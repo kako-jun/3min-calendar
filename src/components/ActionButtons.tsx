@@ -1,5 +1,8 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { shareImage, downloadImage, copyImageToClipboard } from '../lib/capture'
+import { useCalendarStore } from '../lib/store'
+import { THEMES } from '../lib/types'
 
 interface ActionButtonsProps {
   calendarRef: React.RefObject<HTMLDivElement>
@@ -7,6 +10,9 @@ interface ActionButtonsProps {
 }
 
 export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
+  const { t } = useTranslation()
+  const settings = useCalendarStore((state) => state.settings)
+  const theme = THEMES[settings.theme]
   const [isProcessing, setIsProcessing] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -24,14 +30,13 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
     } catch (error: unknown) {
       if (error instanceof Error) {
         if (error.message === 'Web Share API is not supported') {
-          showMessage('クリップボードにコピーしました')
+          showMessage(t('messages.copied'))
         } else if (error.name !== 'AbortError') {
-          // クリップボードにフォールバック
           try {
             await copyImageToClipboard(calendarRef.current)
-            showMessage('クリップボードにコピーしました')
+            showMessage(t('messages.copied'))
           } catch {
-            showMessage('共有に失敗しました')
+            showMessage(t('messages.shareFailed'))
           }
         }
       }
@@ -46,9 +51,9 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
 
     try {
       await downloadImage(calendarRef.current, filename)
-      showMessage('ダウンロードしました')
+      showMessage(t('messages.downloaded'))
     } catch {
-      showMessage('ダウンロードに失敗しました')
+      showMessage(t('messages.downloadFailed'))
     } finally {
       setIsProcessing(false)
     }
@@ -61,25 +66,34 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
         <button
           onClick={handleShare}
           disabled={isProcessing}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-500 active:bg-blue-700 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-50"
+          style={{ backgroundColor: theme.accent }}
         >
           <span>📤</span>
-          <span>シェア</span>
+          <span>{t('actions.share')}</span>
         </button>
 
         {/* ダウンロードボタン */}
         <button
           onClick={handleDownload}
           disabled={isProcessing}
-          className="flex items-center gap-2 rounded-lg bg-gray-600 px-4 py-2 font-medium text-white hover:bg-gray-500 active:bg-gray-700 disabled:opacity-50"
+          className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-opacity hover:opacity-80 disabled:opacity-50"
+          style={{ backgroundColor: theme.surface, color: theme.text }}
         >
           <span>💾</span>
-          <span>保存</span>
+          <span>{t('actions.download')}</span>
         </button>
       </div>
 
       {/* メッセージ表示 */}
-      {message && <div className="rounded bg-gray-700 px-3 py-1 text-sm text-white">{message}</div>}
+      {message && (
+        <div
+          className="rounded px-3 py-1 text-sm"
+          style={{ backgroundColor: theme.surface, color: theme.text }}
+        >
+          {message}
+        </div>
+      )}
     </div>
   )
 }

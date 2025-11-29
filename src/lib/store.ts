@@ -1,7 +1,17 @@
 import { create } from 'zustand'
-import type { DayEntry, CalendarState, Settings } from './types'
+import i18n from './i18n'
+import type { DayEntry, CalendarState, Settings, Template } from './types'
 import { defaultSettings } from './types'
-import { loadEntries, loadSettings, saveEntry, saveSettings } from './storage'
+import {
+  loadEntries,
+  loadSettings,
+  loadTemplates,
+  saveEntry,
+  saveSettings,
+  saveTemplate,
+  deleteTemplate,
+} from './storage'
+import { initHolidays } from './holidays'
 
 interface CalendarActions {
   // 初期化
@@ -17,6 +27,11 @@ interface CalendarActions {
   updateEntry: (date: string, text: string) => Promise<void>
   getEntryText: (date: string) => string
 
+  // テンプレート操作
+  addTemplate: (template: Omit<Template, 'id'>) => Promise<void>
+  removeTemplate: (id: string) => Promise<void>
+  applyTemplate: (templateId: string, year: number, month: number) => Promise<void>
+
   // 設定
   updateSettings: (settings: Partial<Settings>) => Promise<void>
 }
@@ -30,14 +45,26 @@ export const useCalendarStore = create<CalendarState & CalendarActions>((set, ge
     month: now.getMonth(),
   },
   entries: [],
+  templates: [],
   settings: defaultSettings,
   initialized: false,
 
   // 初期化
   initialize: async () => {
     if (get().initialized) return
-    const [entries, settings] = await Promise.all([loadEntries(), loadSettings()])
-    set({ entries, settings, initialized: true })
+    const [entries, settings, templates] = await Promise.all([
+      loadEntries(),
+      loadSettings(),
+      loadTemplates(),
+    ])
+
+    // 言語を設定
+    i18n.changeLanguage(settings.language)
+
+    // 祝日ライブラリを初期化
+    initHolidays(settings.country)
+
+    set({ entries, settings, templates, initialized: true })
   },
 
   // 表示制御
@@ -88,10 +115,58 @@ export const useCalendarStore = create<CalendarState & CalendarActions>((set, ge
     return entry?.text ?? ''
   },
 
+  // テンプレート操作
+  addTemplate: async (templateData) => {
+    const template: Template = {
+      ...templateData,
+      id: crypto.randomUUID(),
+    }
+    await saveTemplate(template)
+    set((state) => ({ templates: [...state.templates, template] }))
+  },
+
+  removeTemplate: async (id) => {
+    await deleteTemplate(id)
+    set((state) => ({
+      templates: state.templates.filter((t) => t.id !== id),
+    }))
+  },
+
+  applyTemplate: async (templateId, year, month) => {
+    const template = get().templates.find((t) => t.id === templateId)
+    if (!template) return
+
+    const { getDaysInMonth } = await import('date-fns')
+    const { format } = await import('date-fns')
+
+    const daysInMonth = getDaysInMonth(new Date(year, month))
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day)
+      const dayOfWeek = date.getDay()
+      const defaultText = template.weekdayDefaults[dayOfWeek]
+      if (defaultText) {
+        const dateString = format(date, 'yyyy-MM-dd')
+        await get().updateEntry(dateString, defaultText)
+      }
+    }
+  },
+
   // 設定
   updateSettings: async (newSettings) => {
     const settings = { ...get().settings, ...newSettings }
     await saveSettings(settings)
+
+    // 言語が変更された場合
+    if (newSettings.language) {
+      i18n.changeLanguage(newSettings.language)
+    }
+
+    // 国が変更された場合
+    if (newSettings.country) {
+      initHolidays(newSettings.country)
+    }
+
     set({ settings })
   },
 }))

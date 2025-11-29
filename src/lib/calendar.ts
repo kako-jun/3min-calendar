@@ -48,7 +48,7 @@ export function getCalendarDays(
 }
 
 export interface WeekdayHeader {
-  label: string
+  labelKey: string // i18nキー
   dayOfWeek: number // 0: 日曜, 6: 土曜
 }
 
@@ -58,13 +58,13 @@ export interface WeekdayHeader {
  */
 export function getWeekdayHeaders(weekStartsOn: 0 | 1 = 0): WeekdayHeader[] {
   const weekdays: WeekdayHeader[] = [
-    { label: '日', dayOfWeek: 0 },
-    { label: '月', dayOfWeek: 1 },
-    { label: '火', dayOfWeek: 2 },
-    { label: '水', dayOfWeek: 3 },
-    { label: '木', dayOfWeek: 4 },
-    { label: '金', dayOfWeek: 5 },
-    { label: '土', dayOfWeek: 6 },
+    { labelKey: 'weekdays.sun', dayOfWeek: 0 },
+    { labelKey: 'weekdays.mon', dayOfWeek: 1 },
+    { labelKey: 'weekdays.tue', dayOfWeek: 2 },
+    { labelKey: 'weekdays.wed', dayOfWeek: 3 },
+    { labelKey: 'weekdays.thu', dayOfWeek: 4 },
+    { labelKey: 'weekdays.fri', dayOfWeek: 5 },
+    { labelKey: 'weekdays.sat', dayOfWeek: 6 },
   ]
   if (weekStartsOn === 1) {
     return [...weekdays.slice(1), weekdays[0]!]
@@ -73,10 +73,10 @@ export function getWeekdayHeaders(weekStartsOn: 0 | 1 = 0): WeekdayHeader[] {
 }
 
 /**
- * 年月の表示文字列を取得
+ * 年月の表示用パラメータを取得（i18n用）
  */
-export function formatYearMonth(year: number, month: number): string {
-  return `${year}年${month + 1}月`
+export function getYearMonthParams(year: number, month: number): { year: number; month: number } {
+  return { year, month: month + 1 }
 }
 
 /**

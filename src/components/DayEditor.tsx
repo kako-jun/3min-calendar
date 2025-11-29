@@ -1,6 +1,9 @@
 import { useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useCalendarStore } from '../lib/store'
 import { format, getDaysInMonth, isToday } from 'date-fns'
+import { QuickInputButtons } from './QuickInputButtons'
+import { THEMES } from '../lib/types'
 
 interface DayRowProps {
   date: Date
@@ -8,68 +11,94 @@ interface DayRowProps {
   onTextChange: (date: string, text: string) => void
   onCopy: (text: string) => void
   onPaste: (date: string) => void
+  onQuickInput: (date: string, value: string) => void
 }
 
-function DayRow({ date, text, onTextChange, onCopy, onPaste }: DayRowProps) {
+function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: DayRowProps) {
+  const { t } = useTranslation()
+  const settings = useCalendarStore((state) => state.settings)
+  const theme = THEMES[settings.theme]
   const dayOfWeek = date.getDay()
   const isSunday = dayOfWeek === 0
   const isSaturday = dayOfWeek === 6
   const dateString = format(date, 'yyyy-MM-dd')
   const dayNumber = date.getDate()
-  const weekdayName = ['日', '月', '火', '水', '木', '金', '土'][dayOfWeek]
+
+  // 曜日名（言語対応）
+  const weekdayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+  const weekdayName = t(`weekdays.${weekdayKeys[dayOfWeek]}`)
 
   return (
     <div
-      className={`flex items-center gap-2 rounded p-2 ${
-        isToday(date) ? 'bg-blue-900/50 ring-1 ring-blue-500' : 'bg-gray-800'
-      }`}
+      className={`rounded p-2 ${isToday(date) ? 'ring-1' : ''}`}
+      style={{
+        backgroundColor: theme.surface,
+        // @ts-expect-error CSS custom property for Tailwind ring color
+        '--tw-ring-color': isToday(date) ? theme.accent : undefined,
+      }}
     >
-      {/* 日付表示 */}
-      <div
-        className={`w-12 shrink-0 text-center text-sm font-medium ${
-          isSunday ? 'text-red-400' : isSaturday ? 'text-blue-400' : 'text-gray-300'
-        }`}
-      >
-        <span className="text-lg">{dayNumber}</span>
-        <span className="ml-1 text-xs">({weekdayName})</span>
+      <div className="flex items-center gap-2">
+        {/* 日付表示 */}
+        <div
+          className="w-14 shrink-0 text-center text-sm font-medium"
+          style={{
+            color: isSunday ? theme.sunday : isSaturday ? theme.saturday : theme.text,
+          }}
+        >
+          <span className="text-lg">{dayNumber}</span>
+          <span className="ml-1 text-xs">({weekdayName})</span>
+        </div>
+
+        {/* テキスト入力 */}
+        <div className="relative min-w-0 flex-1">
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => onTextChange(dateString, e.target.value)}
+            className="w-full rounded border py-1 pl-2 pr-7 text-sm focus:outline-none"
+            style={{
+              backgroundColor: theme.bg,
+              borderColor: theme.textMuted,
+              color: theme.text,
+            }}
+          />
+          {text && (
+            <button
+              onClick={() => onTextChange(dateString, '')}
+              className="absolute right-1 top-1/2 -translate-y-1/2 rounded px-1"
+              style={{ color: theme.textMuted }}
+              title={t('actions.clear')}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* コピーボタン */}
+        <button
+          onClick={() => onCopy(text)}
+          className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
+          style={{ backgroundColor: theme.bg, color: theme.text }}
+          title={t('actions.copy')}
+        >
+          📋
+        </button>
+
+        {/* ペーストボタン */}
+        <button
+          onClick={() => onPaste(dateString)}
+          className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
+          style={{ backgroundColor: theme.bg, color: theme.text }}
+          title={t('actions.paste')}
+        >
+          📥
+        </button>
       </div>
 
-      {/* テキスト入力 */}
-      <div className="relative min-w-0 flex-1">
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => onTextChange(dateString, e.target.value)}
-          className="w-full rounded border border-gray-600 bg-gray-700 py-1 pl-2 pr-7 text-sm text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none"
-        />
-        {text && (
-          <button
-            onClick={() => onTextChange(dateString, '')}
-            className="absolute right-1 top-1/2 -translate-y-1/2 rounded px-1 text-gray-400 hover:text-white"
-            title="クリア"
-          >
-            ✕
-          </button>
-        )}
+      {/* クイック入力ボタン */}
+      <div className="mt-2">
+        <QuickInputButtons onSelect={(value) => onQuickInput(dateString, value)} />
       </div>
-
-      {/* コピーボタン */}
-      <button
-        onClick={() => onCopy(text)}
-        className="shrink-0 rounded bg-gray-600 px-2 py-1 text-xs hover:bg-gray-500 active:bg-gray-400"
-        title="コピー"
-      >
-        📋
-      </button>
-
-      {/* ペーストボタン */}
-      <button
-        onClick={() => onPaste(dateString)}
-        className="shrink-0 rounded bg-gray-600 px-2 py-1 text-xs hover:bg-gray-500 active:bg-gray-400"
-        title="ペースト"
-      >
-        📥
-      </button>
     </div>
   )
 }
@@ -92,29 +121,30 @@ export function DayEditor() {
 
   const handleCopy = useCallback((text: string) => {
     setClipboard(text)
-    // システムクリップボードにもコピー
-    navigator.clipboard.writeText(text).catch(() => {
-      // フォールバック：内部クリップボードのみ使用
-    })
+    navigator.clipboard.writeText(text).catch(() => {})
   }, [])
 
   const handlePaste = useCallback(
     async (date: string) => {
       try {
-        // システムクリップボードから取得を試みる
         const systemClipboard = await navigator.clipboard.readText()
         if (systemClipboard) {
           updateEntry(date, systemClipboard)
           return
         }
-      } catch {
-        // フォールバック：内部クリップボードを使用
-      }
+      } catch {}
       if (clipboard) {
         updateEntry(date, clipboard)
       }
     },
     [clipboard, updateEntry]
+  )
+
+  const handleQuickInput = useCallback(
+    (date: string, value: string) => {
+      updateEntry(date, value)
+    },
+    [updateEntry]
   )
 
   const days = Array.from({ length: daysInMonth }, (_, i) => {
@@ -137,6 +167,7 @@ export function DayEditor() {
           onTextChange={updateEntry}
           onCopy={handleCopy}
           onPaste={handlePaste}
+          onQuickInput={handleQuickInput}
         />
       ))}
     </div>

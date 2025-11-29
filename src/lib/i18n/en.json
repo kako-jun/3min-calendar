@@ -1,0 +1,67 @@
+{
+  "app": {
+    "title": "3-Min Calendar",
+    "tagline": "Supporting hardworking solo business owners"
+  },
+  "calendar": {
+    "today": "Today",
+    "yearMonth": "{{month}}/{{year}}"
+  },
+  "weekdays": {
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
+  "settings": {
+    "weekStart": "Week starts",
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "country": "Country",
+    "language": "Language",
+    "theme": "Theme",
+    "shopName": "Shop name",
+    "showHolidays": "Show holidays"
+  },
+  "actions": {
+    "share": "Share",
+    "download": "Save",
+    "copy": "Copy",
+    "paste": "Paste",
+    "clear": "Clear",
+    "settings": "Settings"
+  },
+  "quickInput": {
+    "closed": "Closed",
+    "available": "◯",
+    "few": "△",
+    "full": "Full",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "Copied to clipboard",
+    "downloaded": "Downloaded",
+    "shareFailed": "Share failed",
+    "downloadFailed": "Download failed"
+  },
+  "template": {
+    "save": "Save template",
+    "apply": "Apply template",
+    "name": "Template name"
+  },
+  "themes": {
+    "dark": "Dark",
+    "light": "Light",
+    "cafe": "Cafe",
+    "nature": "Nature",
+    "ocean": "Ocean",
+    "sunset": "Sunset"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English"
+  }
+}

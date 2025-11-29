@@ -1,0 +1,67 @@
+{
+  "app": {
+    "title": "3分カレンダー",
+    "tagline": "すべての頑張る個人経営者の味方"
+  },
+  "calendar": {
+    "today": "今日",
+    "yearMonth": "{{year}}年{{month}}月"
+  },
+  "weekdays": {
+    "sun": "日",
+    "mon": "月",
+    "tue": "火",
+    "wed": "水",
+    "thu": "木",
+    "fri": "金",
+    "sat": "土"
+  },
+  "settings": {
+    "weekStart": "週の開始",
+    "sunday": "日曜",
+    "monday": "月曜",
+    "country": "国/地域",
+    "language": "言語",
+    "theme": "テーマ",
+    "shopName": "店名",
+    "showHolidays": "祝日を表示"
+  },
+  "actions": {
+    "share": "シェア",
+    "download": "保存",
+    "copy": "コピー",
+    "paste": "ペースト",
+    "clear": "クリア",
+    "settings": "設定"
+  },
+  "quickInput": {
+    "closed": "休",
+    "available": "◯",
+    "few": "△",
+    "full": "満",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "クリップボードにコピーしました",
+    "downloaded": "ダウンロードしました",
+    "shareFailed": "共有に失敗しました",
+    "downloadFailed": "ダウンロードに失敗しました"
+  },
+  "template": {
+    "save": "テンプレート保存",
+    "apply": "テンプレート適用",
+    "name": "テンプレート名"
+  },
+  "themes": {
+    "dark": "ダーク",
+    "light": "ライト",
+    "cafe": "カフェ",
+    "nature": "ネイチャー",
+    "ocean": "オーシャン",
+    "sunset": "サンセット"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English"
+  }
+}
