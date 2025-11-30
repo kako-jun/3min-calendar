@@ -10,13 +10,24 @@ import { APP_THEMES } from '../lib/types'
 interface DayRowProps {
   date: Date
   text: string
+  isSelected: boolean
   onTextChange: (date: string, text: string) => void
   onCopy: (text: string) => void
   onPaste: (date: string) => void
   onQuickInput: (date: string, value: string) => void
+  onSelect: (date: string) => void
 }
 
-function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: DayRowProps) {
+function DayRow({
+  date,
+  text,
+  isSelected,
+  onTextChange,
+  onCopy,
+  onPaste,
+  onQuickInput,
+  onSelect,
+}: DayRowProps) {
   const { t } = useTranslation()
   const settings = useCalendarStore((state) => state.settings)
   const appTheme = APP_THEMES[settings.appTheme]
@@ -30,8 +41,18 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
   const weekdayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
   const weekdayName = t(`weekdays.${weekdayKeys[dayOfWeek]}`)
 
+  // 入力欄やボタンにフォーカス/クリックしたらこの日を選択
+  const handleFocus = () => onSelect(dateString)
+
   return (
-    <div className="rounded p-2" style={{ backgroundColor: appTheme.surface }}>
+    <div
+      className={`rounded p-2 ${isSelected ? 'ring-2' : ''}`}
+      style={{
+        backgroundColor: appTheme.surface,
+        // @ts-expect-error ringColor is a valid Tailwind CSS-in-JS property
+        '--tw-ring-color': isSelected ? appTheme.accent : undefined,
+      }}
+    >
       <div className="flex items-center gap-2">
         {/* 日付表示 */}
         <div
@@ -50,6 +71,7 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
             type="text"
             value={text}
             onChange={(e) => onTextChange(dateString, e.target.value)}
+            onFocus={handleFocus}
             className="w-full rounded border py-1 pl-2 pr-7 text-sm focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
@@ -59,7 +81,10 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
           />
           {text && (
             <button
-              onClick={() => onTextChange(dateString, '')}
+              onClick={() => {
+                handleFocus()
+                onTextChange(dateString, '')
+              }}
               className="absolute right-1 top-1/2 -translate-y-1/2 rounded px-1"
               style={{ color: appTheme.textMuted }}
               title={t('actions.clear')}
@@ -71,7 +96,10 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
 
         {/* コピーボタン */}
         <button
-          onClick={() => onCopy(text)}
+          onClick={() => {
+            handleFocus()
+            onCopy(text)
+          }}
           className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
           style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
           title={t('actions.copy')}
@@ -81,7 +109,10 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
 
         {/* ペーストボタン */}
         <button
-          onClick={() => onPaste(dateString)}
+          onClick={() => {
+            handleFocus()
+            onPaste(dateString)
+          }}
           className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
           style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
           title={t('actions.paste')}
@@ -92,7 +123,12 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
 
       {/* クイック入力ボタン */}
       <div className="mt-2">
-        <QuickInputButtons onSelect={(value) => onQuickInput(dateString, value)} />
+        <QuickInputButtons
+          onSelect={(value) => {
+            handleFocus()
+            onQuickInput(dateString, value)
+          }}
+        />
       </div>
     </div>
   )
@@ -102,6 +138,8 @@ export function DayEditor() {
   const view = useCalendarStore((state) => state.view)
   const entries = useCalendarStore((state) => state.entries)
   const updateEntry = useCalendarStore((state) => state.updateEntry)
+  const selectedDate = useCalendarStore((state) => state.selectedDate)
+  const setSelectedDate = useCalendarStore((state) => state.setSelectedDate)
   const [clipboard, setClipboard] = useState('')
 
   const daysInMonth = getDaysInMonth(new Date(view.year, view.month))
@@ -159,10 +197,12 @@ export function DayEditor() {
           key={dateString}
           date={date}
           text={text}
+          isSelected={selectedDate === dateString}
           onTextChange={updateEntry}
           onCopy={handleCopy}
           onPaste={handlePaste}
           onQuickInput={handleQuickInput}
+          onSelect={setSelectedDate}
         />
       ))}
     </div>

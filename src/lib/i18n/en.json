@@ -29,7 +29,7 @@
   },
   "actions": {
     "share": "Share",
-    "download": "Save",
+    "download": "Download",
     "copy": "Copy",
     "paste": "Paste",
     "clear": "Clear",

@@ -131,6 +131,38 @@ export interface CalendarState {
   initialized: boolean
 }
 
+/** クイック入力のスタイル定義 */
+export interface QuickInputStyle {
+  key: string
+  bgColor: string
+  textColor: string
+}
+
+export const QUICK_INPUT_STYLES: QuickInputStyle[] = [
+  { key: 'closed', bgColor: '#4b5563', textColor: '#ffffff' }, // gray-600
+  { key: 'available', bgColor: '#16a34a', textColor: '#ffffff' }, // green-600
+  { key: 'few', bgColor: '#ca8a04', textColor: '#ffffff' }, // yellow-600
+  { key: 'reserved', bgColor: '#dc2626', textColor: '#ffffff' }, // red-600
+  { key: 'full', bgColor: '#9333ea', textColor: '#ffffff' }, // purple-600
+]
+
+/**
+ * テキストに対応するクイック入力スタイルを取得
+ * マッチしない場合はnullを返す
+ */
+export function getQuickInputStyle(
+  text: string,
+  t: (key: string) => string
+): QuickInputStyle | null {
+  for (const style of QUICK_INPUT_STYLES) {
+    const value = t(`quickInput.${style.key}`)
+    if (text === value) {
+      return style
+    }
+  }
+  return null
+}
+
 /** デフォルト設定 */
 export const defaultSettings: Settings = {
   weekStartsOn: 0,

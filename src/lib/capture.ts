@@ -11,12 +11,18 @@ export async function captureElementAsBlob(element: HTMLElement): Promise<Blob |
   try {
     const html2canvas = (await import('html2canvas')).default
 
+    // 要素の背景色を取得
+    const computedStyle = window.getComputedStyle(element)
+    const bgColor = computedStyle.backgroundColor || '#1f2937'
+
     // 要素をそのままキャプチャ（scale: 2で1080px相当に）
     const canvas = await html2canvas(element, {
-      backgroundColor: '#1f2937', // gray-800
+      backgroundColor: bgColor,
       scale: 2, // 500px * 2 = 1000px（≒1080px）
       logging: false,
       useCORS: true,
+      allowTaint: true,
+      removeContainer: true,
     })
 
     // Blobに変換

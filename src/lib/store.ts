@@ -23,6 +23,9 @@ interface CalendarActions {
   goToNextMonth: () => void
   goToToday: () => void
 
+  // 選択日
+  setSelectedDate: (date: string | null) => void
+
   // エントリ操作
   updateEntry: (date: string, text: string) => Promise<void>
   getEntryText: (date: string) => string
@@ -38,7 +41,9 @@ interface CalendarActions {
 
 const now = new Date()
 
-export const useCalendarStore = create<CalendarState & CalendarActions>((set, get) => ({
+export const useCalendarStore = create<
+  CalendarState & CalendarActions & { selectedDate: string | null }
+>((set, get) => ({
   // 初期状態
   view: {
     year: now.getFullYear(),
@@ -48,6 +53,7 @@ export const useCalendarStore = create<CalendarState & CalendarActions>((set, ge
   templates: [],
   settings: defaultSettings,
   initialized: false,
+  selectedDate: null,
 
   // 初期化
   initialize: async () => {
@@ -93,6 +99,11 @@ export const useCalendarStore = create<CalendarState & CalendarActions>((set, ge
   goToToday: () => {
     const today = new Date()
     set({ view: { year: today.getFullYear(), month: today.getMonth() } })
+  },
+
+  // 選択日
+  setSelectedDate: (date) => {
+    set({ selectedDate: date })
   },
 
   // エントリ操作

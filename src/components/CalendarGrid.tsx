@@ -3,13 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { useCalendarStore } from '../lib/store'
 import { getCalendarDays, getWeekdayHeaders, getYearMonthParams } from '../lib/calendar'
 import { isHoliday, getHolidayName } from '../lib/holidays'
-import { THEMES } from '../lib/types'
+import { THEMES, getQuickInputStyle } from '../lib/types'
 
 export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, ref) {
   const { t } = useTranslation()
   const view = useCalendarStore((state) => state.view)
   const settings = useCalendarStore((state) => state.settings)
   const entries = useCalendarStore((state) => state.entries)
+  const selectedDate = useCalendarStore((state) => state.selectedDate)
+  const setSelectedDate = useCalendarStore((state) => state.setSelectedDate)
 
   const days = getCalendarDays(view.year, view.month, settings.weekStartsOn)
   const weekdays = getWeekdayHeaders(settings.weekStartsOn)
@@ -80,16 +82,19 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
             return theme.text
           }
 
+          const isSelected = selectedDate === day.dateString
+
           return (
             <div
               key={day.dateString}
-              className={`aspect-square rounded p-1 ${day.isToday ? 'ring-2' : ''}`}
+              className={`aspect-square rounded p-1 ${isSelected ? 'ring-2' : ''} ${day.isCurrentMonth ? 'cursor-pointer' : ''}`}
               style={{
                 backgroundColor: day.isCurrentMonth ? theme.bg : `${theme.bg}80`,
                 // @ts-expect-error ringColor is a valid Tailwind CSS-in-JS property
-                '--tw-ring-color': day.isToday ? theme.accent : undefined,
+                '--tw-ring-color': isSelected ? theme.accent : undefined,
               }}
               title={holidayName || undefined}
+              onClick={() => day.isCurrentMonth && setSelectedDate(day.dateString)}
             >
               <div
                 className={`text-right text-[11px] leading-tight ${day.isToday ? 'font-bold' : ''}`}
@@ -97,22 +102,40 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
               >
                 {day.day}
               </div>
-              {text && (
-                <div
-                  className="mt-0.5 text-[10px] leading-tight"
-                  style={{
-                    color: theme.text,
-                    overflow: 'hidden',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                    wordBreak: 'break-all',
-                  }}
-                  title={text}
-                >
-                  {text}
-                </div>
-              )}
+              {text &&
+                (() => {
+                  const quickStyle = getQuickInputStyle(text, t)
+                  if (quickStyle) {
+                    // クイック入力の場合：ボタンと同じスタイルで表示
+                    return (
+                      <div
+                        className="mt-0.5 rounded px-0.5 text-center text-[9px] font-bold"
+                        style={{
+                          backgroundColor: quickStyle.bgColor,
+                          color: quickStyle.textColor,
+                          lineHeight: '1.4',
+                        }}
+                      >
+                        {text}
+                      </div>
+                    )
+                  } else {
+                    // 自由入力の場合：太字テキスト
+                    return (
+                      <div
+                        className="mt-0.5 text-[8px] font-bold"
+                        style={{
+                          color: theme.text,
+                          wordBreak: 'break-all',
+                          lineHeight: '1.2',
+                        }}
+                        title={text}
+                      >
+                        {text.length > 8 ? text.slice(0, 8) : text}
+                      </div>
+                    )
+                  }
+                })()}
             </div>
           )
         })}

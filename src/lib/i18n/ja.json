@@ -29,7 +29,7 @@
   },
   "actions": {
     "share": "シェア",
-    "download": "保存",
+    "download": "ダウンロード",
     "copy": "コピー",
     "paste": "ペースト",
     "clear": "クリア",
