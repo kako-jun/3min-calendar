@@ -15,7 +15,8 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
   const weekdays = getWeekdayHeaders(settings.weekStartsOn)
   const yearMonthParams = getYearMonthParams(view.year, view.month)
 
-  const theme = THEMES[settings.theme]
+  // カレンダー画像用のテーマ
+  const theme = THEMES[settings.calendarTheme]
 
   const getEntryText = (date: string) => {
     const entry = entries.find((e) => e.date === date)

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { shareImage, downloadImage, copyImageToClipboard } from '../lib/capture'
 import { useCalendarStore } from '../lib/store'
-import { THEMES } from '../lib/types'
+import { APP_THEMES } from '../lib/types'
 
 interface ActionButtonsProps {
   calendarRef: React.RefObject<HTMLDivElement>
@@ -12,7 +12,7 @@ interface ActionButtonsProps {
 export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
   const { t } = useTranslation()
   const settings = useCalendarStore((state) => state.settings)
-  const theme = THEMES[settings.theme]
+  const appTheme = APP_THEMES[settings.appTheme]
   const [isProcessing, setIsProcessing] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -67,7 +67,7 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
           onClick={handleShare}
           disabled={isProcessing}
           className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium text-white transition-opacity hover:opacity-80 disabled:opacity-50"
-          style={{ backgroundColor: theme.accent }}
+          style={{ backgroundColor: appTheme.accent }}
         >
           <span>📤</span>
           <span>{t('actions.share')}</span>
@@ -78,7 +78,7 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
           onClick={handleDownload}
           disabled={isProcessing}
           className="flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-opacity hover:opacity-80 disabled:opacity-50"
-          style={{ backgroundColor: theme.surface, color: theme.text }}
+          style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
         >
           <span>💾</span>
           <span>{t('actions.download')}</span>
@@ -89,7 +89,7 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
       {message && (
         <div
           className="rounded px-3 py-1 text-sm"
-          style={{ backgroundColor: theme.surface, color: theme.text }}
+          style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
         >
           {message}
         </div>

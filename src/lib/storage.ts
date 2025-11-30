@@ -70,7 +70,7 @@ export async function saveEntry(entry: DayEntry): Promise<void> {
   })
 }
 
-/** 設定を読み込み */
+/** 設定を読み込み（後方互換対応） */
 export async function loadSettings(): Promise<Settings> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
@@ -80,8 +80,21 @@ export async function loadSettings(): Promise<Settings> {
 
     request.onerror = () => reject(request.error)
     request.onsuccess = () => {
-      const result = request.result as { key: string; value: Settings } | undefined
-      resolve({ ...defaultSettings, ...result?.value })
+      const result = request.result as { key: string; value: Record<string, unknown> } | undefined
+      const saved = result?.value || {}
+
+      // 後方互換: 旧 theme を appTheme と calendarTheme に分離
+      const migrated: Settings = {
+        ...defaultSettings,
+        ...saved,
+        appTheme: (saved.appTheme as Settings['appTheme']) || defaultSettings.appTheme,
+        calendarTheme:
+          (saved.calendarTheme as Settings['calendarTheme']) ||
+          (saved.theme as Settings['calendarTheme']) ||
+          defaultSettings.calendarTheme,
+      }
+
+      resolve(migrated)
     }
   })
 }

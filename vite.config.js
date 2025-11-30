@@ -13,9 +13,9 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
       },
       manifest: {
-        name: '3min. Calendar',
-        short_name: '3min. Cal',
-        description: 'A simple calendar app',
+        name: '3 min. Calendar',
+        short_name: '3 min. Cal',
+        description: 'Quick & easy business calendar for Instagram',
         theme_color: '#1a1a1a',
         background_color: '#1a1a1a',
         display: 'standalone',

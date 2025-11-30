@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useCalendarStore } from '../lib/store'
 import { format, getDaysInMonth, isToday } from 'date-fns'
 import { QuickInputButtons } from './QuickInputButtons'
-import { THEMES } from '../lib/types'
+import { APP_THEMES } from '../lib/types'
 
 interface DayRowProps {
   date: Date
@@ -17,7 +17,7 @@ interface DayRowProps {
 function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: DayRowProps) {
   const { t } = useTranslation()
   const settings = useCalendarStore((state) => state.settings)
-  const theme = THEMES[settings.theme]
+  const appTheme = APP_THEMES[settings.appTheme]
   const dayOfWeek = date.getDay()
   const isSunday = dayOfWeek === 0
   const isSaturday = dayOfWeek === 6
@@ -32,9 +32,9 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
     <div
       className={`rounded p-2 ${isToday(date) ? 'ring-1' : ''}`}
       style={{
-        backgroundColor: theme.surface,
+        backgroundColor: appTheme.surface,
         // @ts-expect-error CSS custom property for Tailwind ring color
-        '--tw-ring-color': isToday(date) ? theme.accent : undefined,
+        '--tw-ring-color': isToday(date) ? appTheme.accent : undefined,
       }}
     >
       <div className="flex items-center gap-2">
@@ -42,7 +42,7 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
         <div
           className="w-14 shrink-0 text-center text-sm font-medium"
           style={{
-            color: isSunday ? theme.sunday : isSaturday ? theme.saturday : theme.text,
+            color: isSunday ? appTheme.accent : isSaturday ? appTheme.accent : appTheme.text,
           }}
         >
           <span className="text-lg">{dayNumber}</span>
@@ -57,16 +57,16 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
             onChange={(e) => onTextChange(dateString, e.target.value)}
             className="w-full rounded border py-1 pl-2 pr-7 text-sm focus:outline-none"
             style={{
-              backgroundColor: theme.bg,
-              borderColor: theme.textMuted,
-              color: theme.text,
+              backgroundColor: appTheme.bg,
+              borderColor: appTheme.textMuted,
+              color: appTheme.text,
             }}
           />
           {text && (
             <button
               onClick={() => onTextChange(dateString, '')}
               className="absolute right-1 top-1/2 -translate-y-1/2 rounded px-1"
-              style={{ color: theme.textMuted }}
+              style={{ color: appTheme.textMuted }}
               title={t('actions.clear')}
             >
               ✕
@@ -78,7 +78,7 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
         <button
           onClick={() => onCopy(text)}
           className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
-          style={{ backgroundColor: theme.bg, color: theme.text }}
+          style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
           title={t('actions.copy')}
         >
           📋
@@ -88,7 +88,7 @@ function DayRow({ date, text, onTextChange, onCopy, onPaste, onQuickInput }: Day
         <button
           onClick={() => onPaste(dateString)}
           className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
-          style={{ backgroundColor: theme.bg, color: theme.text }}
+          style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
           title={t('actions.paste')}
         >
           📥

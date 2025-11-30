@@ -22,7 +22,8 @@
     "monday": "月曜",
     "country": "国/地域",
     "language": "言語",
-    "theme": "テーマ",
+    "appTheme": "アプリの外観",
+    "calendarTheme": "カレンダーのテーマ",
     "shopName": "店名",
     "showHolidays": "祝日を表示"
   },
@@ -52,7 +53,11 @@
     "apply": "テンプレート適用",
     "name": "テンプレート名"
   },
-  "themes": {
+  "appThemes": {
+    "dark": "ダーク",
+    "light": "ライト"
+  },
+  "calendarThemes": {
     "dark": "ダーク",
     "light": "ライト",
     "cafe": "カフェ",

@@ -6,8 +6,14 @@ export interface DayEntry {
   text: string
 }
 
-/** テーマ定義 */
-export type ThemeId = 'dark' | 'light' | 'cafe' | 'nature' | 'ocean' | 'sunset'
+/** アプリテーマ（ライト/ダーク） */
+export type AppTheme = 'light' | 'dark'
+
+/** カレンダーテーマ定義 */
+export type CalendarThemeId = 'dark' | 'light' | 'cafe' | 'nature' | 'ocean' | 'sunset'
+
+/** @deprecated ThemeIdはCalendarThemeIdに置き換え予定 */
+export type ThemeId = CalendarThemeId
 
 export interface ThemeColors {
   bg: string
@@ -94,11 +100,17 @@ export interface Template {
 /** アプリ設定 */
 export interface Settings {
   weekStartsOn: 0 | 1 // 0: 日曜, 1: 月曜
-  theme: ThemeId
+  appTheme: AppTheme // アプリ全体のテーマ（ライト/ダーク）
+  calendarTheme: CalendarThemeId // カレンダー画像のテーマ
   language: 'ja' | 'en'
   country: CountryCode
   shopName: string
   showHolidays: boolean
+}
+
+/** @deprecated 後方互換用 */
+export interface LegacySettings extends Omit<Settings, 'appTheme' | 'calendarTheme'> {
+  theme?: ThemeId
 }
 
 /** カレンダーの表示状態 */
@@ -122,9 +134,31 @@ export interface CalendarState {
 /** デフォルト設定 */
 export const defaultSettings: Settings = {
   weekStartsOn: 0,
-  theme: 'dark',
+  appTheme: 'dark',
+  calendarTheme: 'dark',
   language: 'ja',
   country: 'JP',
   shopName: '',
   showHolidays: true,
+}
+
+/** アプリテーマの色定義 */
+export const APP_THEMES: Record<
+  AppTheme,
+  { bg: string; surface: string; text: string; textMuted: string; accent: string }
+> = {
+  dark: {
+    bg: '#111827',
+    surface: '#1f2937',
+    text: '#ffffff',
+    textMuted: '#9ca3af',
+    accent: '#3b82f6',
+  },
+  light: {
+    bg: '#f9fafb',
+    surface: '#ffffff',
+    text: '#111827',
+    textMuted: '#6b7280',
+    accent: '#3b82f6',
+  },
 }

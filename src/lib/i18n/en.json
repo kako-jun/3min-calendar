@@ -22,7 +22,8 @@
     "monday": "Monday",
     "country": "Country",
     "language": "Language",
-    "theme": "Theme",
+    "appTheme": "Appearance",
+    "calendarTheme": "Calendar theme",
     "shopName": "Shop name",
     "showHolidays": "Show holidays"
   },
@@ -52,7 +53,11 @@
     "apply": "Apply template",
     "name": "Template name"
   },
-  "themes": {
+  "appThemes": {
+    "dark": "Dark",
+    "light": "Light"
+  },
+  "calendarThemes": {
     "dark": "Dark",
     "light": "Light",
     "cafe": "Cafe",
