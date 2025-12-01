@@ -31,3 +31,4 @@ dist-ssr
 .env.local
 .env.*.local
 .serena/
+.claude/settings.local.json
