@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faClipboard } from '@fortawesome/free-solid-svg-icons'
 import { useCalendarStore } from '../lib/store'
-import { format } from 'date-fns'
+import { format, addDays } from 'date-fns'
 import { QuickInputButtons } from './QuickInputButtons'
 import { APP_THEMES } from '../lib/types'
 
@@ -13,6 +13,20 @@ const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
   const minutes = (i % 2) * 30
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
 })
+
+/** 時刻から時間帯の色を取得 */
+function getTimeColor(time: string | undefined): string {
+  if (!time) return ''
+  const [hourStr] = time.split(':')
+  if (!hourStr) return ''
+  const hour = parseInt(hourStr, 10)
+  if (hour >= 5 && hour < 10) return '#f59e0b' // 朝: オレンジ
+  if (hour >= 10 && hour < 12) return '#84cc16' // 午前: ライム
+  if (hour >= 12 && hour < 17) return '#22c55e' // 午後: グリーン
+  if (hour >= 17 && hour < 21) return '#f97316' // 夕方: ディープオレンジ
+  if (hour >= 21 || hour < 5) return '#8b5cf6' // 夜/深夜: パープル
+  return ''
+}
 
 /** 時刻パターン: HH:MM-HH:MM, HH:MM-, -HH:MM */
 const TIME_PATTERN = /(\d{1,2}:\d{2})?-(\d{1,2}:\d{2})?/
@@ -183,11 +197,11 @@ function DayRow({
           <select
             value={currentTime?.from || ''}
             onChange={(e) => handleTimeChange('from', e.target.value)}
-            className="rounded border px-1 py-0.5 text-xs focus:outline-none"
+            className="rounded border px-1 py-0.5 text-xs font-medium focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
               borderColor: appTheme.textMuted,
-              color: appTheme.text,
+              color: getTimeColor(currentTime?.from || '') || appTheme.text,
             }}
             title={t('time.from')}
           >
@@ -202,11 +216,11 @@ function DayRow({
           <select
             value={currentTime?.to || ''}
             onChange={(e) => handleTimeChange('to', e.target.value)}
-            className="rounded border px-1 py-0.5 text-xs focus:outline-none"
+            className="rounded border px-1 py-0.5 text-xs font-medium focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
               borderColor: appTheme.textMuted,
-              color: appTheme.text,
+              color: getTimeColor(currentTime?.to || '') || appTheme.text,
             }}
             title={t('time.to')}
           >
@@ -285,19 +299,35 @@ export function DayEditor() {
     )
   }
 
-  const date = new Date(selectedDate)
-  const text = getEntryText(selectedDate)
+  const selectedDateObj = new Date(selectedDate)
+
+  // 前後1日を含む3日分の日付を生成
+  const daysToShow = [-1, 0, 1].map((offset) => {
+    const date = addDays(selectedDateObj, offset)
+    const dateString = format(date, 'yyyy-MM-dd')
+    return {
+      date,
+      dateString,
+      text: getEntryText(dateString),
+      isSelected: offset === 0,
+    }
+  })
 
   return (
-    <DayRow
-      date={date}
-      text={text}
-      isSelected={true}
-      onTextChange={updateEntry}
-      onCopy={handleCopy}
-      onPaste={handlePaste}
-      onQuickInput={handleQuickInput}
-      onSelect={setSelectedDate}
-    />
+    <div className="flex flex-col gap-2">
+      {daysToShow.map(({ date, dateString, text, isSelected }) => (
+        <DayRow
+          key={dateString}
+          date={date}
+          text={text}
+          isSelected={isSelected}
+          onTextChange={updateEntry}
+          onCopy={handleCopy}
+          onPaste={handlePaste}
+          onQuickInput={handleQuickInput}
+          onSelect={setSelectedDate}
+        />
+      ))}
+    </div>
   )
 }
