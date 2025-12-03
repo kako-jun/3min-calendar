@@ -40,6 +40,11 @@
     "clear": "クリア",
     "settings": "設定"
   },
+  "time": {
+    "from": "開始",
+    "to": "終了",
+    "none": "-"
+  },
   "quickInput": {
     "closed": "休",
     "available": "◯",

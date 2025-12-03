@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faClipboard } from '@fortawesome/free-solid-svg-icons'
@@ -6,6 +6,42 @@ import { useCalendarStore } from '../lib/store'
 import { format, getDaysInMonth } from 'date-fns'
 import { QuickInputButtons } from './QuickInputButtons'
 import { APP_THEMES } from '../lib/types'
+
+/** 30分刻みの時刻オプションを生成 */
+const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
+  const hours = Math.floor(i / 2)
+  const minutes = (i % 2) * 30
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+})
+
+/** 時刻パターン: HH:MM-HH:MM, HH:MM-, -HH:MM */
+const TIME_PATTERN = /(\d{1,2}:\d{2})?-(\d{1,2}:\d{2})?/
+
+/** テキストから時刻部分を抽出 */
+function parseTimeFromText(text: string): { from: string; to: string } | null {
+  const match = text.match(TIME_PATTERN)
+  if (!match || (!match[1] && !match[2])) return null
+  return { from: match[1] || '', to: match[2] || '' }
+}
+
+/** テキストに時刻を追加/更新 */
+function updateTimeInText(text: string, from: string, to: string): string {
+  const timeStr = from || to ? `${from}-${to}` : ''
+  const existing = text.match(TIME_PATTERN)
+
+  if (existing) {
+    // 既存の時刻部分を置換
+    if (!timeStr) {
+      // 時刻を削除
+      return text.replace(TIME_PATTERN, '').trim()
+    }
+    return text.replace(TIME_PATTERN, timeStr)
+  } else if (timeStr) {
+    // 時刻がない場合は末尾に追加
+    return text ? `${text}${timeStr}` : timeStr
+  }
+  return text
+}
 
 interface DayRowProps {
   date: Date
@@ -41,8 +77,20 @@ function DayRow({
   const weekdayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
   const weekdayName = t(`weekdays.${weekdayKeys[dayOfWeek]}`)
 
+  // テキストから現在の時刻を解析
+  const currentTime = useMemo(() => parseTimeFromText(text), [text])
+
   // 入力欄やボタンにフォーカス/クリックしたらこの日を選択
   const handleFocus = () => onSelect(dateString)
+
+  // 時刻変更ハンドラ
+  const handleTimeChange = (type: 'from' | 'to', value: string) => {
+    handleFocus()
+    const from = type === 'from' ? value : currentTime?.from || ''
+    const to = type === 'to' ? value : currentTime?.to || ''
+    const newText = updateTimeInText(text, from, to)
+    onTextChange(dateString, newText)
+  }
 
   return (
     <div
@@ -121,14 +169,55 @@ function DayRow({
         </button>
       </div>
 
-      {/* クイック入力ボタン */}
-      <div className="mt-2">
+      {/* クイック入力ボタンと時刻入力 */}
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         <QuickInputButtons
           onSelect={(value) => {
             handleFocus()
             onQuickInput(dateString, value)
           }}
         />
+
+        {/* 時刻入力 */}
+        <div className="flex items-center gap-1">
+          <select
+            value={currentTime?.from || ''}
+            onChange={(e) => handleTimeChange('from', e.target.value)}
+            className="rounded border px-1 py-0.5 text-xs focus:outline-none"
+            style={{
+              backgroundColor: appTheme.bg,
+              borderColor: appTheme.textMuted,
+              color: appTheme.text,
+            }}
+            title={t('time.from')}
+          >
+            <option value="">{t('time.none')}</option>
+            {TIME_OPTIONS.map((time) => (
+              <option key={time} value={time}>
+                {time}
+              </option>
+            ))}
+          </select>
+          <span style={{ color: appTheme.textMuted }}>-</span>
+          <select
+            value={currentTime?.to || ''}
+            onChange={(e) => handleTimeChange('to', e.target.value)}
+            className="rounded border px-1 py-0.5 text-xs focus:outline-none"
+            style={{
+              backgroundColor: appTheme.bg,
+              borderColor: appTheme.textMuted,
+              color: appTheme.text,
+            }}
+            title={t('time.to')}
+          >
+            <option value="">{t('time.none')}</option>
+            {TIME_OPTIONS.map((time) => (
+              <option key={time} value={time}>
+                {time}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </div>
   )
