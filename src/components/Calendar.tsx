@@ -85,8 +85,10 @@ export function Calendar() {
               id="calendar-comment-input"
               type="text"
               value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              onBlur={() => updateCalendarComment(view.year, view.month, comment)}
+              onChange={(e) => {
+                setComment(e.target.value)
+                updateCalendarComment(view.year, view.month, e.target.value)
+              }}
               placeholder={t('calendar.commentPlaceholder')}
               className="w-full rounded border px-2 py-1 text-sm focus:outline-none"
               style={{
