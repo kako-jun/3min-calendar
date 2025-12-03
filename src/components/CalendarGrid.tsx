@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useCalendarStore } from '../lib/store'
 import { getCalendarDays, getWeekdayHeaders, getYearMonthParams } from '../lib/calendar'
 import { isHoliday, getHolidayName } from '../lib/holidays'
-import { THEMES, getQuickInputStyle } from '../lib/types'
+import { THEMES, parseStampedText } from '../lib/types'
 
 export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, ref) {
   const { t } = useTranslation()
@@ -123,23 +123,43 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
               </div>
               {text &&
                 (() => {
-                  const quickStyle = getQuickInputStyle(text, t)
-                  if (quickStyle) {
-                    // クイック入力の場合：ボタンと同じスタイルで表示
+                  const segments = parseStampedText(text, t)
+                  const hasStamps = segments.some((s) => s.type === 'stamp')
+
+                  if (hasStamps) {
+                    // スタンプを含む場合：スタンプは固定サイズ、テキストは通常表示
                     return (
-                      <div
-                        className="mt-0.5 rounded px-0.5 text-center text-[9px] font-bold"
-                        style={{
-                          backgroundColor: quickStyle.bgColor,
-                          color: quickStyle.textColor,
-                          lineHeight: '1.4',
-                        }}
-                      >
-                        {text}
+                      <div className="mt-0.5 flex flex-wrap items-center gap-0.5">
+                        {segments.map((segment, i) =>
+                          segment.type === 'stamp' ? (
+                            <span
+                              key={i}
+                              className="inline-block shrink-0 rounded px-1 text-[9px] font-bold"
+                              style={{
+                                backgroundColor: segment.style.bgColor,
+                                color: segment.style.textColor,
+                                lineHeight: '1.4',
+                              }}
+                            >
+                              {segment.text}
+                            </span>
+                          ) : (
+                            <span
+                              key={i}
+                              className="text-[8px] font-bold"
+                              style={{
+                                color: theme.text,
+                                lineHeight: '1.2',
+                              }}
+                            >
+                              {segment.text.length > 6 ? segment.text.slice(0, 6) : segment.text}
+                            </span>
+                          )
+                        )}
                       </div>
                     )
                   } else {
-                    // 自由入力の場合：太字テキスト
+                    // スタンプなし：通常テキスト
                     return (
                       <div
                         className="mt-0.5 text-[8px] font-bold"

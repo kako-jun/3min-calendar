@@ -152,6 +152,7 @@ export const QUICK_INPUT_STYLES: QuickInputStyle[] = [
 /**
  * テキストに対応するクイック入力スタイルを取得
  * マッチしない場合はnullを返す
+ * @deprecated parseStampedText を使用してください
  */
 export function getQuickInputStyle(
   text: string,
@@ -164,6 +165,85 @@ export function getQuickInputStyle(
     }
   }
   return null
+}
+
+/** パース結果のセグメント */
+export type TextSegment =
+  | { type: 'stamp'; style: QuickInputStyle; text: string }
+  | { type: 'text'; text: string }
+
+/**
+ * スタンプタグのパターン: [休], [◯], [△], [✕], [満] など
+ */
+const STAMP_TAG_REGEX = /\[([^\]]+)\]/g
+
+/**
+ * スタンプキーからタグ形式の文字列を生成
+ * 例: 'closed' → '[休]' (日本語) / '[Closed]' (英語)
+ */
+export function formatStampTag(stampKey: string, t: (key: string) => string): string {
+  const value = t(`quickInput.${stampKey}`)
+  return `[${value}]`
+}
+
+/**
+ * タグ内のテキストからスタンプスタイルを取得
+ */
+export function getStampStyleByText(
+  innerText: string,
+  t: (key: string) => string
+): QuickInputStyle | null {
+  for (const style of QUICK_INPUT_STYLES) {
+    const value = t(`quickInput.${style.key}`)
+    if (innerText === value) {
+      return style
+    }
+  }
+  return null
+}
+
+/**
+ * テキストをスタンプタグと通常テキストに分解
+ * 例: "[休]10:00-18:00" → [{ type: 'stamp', ... }, { type: 'text', text: '10:00-18:00' }]
+ */
+export function parseStampedText(text: string, t: (key: string) => string): TextSegment[] {
+  const segments: TextSegment[] = []
+  let lastIndex = 0
+
+  // マッチを探す
+  const matches = text.matchAll(STAMP_TAG_REGEX)
+
+  for (const match of matches) {
+    const matchStart = match.index ?? 0
+    const matchEnd = matchStart + match[0].length
+    const innerText = match[1] ?? ''
+
+    // マッチ前のテキスト
+    if (matchStart > lastIndex) {
+      const beforeText = text.slice(lastIndex, matchStart)
+      if (beforeText) {
+        segments.push({ type: 'text', text: beforeText })
+      }
+    }
+
+    // スタンプタグの処理
+    const style = innerText ? getStampStyleByText(innerText, t) : null
+    if (style) {
+      segments.push({ type: 'stamp', style, text: innerText })
+    } else {
+      // 未知のタグは通常テキストとして扱う
+      segments.push({ type: 'text', text: match[0] })
+    }
+
+    lastIndex = matchEnd
+  }
+
+  // 残りのテキスト
+  if (lastIndex < text.length) {
+    segments.push({ type: 'text', text: text.slice(lastIndex) })
+  }
+
+  return segments
 }
 
 /** デフォルト設定 */
