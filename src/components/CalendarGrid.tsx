@@ -202,25 +202,24 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
         })}
       </div>
 
-      {/* コメント表示（右下） */}
-      {comment && (
+      {/* コメント表示（右下）- 常に表示してクリック可能に */}
+      <div
+        className="relative mt-1 flex cursor-pointer justify-end overflow-hidden"
+        onClick={() => document.getElementById('calendar-comment-input')?.focus()}
+        style={{ minHeight: '1.25rem' }}
+      >
         <div
-          className="relative mt-1 flex cursor-pointer justify-end overflow-hidden"
-          onClick={() => document.getElementById('calendar-comment-input')?.focus()}
+          ref={commentRef}
+          className="whitespace-nowrap text-xs"
+          style={{
+            color: comment ? theme.text : theme.textMuted,
+            transformOrigin: 'right center',
+            transform: `scaleX(${commentScale})`,
+          }}
         >
-          <div
-            ref={commentRef}
-            className="whitespace-nowrap text-xs"
-            style={{
-              color: theme.text,
-              transformOrigin: 'right center',
-              transform: `scaleX(${commentScale})`,
-            }}
-          >
-            {comment}
-          </div>
+          {comment || t('calendar.commentPlaceholder')}
         </div>
-      )}
+      </div>
     </div>
   )
 })
