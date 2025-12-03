@@ -1,7 +1,19 @@
 {
   "app": {
     "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
     "tagline": "Save time for hardworking solo owners"
+  },
+  "nav": {
+    "calendar": "Calendar",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "generate": "Generate",
+    "sizeLabel": "Size",
+    "trademark": "QR Code is a registered trademark of DENSO WAVE INCORPORATED"
   },
   "calendar": {
     "today": "Today",

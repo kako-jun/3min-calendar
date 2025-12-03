@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { useCalendarStore } from './lib/store'
 import { APP_THEMES } from './lib/types'
 import { Calendar } from './components/Calendar'
+import { QRPage } from './components/QRPage'
 
 function App() {
   const initialize = useCalendarStore((state) => state.initialize)
@@ -27,7 +29,11 @@ function App() {
 
   return (
     <div className="min-h-full pb-8" style={{ backgroundColor: appTheme.bg, color: appTheme.text }}>
-      <Calendar />
+      <Routes>
+        <Route path="/" element={<Navigate to="/calendar" replace />} />
+        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/qr" element={<QRPage />} />
+      </Routes>
     </div>
   )
 }

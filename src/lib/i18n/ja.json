@@ -1,7 +1,19 @@
 {
   "app": {
     "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
     "tagline": "がんばる個人経営者の時短に"
+  },
+  "nav": {
+    "calendar": "Calendar",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "generate": "生成",
+    "sizeLabel": "サイズ",
+    "trademark": "QRコードは株式会社デンソーウェーブの登録商標です"
   },
   "calendar": {
     "today": "今日",
