@@ -273,20 +273,23 @@ export function DayEditor() {
 
   // アニメーション方向を追跡（1: 下へ移動=次の日を選択, -1: 上へ移動=前の日を選択）
   const prevSelectedDateRef = useRef<string | null>(null)
-  const [direction, setDirection] = useState(0)
 
+  // direction計算をレンダリング中に同期的に行う
+  let direction = 0
+  if (
+    selectedDate &&
+    prevSelectedDateRef.current &&
+    selectedDate !== prevSelectedDateRef.current
+  ) {
+    const prev = new Date(prevSelectedDateRef.current).getTime()
+    const curr = new Date(selectedDate).getTime()
+    direction = curr > prev ? 1 : -1
+  }
+
+  // prevSelectedDateRefをレンダリング後に更新
   useEffect(() => {
-    if (
-      selectedDate &&
-      prevSelectedDateRef.current &&
-      selectedDate !== prevSelectedDateRef.current
-    ) {
-      const prev = new Date(prevSelectedDateRef.current).getTime()
-      const curr = new Date(selectedDate).getTime()
-      setDirection(curr > prev ? 1 : -1)
-    }
     prevSelectedDateRef.current = selectedDate
-  }, [selectedDate])
+  })
 
   const getEntryText = useCallback(
     (date: string) => {
@@ -379,7 +382,7 @@ export function DayEditor() {
     }
   })
 
-  // アニメーションバリアント
+  // アニメーションバリアント（オーバーシュートなし）
   const rowVariants = {
     initial: (dir: number) => ({
       y: dir * 20,
@@ -389,16 +392,18 @@ export function DayEditor() {
       y: 0,
       opacity: 1,
       transition: {
-        type: 'spring' as const,
-        stiffness: 500,
-        damping: 30,
+        type: 'tween' as const,
+        duration: 0.15,
+        ease: 'easeOut' as const,
       },
     },
     exit: (dir: number) => ({
       y: dir * -20,
       opacity: 0,
       transition: {
+        type: 'tween' as const,
         duration: 0.15,
+        ease: 'easeIn' as const,
       },
     }),
   }

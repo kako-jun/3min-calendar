@@ -206,9 +206,9 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
                     boxShadow: `inset 0 0 0 2px ${theme.accent}`,
                   }}
                   transition={{
-                    type: 'spring',
-                    stiffness: 500,
-                    damping: 30,
+                    type: 'tween',
+                    duration: 0.15,
+                    ease: 'easeOut',
                   }}
                 />
               )}

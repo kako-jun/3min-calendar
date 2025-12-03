@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
+    "@fortawesome/free-brands-svg-icons": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.1",
     "date-fns": "^4.1.0",
@@ -23,9 +24,11 @@
     "framer-motion": "^12.23.25",
     "html2canvas": "^1.4.1",
     "i18next": "^25.6.3",
+    "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^16.3.5",
+    "react-router-dom": "^7.10.0",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
