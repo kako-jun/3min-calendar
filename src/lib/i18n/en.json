@@ -88,5 +88,18 @@
   },
   "editor": {
     "selectDay": "Click a date on the calendar to edit"
+  },
+  "emoji": {
+    "title": "Add emoji",
+    "categories": {
+      "events": "Events",
+      "food": "Food",
+      "beauty": "Beauty",
+      "nature": "Nature",
+      "symbols": "Symbols",
+      "status": "Status",
+      "faces": "Faces",
+      "hands": "Hands"
+    }
   }
 }

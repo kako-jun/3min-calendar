@@ -88,5 +88,18 @@
   },
   "editor": {
     "selectDay": "カレンダーの日付をクリックして編集"
+  },
+  "emoji": {
+    "title": "絵文字を追加",
+    "categories": {
+      "events": "イベント",
+      "food": "飲食",
+      "beauty": "美容",
+      "nature": "自然",
+      "symbols": "記号",
+      "status": "状態",
+      "faces": "顔",
+      "hands": "手"
+    }
   }
 }
