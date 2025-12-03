@@ -12,7 +12,6 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
   const entries = useCalendarStore((state) => state.entries)
   const selectedDate = useCalendarStore((state) => state.selectedDate)
   const setSelectedDate = useCalendarStore((state) => state.setSelectedDate)
-  const getCalendarComment = useCalendarStore((state) => state.getCalendarComment)
 
   const days = getCalendarDays(view.year, view.month, settings.weekStartsOn)
   const weekdays = getWeekdayHeaders(settings.weekStartsOn)
@@ -21,8 +20,9 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
   // カレンダー画像用のテーマ
   const theme = THEMES[settings.calendarTheme]
 
-  // 月のコメント
-  const comment = getCalendarComment(view.year, view.month)
+  // 月のコメント（settingsから直接取得して再レンダリングを確実にする）
+  const commentKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
+  const comment = settings.calendarComments?.[commentKey] ?? ''
   const commentRef = useRef<HTMLDivElement>(null)
   const [commentScale, setCommentScale] = useState(1)
 
@@ -204,7 +204,10 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
 
       {/* コメント表示（右下） */}
       {comment && (
-        <div className="relative mt-1 flex justify-end overflow-hidden">
+        <div
+          className="relative mt-1 flex cursor-pointer justify-end overflow-hidden"
+          onClick={() => document.getElementById('calendar-comment-input')?.focus()}
+        >
           <div
             ref={commentRef}
             className="whitespace-nowrap text-xs"
