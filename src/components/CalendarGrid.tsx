@@ -19,7 +19,14 @@ function getTextFontSize(text: string): string {
 /** スタンプのフォントサイズ */
 const STAMP_FONT_SIZE = '10px'
 
-export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, ref) {
+interface CalendarGridProps {
+  comment?: string
+}
+
+export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(function CalendarGrid(
+  { comment: propComment },
+  ref
+) {
   const { t } = useTranslation()
   const view = useCalendarStore((state) => state.view)
   const settings = useCalendarStore((state) => state.settings)
@@ -41,9 +48,10 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
     return `${theme.textMuted}60`
   }, [theme.textMuted])
 
-  // 月のコメント（settingsから直接取得して再レンダリングを確実にする）
+  // 月のコメント（propsがあればpropsを使用、なければストアから取得）
   const commentKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
-  const comment = settings.calendarComments?.[commentKey] ?? ''
+  const storedComment = settings.calendarComments?.[commentKey] ?? ''
+  const comment = propComment !== undefined ? propComment : storedComment
   const commentRef = useRef<HTMLDivElement>(null)
   const [commentScale, setCommentScale] = useState(1)
 
@@ -248,9 +256,9 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
         })}
       </div>
 
-      {/* コメント表示（右下）- 常に表示してクリック可能に */}
+      {/* コメント表示（左下）- 常に表示してクリック可能に */}
       <div
-        className="relative mt-1 flex cursor-pointer justify-end overflow-hidden"
+        className="relative mt-1 flex cursor-pointer justify-start overflow-hidden"
         onClick={() => document.getElementById('calendar-comment-input')?.focus()}
         style={{ minHeight: '1.25rem' }}
       >
@@ -259,7 +267,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
           className="whitespace-nowrap text-xs"
           style={{
             color: comment ? theme.text : theme.textMuted,
-            transformOrigin: 'right center',
+            transformOrigin: 'left center',
             transform: `scaleX(${commentScale})`,
           }}
         >
