@@ -1,4 +1,4 @@
-import { forwardRef, useRef, useEffect, useState } from 'react'
+import { forwardRef, useRef, useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCalendarStore } from '../lib/store'
 import { getCalendarDays, getWeekdayHeaders, getYearMonthParams } from '../lib/calendar'
@@ -16,9 +16,16 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
   const days = getCalendarDays(view.year, view.month, settings.weekStartsOn)
   const weekdays = getWeekdayHeaders(settings.weekStartsOn)
   const yearMonthParams = getYearMonthParams(view.year, view.month)
+  const isLinedStyle = settings.gridStyle === 'lined'
 
   // カレンダー画像用のテーマ
   const theme = THEMES[settings.calendarTheme]
+
+  // 罫線モード用の罫線色（テーマに合わせて調整）
+  const lineColor = useMemo(() => {
+    // textMutedの色を少し透明にして罫線に使用
+    return `${theme.textMuted}60`
+  }, [theme.textMuted])
 
   // 月のコメント（settingsから直接取得して再レンダリングを確実にする）
   const commentKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
@@ -85,8 +92,17 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
       </div>
 
       {/* 曜日ヘッダー */}
-      <div className="relative mb-1 grid grid-cols-7 gap-1">
-        {weekdays.map((day) => (
+      <div
+        className={`relative grid grid-cols-7 ${isLinedStyle ? 'mb-0' : 'mb-1 gap-1'}`}
+        style={
+          isLinedStyle
+            ? {
+                borderBottom: `1px solid ${lineColor}`,
+              }
+            : undefined
+        }
+      >
+        {weekdays.map((day, index) => (
           <div
             key={day.dayOfWeek}
             className="py-1 text-center text-xs font-semibold"
@@ -97,6 +113,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
                   : day.dayOfWeek === 6
                     ? theme.saturday
                     : theme.textMuted,
+              ...(isLinedStyle && index < 6 ? { borderRight: `1px solid ${lineColor}` } : {}),
             }}
           >
             {t(day.labelKey)}
@@ -105,8 +122,18 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
       </div>
 
       {/* 日付グリッド（6行7列、正方形セル） */}
-      <div className="relative grid flex-1 grid-cols-7 grid-rows-6 gap-1">
-        {days.map((day) => {
+      <div
+        className={`relative grid flex-1 grid-cols-7 grid-rows-6 ${isLinedStyle ? 'gap-0' : 'gap-1'}`}
+        style={
+          isLinedStyle
+            ? {
+                border: `1px solid ${lineColor}`,
+                borderTop: 'none',
+              }
+            : undefined
+        }
+      >
+        {days.map((day, index) => {
           const dayOfWeek = day.date.getDay()
           const isSunday = dayOfWeek === 0
           const isSaturday = dayOfWeek === 6
@@ -125,12 +152,25 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
 
           const isSelected = selectedDate === day.dateString
 
+          // 罫線モード用のセルスタイル
+          const col = index % 7
+          const row = Math.floor(index / 7)
+          const linedCellStyle = isLinedStyle
+            ? {
+                borderRight: col < 6 ? `1px solid ${lineColor}` : 'none',
+                borderBottom: row < 5 ? `1px solid ${lineColor}` : 'none',
+                backgroundColor: day.isCurrentMonth ? 'transparent' : `${theme.bg}40`,
+              }
+            : {
+                backgroundColor: day.isCurrentMonth ? theme.bg : `${theme.bg}80`,
+              }
+
           return (
             <div
               key={day.dateString}
-              className={`aspect-square rounded p-1 ${isSelected ? 'ring-2' : ''} ${day.isCurrentMonth ? 'cursor-pointer' : ''}`}
+              className={`aspect-square p-1 ${isLinedStyle ? '' : 'rounded'} ${isSelected ? 'ring-2 ring-inset' : ''} ${day.isCurrentMonth ? 'cursor-pointer' : ''} ${isLinedStyle && day.isCurrentMonth ? 'transition-colors hover:bg-black/5' : ''}`}
               style={{
-                backgroundColor: day.isCurrentMonth ? theme.bg : `${theme.bg}80`,
+                ...linedCellStyle,
                 // @ts-expect-error ringColor is a valid Tailwind CSS-in-JS property
                 '--tw-ring-color': isSelected ? theme.accent : undefined,
               }}

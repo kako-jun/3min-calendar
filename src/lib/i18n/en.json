@@ -78,6 +78,10 @@
     "ocean": "Ocean",
     "sunset": "Sunset"
   },
+  "gridStyles": {
+    "rounded": "Rounded",
+    "lined": "Grid"
+  },
   "languages": {
     "ja": "日本語",
     "en": "English"

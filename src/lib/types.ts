@@ -12,6 +12,9 @@ export type AppTheme = 'light' | 'dark'
 /** カレンダーテーマ定義 */
 export type CalendarThemeId = 'dark' | 'light' | 'cafe' | 'nature' | 'ocean' | 'sunset'
 
+/** グリッド表示スタイル */
+export type GridStyle = 'rounded' | 'lined'
+
 /** @deprecated ThemeIdはCalendarThemeIdに置き換え予定 */
 export type ThemeId = CalendarThemeId
 
@@ -102,6 +105,7 @@ export interface Settings {
   weekStartsOn: 0 | 1 // 0: 日曜, 1: 月曜
   appTheme: AppTheme // アプリ全体のテーマ（ライト/ダーク）
   calendarTheme: CalendarThemeId // カレンダー画像のテーマ
+  gridStyle: GridStyle // グリッド表示スタイル（角丸/罫線）
   language: 'ja' | 'en'
   country: CountryCode
   shopName: string
@@ -252,6 +256,7 @@ export const defaultSettings: Settings = {
   weekStartsOn: 0,
   appTheme: 'dark',
   calendarTheme: 'dark',
+  gridStyle: 'rounded',
   language: 'ja',
   country: 'JP',
   shopName: '',

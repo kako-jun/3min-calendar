@@ -78,6 +78,10 @@
     "ocean": "オーシャン",
     "sunset": "サンセット"
   },
+  "gridStyles": {
+    "rounded": "角丸",
+    "lined": "罫線"
+  },
   "languages": {
     "ja": "日本語",
     "en": "English"
