@@ -5,7 +5,9 @@ import { faCopy, faClipboard } from '@fortawesome/free-solid-svg-icons'
 import { useCalendarStore } from '../lib/store'
 import { format, addDays } from 'date-fns'
 import { QuickInputButtons } from './QuickInputButtons'
-import { APP_THEMES } from '../lib/types'
+import { EmojiPicker } from './EmojiPicker'
+import { APP_THEMES, THEMES } from '../lib/types'
+import { isHoliday } from '../lib/holidays'
 
 /** 30分刻みの時刻オプションを生成 */
 const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
@@ -65,6 +67,7 @@ interface DayRowProps {
   onCopy: (text: string) => void
   onPaste: (date: string) => void
   onQuickInput: (date: string, value: string) => void
+  onEmojiSelect: (date: string, emoji: string) => void
   onSelect: (date: string) => void
 }
 
@@ -76,16 +79,19 @@ function DayRow({
   onCopy,
   onPaste,
   onQuickInput,
+  onEmojiSelect,
   onSelect,
 }: DayRowProps) {
   const { t } = useTranslation()
   const settings = useCalendarStore((state) => state.settings)
   const appTheme = APP_THEMES[settings.appTheme]
+  const calendarTheme = THEMES[settings.calendarTheme]
   const dayOfWeek = date.getDay()
   const isSunday = dayOfWeek === 0
   const isSaturday = dayOfWeek === 6
   const dateString = format(date, 'yyyy-MM-dd')
   const dayNumber = date.getDate()
+  const holiday = settings.showHolidays && isHoliday(date)
 
   // 曜日名（言語対応）
   const weekdayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
@@ -121,7 +127,12 @@ function DayRow({
         <div
           className="w-14 shrink-0 text-center text-sm font-medium"
           style={{
-            color: isSunday ? appTheme.accent : isSaturday ? appTheme.accent : appTheme.text,
+            color:
+              isSunday || holiday
+                ? calendarTheme.sunday
+                : isSaturday
+                  ? calendarTheme.saturday
+                  : appTheme.text,
           }}
         >
           <span className="text-lg">{dayNumber}</span>
@@ -233,6 +244,15 @@ function DayRow({
             ))}
           </select>
         </div>
+
+        {/* 絵文字ピッカー */}
+        <EmojiPicker
+          appTheme={settings.appTheme}
+          onSelect={(emoji) => {
+            handleFocus()
+            onEmojiSelect(dateString, emoji)
+          }}
+        />
       </div>
     </div>
   )
@@ -279,10 +299,36 @@ export function DayEditor() {
   )
 
   const handleQuickInput = useCallback(
-    (date: string, value: string) => {
-      updateEntry(date, value)
+    (date: string, newStamp: string) => {
+      const currentText = getEntryText(date)
+
+      // 現在のテキストにスタンプがあるか確認
+      const stampMatch = currentText.match(/^\[([^\]]+)\]/)
+
+      if (stampMatch) {
+        const currentStamp = stampMatch[0]
+        if (currentStamp === newStamp) {
+          // 同じスタンプなら除去（トグル）
+          updateEntry(date, currentText.replace(currentStamp, '').trim())
+        } else {
+          // 違うスタンプなら置換
+          updateEntry(date, currentText.replace(currentStamp, newStamp))
+        }
+      } else {
+        // スタンプがない場合は先頭に追加
+        updateEntry(date, currentText ? `${newStamp}${currentText}` : newStamp)
+      }
     },
-    [updateEntry]
+    [getEntryText, updateEntry]
+  )
+
+  const handleEmojiSelect = useCallback(
+    (date: string, emoji: string) => {
+      const currentText = getEntryText(date)
+      // 絵文字は排他ではなく、末尾に追加
+      updateEntry(date, currentText + emoji)
+    },
+    [getEntryText, updateEntry]
   )
 
   // 選択された日がない、または現在表示中の月と異なる場合
@@ -326,6 +372,7 @@ export function DayEditor() {
           onCopy={handleCopy}
           onPaste={handlePaste}
           onQuickInput={handleQuickInput}
+          onEmojiSelect={handleEmojiSelect}
           onSelect={setSelectedDate}
         />
       ))}

@@ -10,12 +10,14 @@ import {
   saveSettings,
   saveTemplate,
   deleteTemplate,
+  StorageError,
 } from './storage'
 import { initHolidays } from './holidays'
 
 interface CalendarActions {
   // 初期化
   initialize: () => Promise<void>
+  initError: string | null
 
   // 表示制御
   setView: (year: number, month: number) => void
@@ -61,23 +63,59 @@ export const useCalendarStore = create<
   settings: defaultSettings,
   initialized: false,
   selectedDate: null,
+  initError: null,
 
   // 初期化
   initialize: async () => {
     if (get().initialized) return
-    const [entries, settings, templates] = await Promise.all([
-      loadEntries(),
-      loadSettings(),
-      loadTemplates(),
-    ])
 
-    // 言語を設定
-    i18n.changeLanguage(settings.language)
+    try {
+      const [entries, settings, templates] = await Promise.all([
+        loadEntries(),
+        loadSettings(),
+        loadTemplates(),
+      ])
 
-    // 祝日ライブラリを初期化
-    initHolidays(settings.country)
+      // データの整合性チェック - 有効なデータのみ使用
+      const validEntries = Array.isArray(entries) ? entries : []
+      const validTemplates = Array.isArray(templates) ? templates : []
+      const validSettings = settings && typeof settings === 'object' ? settings : defaultSettings
 
-    set({ entries, settings, templates, initialized: true })
+      // 言語を設定
+      i18n.changeLanguage(validSettings.language)
+
+      // 祝日ライブラリを初期化
+      initHolidays(validSettings.country)
+
+      set({
+        entries: validEntries,
+        settings: validSettings,
+        templates: validTemplates,
+        initialized: true,
+        initError: null,
+      })
+
+      console.log(
+        `Storage loaded: ${validEntries.length} entries, ${validTemplates.length} templates`
+      )
+    } catch (error) {
+      console.error('Failed to initialize storage:', error)
+
+      // StorageErrorの場合はユーザーに通知
+      const errorMessage =
+        error instanceof StorageError
+          ? error.message
+          : 'データの読み込みに失敗しました。ブラウザを再起動してください。'
+
+      // エラー状態を設定（空データで上書きせず、エラーを表示）
+      set({
+        initError: errorMessage,
+        initialized: true, // 初期化済みフラグは立てるが、データは空のまま
+      })
+
+      // ユーザーに警告
+      alert(errorMessage)
+    }
   },
 
   // 表示制御

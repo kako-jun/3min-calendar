@@ -17,7 +17,7 @@ function App() {
   if (!initialized) {
     return (
       <div
-        className="flex min-h-screen items-center justify-center"
+        className="flex h-full items-center justify-center"
         style={{ backgroundColor: appTheme.bg }}
       >
         <div style={{ color: appTheme.text }}>Loading...</div>
@@ -26,7 +26,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: appTheme.bg, color: appTheme.text }}>
+    <div className="min-h-full pb-4" style={{ backgroundColor: appTheme.bg, color: appTheme.text }}>
       <Calendar />
     </div>
   )
