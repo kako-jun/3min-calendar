@@ -101,6 +101,17 @@ function DayRow({
   // テキストから現在の時刻を解析
   const currentTime = useMemo(() => parseTimeFromText(text), [text])
 
+  // IME入力中フラグ（Android日本語入力対応）
+  const isComposingRef = useRef(false)
+  const [localText, setLocalText] = useState(text)
+
+  // 親からのtext変更を反映（IME入力中でなければ）
+  useEffect(() => {
+    if (!isComposingRef.current) {
+      setLocalText(text)
+    }
+  }, [text])
+
   // 入力欄やボタンにフォーカス/クリックしたらこの日を選択
   const handleFocus = () => onSelect(dateString)
 
@@ -144,8 +155,23 @@ function DayRow({
         <div className="relative min-w-0 flex-1">
           <input
             type="text"
-            value={text}
-            onChange={(e) => onTextChange(dateString, e.target.value)}
+            value={localText}
+            onChange={(e) => {
+              const newValue = e.target.value
+              setLocalText(newValue)
+              // IME入力中でなければ即座に親に反映
+              if (!isComposingRef.current) {
+                onTextChange(dateString, newValue)
+              }
+            }}
+            onCompositionStart={() => {
+              isComposingRef.current = true
+            }}
+            onCompositionEnd={(e) => {
+              isComposingRef.current = false
+              // IME確定時に親に反映
+              onTextChange(dateString, e.currentTarget.value)
+            }}
             onFocus={handleFocus}
             maxLength={10}
             className="w-full rounded border py-1 pl-2 pr-7 text-sm focus:outline-none"
@@ -155,10 +181,11 @@ function DayRow({
               color: appTheme.text,
             }}
           />
-          {text && (
+          {localText && (
             <button
               onClick={() => {
                 handleFocus()
+                setLocalText('')
                 onTextChange(dateString, '')
               }}
               className="absolute right-1 top-1/2 -translate-y-1/2 rounded px-1"

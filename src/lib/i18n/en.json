@@ -13,6 +13,21 @@
     "urlPlaceholder": "https://example.com",
     "generate": "Generate",
     "sizeLabel": "Size",
+    "errorLevel": "Error Level",
+    "fgColor": "Code Color",
+    "bgColor": "Background",
+    "invert": "Invert colors",
+    "transparent": "Transparent background",
+    "style": "Style",
+    "styles": {
+      "squares": "Squares",
+      "dots": "Dots",
+      "fluid": "Fluid"
+    },
+    "eyeRadius": "Eye Radius",
+    "logo": "Center Logo",
+    "selectLogo": "Select image",
+    "removeLogo": "Remove logo",
     "safety": "Your URL is never sent to any server. Generated locally in your browser with no tracking or redirect URLs.",
     "openSource": "Source code available on GitHub",
     "trademark": "QR Code is a registered trademark of DENSO WAVE INCORPORATED"
