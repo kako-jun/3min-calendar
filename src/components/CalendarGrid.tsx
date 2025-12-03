@@ -5,25 +5,28 @@ import { getCalendarDays, getWeekdayHeaders, getYearMonthParams } from '../lib/c
 import { isHoliday, getHolidayName } from '../lib/holidays'
 import { THEMES, parseStampedText } from '../lib/types'
 
-/** テキスト長に応じたフォントサイズを返す（セル内で収まるように自動縮小） */
+/** テキスト長に応じたフォントサイズを返す（セル内で収まるように自動縮小、最大サイズを大きく） */
 function getTextFontSize(text: string): string {
   const len = text.length
-  if (len <= 4) return '9px'
-  if (len <= 6) return '8px'
-  if (len <= 9) return '7px'
-  if (len <= 12) return '6px'
-  return '5px'
+  if (len <= 2) return '14px'
+  if (len <= 4) return '12px'
+  if (len <= 6) return '10px'
+  if (len <= 9) return '9px'
+  if (len <= 12) return '8px'
+  return '7px'
 }
 
-/** テキスト長に応じたスケールを返す（非常に長いテキスト用） */
-function getTextScale(text: string): number {
-  const len = text.length
-  if (len <= 12) return 1
-  if (len <= 16) return 0.9
-  return 0.8
+/** スタンプのフォントサイズ */
+const STAMP_FONT_SIZE = '10px'
+
+interface CalendarGridProps {
+  comment?: string
 }
 
-export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, ref) {
+export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(function CalendarGrid(
+  { comment: propComment },
+  ref
+) {
   const { t } = useTranslation()
   const view = useCalendarStore((state) => state.view)
   const settings = useCalendarStore((state) => state.settings)
@@ -45,9 +48,10 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
     return `${theme.textMuted}60`
   }, [theme.textMuted])
 
-  // 月のコメント（settingsから直接取得して再レンダリングを確実にする）
+  // 月のコメント（propsがあればpropsを使用、なければストアから取得）
   const commentKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
-  const comment = settings.calendarComments?.[commentKey] ?? ''
+  const storedComment = settings.calendarComments?.[commentKey] ?? ''
+  const comment = propComment !== undefined ? propComment : storedComment
   const commentRef = useRef<HTMLDivElement>(null)
   const [commentScale, setCommentScale] = useState(1)
 
@@ -115,6 +119,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
         style={
           isLinedStyle
             ? {
+                border: `1px solid ${lineColor}`,
                 borderBottom: `1px solid ${lineColor}`,
               }
             : undefined
@@ -204,71 +209,57 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
               {text &&
                 (() => {
                   const segments = parseStampedText(text, t)
-                  const hasStamps = segments.some((s) => s.type === 'stamp')
+                  const stamps = segments.filter((s) => s.type === 'stamp')
+                  const texts = segments.filter((s) => s.type === 'text')
+                  const textContent = texts.map((s) => s.text).join('')
 
-                  if (hasStamps) {
-                    // スタンプを含む場合：スタンプは固定サイズ、テキストは通常表示
-                    return (
-                      <div className="mt-0.5 flex flex-wrap items-center gap-0.5">
-                        {segments.map((segment, i) =>
-                          segment.type === 'stamp' ? (
+                  return (
+                    <div className="mt-0.5 flex flex-col overflow-hidden">
+                      {/* スタンプ行（スタンプがあれば表示） */}
+                      {stamps.length > 0 && (
+                        <div className="flex flex-wrap gap-0.5">
+                          {stamps.map((stamp, i) => (
                             <span
                               key={i}
-                              className="inline-block shrink-0 rounded px-1 text-[9px] font-bold"
+                              className="inline-block shrink-0 rounded px-1 font-bold"
                               style={{
-                                backgroundColor: segment.style.bgColor,
-                                color: segment.style.textColor,
+                                backgroundColor: stamp.style.bgColor,
+                                color: stamp.style.textColor,
+                                fontSize: STAMP_FONT_SIZE,
                                 lineHeight: '1.4',
                               }}
                             >
-                              {segment.text}
+                              {stamp.text}
                             </span>
-                          ) : (
-                            <span
-                              key={i}
-                              className="font-bold"
-                              style={{
-                                color: theme.text,
-                                lineHeight: '1.2',
-                                fontSize: getTextFontSize(segment.text),
-                              }}
-                            >
-                              {segment.text}
-                            </span>
-                          )
-                        )}
-                      </div>
-                    )
-                  } else {
-                    // スタンプなし：通常テキスト（長さに応じて自動縮小）
-                    const fontSize = getTextFontSize(text)
-                    const scale = getTextScale(text)
-                    return (
-                      <div
-                        className="mt-0.5 overflow-hidden font-bold"
-                        style={{
-                          color: theme.text,
-                          wordBreak: 'break-all',
-                          lineHeight: '1.2',
-                          fontSize,
-                          transform: scale < 1 ? `scale(${scale})` : undefined,
-                          transformOrigin: 'top left',
-                        }}
-                        title={text}
-                      >
-                        {text}
-                      </div>
-                    )
-                  }
+                          ))}
+                        </div>
+                      )}
+                      {/* テキスト行（テキストがあれば表示） */}
+                      {textContent && (
+                        <div
+                          className="font-bold"
+                          style={{
+                            color: theme.text,
+                            wordBreak: 'break-all',
+                            lineHeight: '1.2',
+                            fontSize: getTextFontSize(textContent),
+                          }}
+                          title={textContent}
+                        >
+                          {textContent}
+                        </div>
+                      )}
+                    </div>
+                  )
                 })()}
             </div>
           )
         })}
       </div>
 
-      {/* コメント表示（右下）- 常に表示してクリック可能に */}
+      {/* コメント表示（左下）- 常に表示してクリック可能に */}
       <div
-        className="relative mt-1 flex cursor-pointer justify-end overflow-hidden"
+        className="relative mt-1 flex cursor-pointer justify-start overflow-hidden"
         onClick={() => document.getElementById('calendar-comment-input')?.focus()}
         style={{ minHeight: '1.25rem' }}
       >
@@ -277,7 +268,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
           className="whitespace-nowrap text-xs"
           style={{
             color: comment ? theme.text : theme.textMuted,
-            transformOrigin: 'right center',
+            transformOrigin: 'left center',
             transform: `scaleX(${commentScale})`,
           }}
         >

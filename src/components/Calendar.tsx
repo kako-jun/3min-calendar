@@ -61,7 +61,7 @@ export function Calendar() {
       <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-start">
         {/* カレンダーグリッド + コントロール（テーマ＆アクション） */}
         <div className="flex flex-col items-center gap-2 lg:w-1/2">
-          <CalendarGrid ref={calendarRef} />
+          <CalendarGrid ref={calendarRef} comment={comment} />
           <div className="flex items-center gap-3">
             <CalendarThemeSelector />
             <button
