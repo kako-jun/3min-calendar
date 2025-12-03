@@ -40,6 +40,11 @@
     "clear": "Clear",
     "settings": "Settings"
   },
+  "time": {
+    "from": "From",
+    "to": "To",
+    "none": "-"
+  },
   "quickInput": {
     "closed": "Closed",
     "available": "◯",
