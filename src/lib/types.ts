@@ -109,6 +109,7 @@ export interface Settings {
   showHolidays: boolean
   backgroundImage: string | null // Base64エンコードされた背景画像
   backgroundOpacity: number // 背景画像の透明度 (0-1)
+  calendarComments: Record<string, string> // 月ごとのコメント（キー: "YYYY-MM"）
 }
 
 /** @deprecated 後方互換用 */
@@ -258,6 +259,7 @@ export const defaultSettings: Settings = {
   showHolidays: true,
   backgroundImage: null,
   backgroundOpacity: 0.15,
+  calendarComments: {},
 }
 
 /** アプリテーマの色定義 */

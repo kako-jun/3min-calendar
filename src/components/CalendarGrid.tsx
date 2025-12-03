@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useCalendarStore } from '../lib/store'
 import { getCalendarDays, getWeekdayHeaders, getYearMonthParams } from '../lib/calendar'
@@ -12,6 +12,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
   const entries = useCalendarStore((state) => state.entries)
   const selectedDate = useCalendarStore((state) => state.selectedDate)
   const setSelectedDate = useCalendarStore((state) => state.setSelectedDate)
+  const getCalendarComment = useCalendarStore((state) => state.getCalendarComment)
 
   const days = getCalendarDays(view.year, view.month, settings.weekStartsOn)
   const weekdays = getWeekdayHeaders(settings.weekStartsOn)
@@ -19,6 +20,28 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
 
   // カレンダー画像用のテーマ
   const theme = THEMES[settings.calendarTheme]
+
+  // 月のコメント
+  const comment = getCalendarComment(view.year, view.month)
+  const commentRef = useRef<HTMLDivElement>(null)
+  const [commentScale, setCommentScale] = useState(1)
+
+  // コメントがオーバーフローする場合は縮小
+  useEffect(() => {
+    if (!commentRef.current || !comment) {
+      setCommentScale(1)
+      return
+    }
+    const container = commentRef.current.parentElement
+    if (!container) return
+    const containerWidth = container.clientWidth
+    const textWidth = commentRef.current.scrollWidth
+    if (textWidth > containerWidth) {
+      setCommentScale(containerWidth / textWidth)
+    } else {
+      setCommentScale(1)
+    }
+  }, [comment])
 
   const getEntryText = (date: string) => {
     const entry = entries.find((e) => e.date === date)
@@ -178,6 +201,23 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
           )
         })}
       </div>
+
+      {/* コメント表示（右下） */}
+      {comment && (
+        <div className="relative mt-1 flex justify-end overflow-hidden">
+          <div
+            ref={commentRef}
+            className="whitespace-nowrap text-xs"
+            style={{
+              color: theme.text,
+              transformOrigin: 'right center',
+              transform: `scaleX(${commentScale})`,
+            }}
+          >
+            {comment}
+          </div>
+        </div>
+      )}
     </div>
   )
 })

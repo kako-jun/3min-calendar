@@ -5,7 +5,8 @@
   },
   "calendar": {
     "today": "Today",
-    "yearMonth": "{{month}}/{{year}}"
+    "yearMonth": "{{month}}/{{year}}",
+    "commentPlaceholder": "Comment (shown at bottom right of calendar)"
   },
   "weekdays": {
     "sun": "Sun",

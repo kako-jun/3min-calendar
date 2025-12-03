@@ -40,6 +40,10 @@ interface CalendarActions {
 
   // 設定
   updateSettings: (settings: Partial<Settings>) => Promise<void>
+
+  // カレンダーコメント
+  getCalendarComment: (year: number, month: number) => string
+  updateCalendarComment: (year: number, month: number, comment: string) => Promise<void>
 }
 
 const now = new Date()
@@ -182,6 +186,23 @@ export const useCalendarStore = create<
     }
 
     set({ settings })
+  },
+
+  // カレンダーコメント
+  getCalendarComment: (year, month) => {
+    const key = `${year}-${String(month + 1).padStart(2, '0')}`
+    return get().settings.calendarComments[key] ?? ''
+  },
+
+  updateCalendarComment: async (year, month, comment) => {
+    const key = `${year}-${String(month + 1).padStart(2, '0')}`
+    const calendarComments = { ...get().settings.calendarComments }
+    if (comment.trim()) {
+      calendarComments[key] = comment
+    } else {
+      delete calendarComments[key]
+    }
+    await get().updateSettings({ calendarComments })
   },
 
   // 先月からコピー（曜日パターンを推測して適用）

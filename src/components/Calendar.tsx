@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear, faCopy } from '@fortawesome/free-solid-svg-icons'
@@ -18,10 +18,18 @@ export function Calendar() {
   const view = useCalendarStore((state) => state.view)
   const settings = useCalendarStore((state) => state.settings)
   const copyFromPreviousMonth = useCalendarStore((state) => state.copyFromPreviousMonth)
+  const getCalendarComment = useCalendarStore((state) => state.getCalendarComment)
+  const updateCalendarComment = useCalendarStore((state) => state.updateCalendarComment)
   const appTheme = APP_THEMES[settings.appTheme]
   const calendarRef = useRef<HTMLDivElement>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [isCopying, setIsCopying] = useState(false)
+  const [comment, setComment] = useState('')
+
+  // 月が変わったらコメントを読み込む
+  useEffect(() => {
+    setComment(getCalendarComment(view.year, view.month))
+  }, [view.year, view.month, getCalendarComment])
 
   const handleCopyFromPrev = async () => {
     if (isCopying) return
@@ -71,6 +79,23 @@ export function Calendar() {
         {/* 日ごとの編集領域 */}
         <div className="lg:w-1/2">
           <DayEditor />
+          {/* コメント入力欄 */}
+          <div className="mt-2">
+            <input
+              id="calendar-comment-input"
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              onBlur={() => updateCalendarComment(view.year, view.month, comment)}
+              placeholder={t('calendar.commentPlaceholder')}
+              className="w-full rounded border px-2 py-1 text-sm focus:outline-none"
+              style={{
+                backgroundColor: appTheme.surface,
+                borderColor: appTheme.textMuted,
+                color: appTheme.text,
+              }}
+            />
+          </div>
         </div>
       </div>
 

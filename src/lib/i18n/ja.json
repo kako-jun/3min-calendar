@@ -5,7 +5,8 @@
   },
   "calendar": {
     "today": "今日",
-    "yearMonth": "{{year}}年{{month}}月"
+    "yearMonth": "{{year}}年{{month}}月",
+    "commentPlaceholder": "コメント（カレンダー右下に表示）"
   },
   "weekdays": {
     "sun": "日",
