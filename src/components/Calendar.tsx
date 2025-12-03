@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear, faRotateLeft } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faReply } from '@fortawesome/free-solid-svg-icons'
 import { useCalendarStore } from '../lib/store'
 import { getYearMonthParams } from '../lib/calendar'
 import { APP_THEMES } from '../lib/types'
@@ -70,7 +70,7 @@ export function Calendar() {
               className="flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-opacity hover:opacity-80 disabled:opacity-50"
               style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
             >
-              <FontAwesomeIcon icon={faRotateLeft} />
+              <FontAwesomeIcon icon={faReply} />
               <span>{t('actions.copyFromPrevShort')}</span>
             </button>
             <ActionButtons calendarRef={calendarRef} filename={filename} />
