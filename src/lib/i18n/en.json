@@ -40,7 +40,8 @@
     "paste": "Paste",
     "clear": "Clear",
     "settings": "Settings",
-    "copyFromPrev": "Copy from last month"
+    "copyFromPrev": "Copy from last month",
+    "copyFromPrevShort": "Last month"
   },
   "time": {
     "from": "From",
@@ -80,5 +81,8 @@
   "languages": {
     "ja": "日本語",
     "en": "English"
+  },
+  "editor": {
+    "selectDay": "Click a date on the calendar to edit"
   }
 }

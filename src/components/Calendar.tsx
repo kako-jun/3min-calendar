@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faRotateLeft } from '@fortawesome/free-solid-svg-icons'
 import { useCalendarStore } from '../lib/store'
 import { getYearMonthParams } from '../lib/calendar'
 import { APP_THEMES } from '../lib/types'
@@ -50,8 +50,8 @@ export function Calendar() {
         <MonthSelector title={title} />
         <button
           onClick={() => setSettingsOpen(true)}
-          className="rounded px-2 py-0.5 text-xs transition-colors hover:opacity-80"
-          style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
+          className="p-1 text-base transition-opacity hover:opacity-60"
+          style={{ color: appTheme.textMuted }}
         >
           <FontAwesomeIcon icon={faGear} />
         </button>
@@ -67,11 +67,11 @@ export function Calendar() {
             <button
               onClick={handleCopyFromPrev}
               disabled={isCopying}
-              className="flex h-8 w-8 items-center justify-center rounded-full transition-opacity hover:opacity-80 disabled:opacity-50"
+              className="flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-opacity hover:opacity-80 disabled:opacity-50"
               style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
-              title={t('actions.copyFromPrev')}
             >
-              <FontAwesomeIcon icon={faCopy} />
+              <FontAwesomeIcon icon={faRotateLeft} />
+              <span>{t('actions.copyFromPrevShort')}</span>
             </button>
             <ActionButtons calendarRef={calendarRef} filename={filename} />
           </div>

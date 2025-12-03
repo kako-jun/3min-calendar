@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faClipboard } from '@fortawesome/free-solid-svg-icons'
 import { useCalendarStore } from '../lib/store'
-import { format, getDaysInMonth } from 'date-fns'
+import { format } from 'date-fns'
 import { QuickInputButtons } from './QuickInputButtons'
 import { APP_THEMES } from '../lib/types'
 
@@ -224,14 +224,15 @@ function DayRow({
 }
 
 export function DayEditor() {
+  const { t } = useTranslation()
   const view = useCalendarStore((state) => state.view)
   const entries = useCalendarStore((state) => state.entries)
   const updateEntry = useCalendarStore((state) => state.updateEntry)
   const selectedDate = useCalendarStore((state) => state.selectedDate)
   const setSelectedDate = useCalendarStore((state) => state.setSelectedDate)
+  const settings = useCalendarStore((state) => state.settings)
+  const appTheme = APP_THEMES[settings.appTheme]
   const [clipboard, setClipboard] = useState('')
-
-  const daysInMonth = getDaysInMonth(new Date(view.year, view.month))
 
   const getEntryText = useCallback(
     (date: string) => {
@@ -269,31 +270,34 @@ export function DayEditor() {
     [updateEntry]
   )
 
-  const days = Array.from({ length: daysInMonth }, (_, i) => {
-    const date = new Date(view.year, view.month, i + 1)
-    const dateString = format(date, 'yyyy-MM-dd')
-    return {
-      date,
-      dateString,
-      text: getEntryText(dateString),
-    }
-  })
+  // 選択された日がない、または現在表示中の月と異なる場合
+  if (
+    !selectedDate ||
+    !selectedDate.startsWith(`${view.year}-${String(view.month + 1).padStart(2, '0')}`)
+  ) {
+    return (
+      <div
+        className="rounded p-4 text-center text-sm"
+        style={{ backgroundColor: appTheme.surface, color: appTheme.textMuted }}
+      >
+        {t('editor.selectDay')}
+      </div>
+    )
+  }
+
+  const date = new Date(selectedDate)
+  const text = getEntryText(selectedDate)
 
   return (
-    <div className="space-y-1">
-      {days.map(({ date, dateString, text }) => (
-        <DayRow
-          key={dateString}
-          date={date}
-          text={text}
-          isSelected={selectedDate === dateString}
-          onTextChange={updateEntry}
-          onCopy={handleCopy}
-          onPaste={handlePaste}
-          onQuickInput={handleQuickInput}
-          onSelect={setSelectedDate}
-        />
-      ))}
-    </div>
+    <DayRow
+      date={date}
+      text={text}
+      isSelected={true}
+      onTextChange={updateEntry}
+      onCopy={handleCopy}
+      onPaste={handlePaste}
+      onQuickInput={handleQuickInput}
+      onSelect={setSelectedDate}
+    />
   )
 }

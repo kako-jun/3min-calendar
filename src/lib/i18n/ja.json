@@ -40,7 +40,8 @@
     "paste": "ペースト",
     "clear": "クリア",
     "settings": "設定",
-    "copyFromPrev": "先月からコピー"
+    "copyFromPrev": "先月からコピー",
+    "copyFromPrevShort": "先月から"
   },
   "time": {
     "from": "開始",
@@ -80,5 +81,8 @@
   "languages": {
     "ja": "日本語",
     "en": "English"
+  },
+  "editor": {
+    "selectDay": "カレンダーの日付をクリックして編集"
   }
 }
