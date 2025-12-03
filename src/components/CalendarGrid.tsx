@@ -5,6 +5,24 @@ import { getCalendarDays, getWeekdayHeaders, getYearMonthParams } from '../lib/c
 import { isHoliday, getHolidayName } from '../lib/holidays'
 import { THEMES, parseStampedText } from '../lib/types'
 
+/** テキスト長に応じたフォントサイズを返す（セル内で収まるように自動縮小） */
+function getTextFontSize(text: string): string {
+  const len = text.length
+  if (len <= 4) return '9px'
+  if (len <= 6) return '8px'
+  if (len <= 9) return '7px'
+  if (len <= 12) return '6px'
+  return '5px'
+}
+
+/** テキスト長に応じたスケールを返す（非常に長いテキスト用） */
+function getTextScale(text: string): number {
+  const len = text.length
+  if (len <= 12) return 1
+  if (len <= 16) return 0.9
+  return 0.8
+}
+
 export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, ref) {
   const { t } = useTranslation()
   const view = useCalendarStore((state) => state.view)
@@ -168,7 +186,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
           return (
             <div
               key={day.dateString}
-              className={`aspect-square p-1 ${isLinedStyle ? '' : 'rounded'} ${isSelected ? 'ring-2 ring-inset' : ''} ${day.isCurrentMonth ? 'cursor-pointer' : ''} ${isLinedStyle && day.isCurrentMonth ? 'transition-colors hover:bg-black/5' : ''}`}
+              className={`aspect-square p-0.5 ${isLinedStyle ? '' : 'rounded'} ${isSelected ? 'ring-2 ring-inset' : ''} ${day.isCurrentMonth ? 'cursor-pointer' : ''} ${isLinedStyle && day.isCurrentMonth ? 'transition-colors hover:bg-black/5' : ''}`}
               style={{
                 ...linedCellStyle,
                 // @ts-expect-error ringColor is a valid Tailwind CSS-in-JS property
@@ -208,31 +226,37 @@ export const CalendarGrid = forwardRef<HTMLDivElement>(function CalendarGrid(_, 
                           ) : (
                             <span
                               key={i}
-                              className="text-[8px] font-bold"
+                              className="font-bold"
                               style={{
                                 color: theme.text,
                                 lineHeight: '1.2',
+                                fontSize: getTextFontSize(segment.text),
                               }}
                             >
-                              {segment.text.length > 6 ? segment.text.slice(0, 6) : segment.text}
+                              {segment.text}
                             </span>
                           )
                         )}
                       </div>
                     )
                   } else {
-                    // スタンプなし：通常テキスト
+                    // スタンプなし：通常テキスト（長さに応じて自動縮小）
+                    const fontSize = getTextFontSize(text)
+                    const scale = getTextScale(text)
                     return (
                       <div
-                        className="mt-0.5 text-[8px] font-bold"
+                        className="mt-0.5 overflow-hidden font-bold"
                         style={{
                           color: theme.text,
                           wordBreak: 'break-all',
                           lineHeight: '1.2',
+                          fontSize,
+                          transform: scale < 1 ? `scale(${scale})` : undefined,
+                          transformOrigin: 'top left',
                         }}
                         title={text}
                       >
-                        {text.length > 8 ? text.slice(0, 8) : text}
+                        {text}
                       </div>
                     )
                   }

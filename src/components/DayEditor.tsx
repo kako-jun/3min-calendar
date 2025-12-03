@@ -108,12 +108,13 @@ function DayRow({
 
   return (
     <div
-      className={`rounded p-2 ${isSelected ? 'ring-2' : ''}`}
+      className={`cursor-pointer rounded p-2 ${isSelected ? 'ring-2' : ''}`}
       style={{
         backgroundColor: appTheme.surface,
         // @ts-expect-error ringColor is a valid Tailwind CSS-in-JS property
         '--tw-ring-color': isSelected ? appTheme.accent : undefined,
       }}
+      onClick={handleFocus}
     >
       <div className="flex items-center gap-2">
         {/* 日付表示 */}
