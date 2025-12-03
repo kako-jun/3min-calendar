@@ -13,6 +13,8 @@
     "urlPlaceholder": "https://example.com",
     "generate": "Generate",
     "sizeLabel": "Size",
+    "safety": "Your URL is never sent to any server. Generated locally in your browser with no tracking or redirect URLs.",
+    "openSource": "Source code available on GitHub",
     "trademark": "QR Code is a registered trademark of DENSO WAVE INCORPORATED"
   },
   "calendar": {

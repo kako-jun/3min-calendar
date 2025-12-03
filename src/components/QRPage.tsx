@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { QRCodeCanvas } from 'qrcode.react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDownload, faShareNodes, faGear } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faShareNodes, faGear, faShieldHalved } from '@fortawesome/free-solid-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { useCalendarStore } from '../lib/store'
 import { APP_THEMES } from '../lib/types'
 import { AppHeader } from './AppHeader'
@@ -214,6 +215,27 @@ export function QRPage() {
           <FontAwesomeIcon icon={faDownload} />
           {t('actions.download')}
         </button>
+      </div>
+
+      {/* 安全性アピール */}
+      <div
+        className="mb-4 rounded p-3 text-center text-xs"
+        style={{ backgroundColor: appTheme.surface, color: appTheme.textMuted }}
+      >
+        <div className="mb-2 flex items-center justify-center gap-2">
+          <FontAwesomeIcon icon={faShieldHalved} className="text-green-500" />
+          <span>{t('qr.safety')}</span>
+        </div>
+        <a
+          href="https://github.com/kako-jun/3min-calendar"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1 underline transition-opacity hover:opacity-70"
+          style={{ color: appTheme.accent }}
+        >
+          <FontAwesomeIcon icon={faGithub} />
+          {t('qr.openSource')}
+        </a>
       </div>
 
       {/* 商標表記 */}
