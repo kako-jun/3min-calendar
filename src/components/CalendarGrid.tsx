@@ -201,7 +201,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
               {isSelected && (
                 <motion.div
                   layoutId="calendar-selection"
-                  className={`pointer-events-none absolute inset-0 ${isLinedStyle ? '' : 'rounded'}`}
+                  className={`pointer-events-none absolute inset-[1px] ${isLinedStyle ? '' : 'rounded'}`}
                   style={{
                     boxShadow: `inset 0 0 0 2px ${theme.accent}`,
                   }}
@@ -272,9 +272,8 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
 
       {/* コメント表示（左下）- 常に表示してクリック可能に */}
       <div
-        className="relative mt-1 flex cursor-pointer justify-start overflow-hidden"
+        className="relative mt-0.5 flex cursor-pointer justify-start overflow-hidden"
         onClick={() => document.getElementById('calendar-comment-input')?.focus()}
-        style={{ minHeight: '1.25rem' }}
       >
         <div
           ref={commentRef}
