@@ -147,7 +147,7 @@ function DayRow({
             value={text}
             onChange={(e) => onTextChange(dateString, e.target.value)}
             onFocus={handleFocus}
-            maxLength={25}
+            maxLength={10}
             className="w-full rounded border py-1 pl-2 pr-7 text-sm focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
@@ -276,11 +276,7 @@ export function DayEditor() {
 
   // direction計算をレンダリング中に同期的に行う
   let direction = 0
-  if (
-    selectedDate &&
-    prevSelectedDateRef.current &&
-    selectedDate !== prevSelectedDateRef.current
-  ) {
+  if (selectedDate && prevSelectedDateRef.current && selectedDate !== prevSelectedDateRef.current) {
     const prev = new Date(prevSelectedDateRef.current).getTime()
     const curr = new Date(selectedDate).getTime()
     direction = curr > prev ? 1 : -1
@@ -370,17 +366,20 @@ export function DayEditor() {
 
   const selectedDateObj = new Date(selectedDate)
 
-  // 前後1日を含む3日分の日付を生成
-  const daysToShow = [-1, 0, 1].map((offset) => {
-    const date = addDays(selectedDateObj, offset)
-    const dateString = format(date, 'yyyy-MM-dd')
-    return {
-      date,
-      dateString,
-      text: getEntryText(dateString),
-      isSelected: offset === 0,
-    }
-  })
+  // 前後1日を含む3日分の日付を生成（ただし当月の日のみ）
+  const currentMonthPrefix = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
+  const daysToShow = [-1, 0, 1]
+    .map((offset) => {
+      const date = addDays(selectedDateObj, offset)
+      const dateString = format(date, 'yyyy-MM-dd')
+      return {
+        date,
+        dateString,
+        text: getEntryText(dateString),
+        isSelected: offset === 0,
+      }
+    })
+    .filter((day) => day.dateString.startsWith(currentMonthPrefix))
 
   // アニメーションバリアント（オーバーシュートなし）
   const rowVariants = {

@@ -70,9 +70,7 @@ export function QRPage() {
       }
 
       // フォールバック: クリップボードにコピー
-      await navigator.clipboard.write([
-        new ClipboardItem({ 'image/png': blob }),
-      ])
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
       alert(t('messages.copied'))
     } catch (error) {
       console.error('Share failed:', error)
@@ -95,10 +93,7 @@ export function QRPage() {
 
       {/* URL入力 */}
       <div className="mb-4">
-        <label
-          className="mb-1 block text-sm"
-          style={{ color: appTheme.textMuted }}
-        >
+        <label className="mb-1 block text-sm" style={{ color: appTheme.textMuted }}>
           {t('qr.urlLabel')}
         </label>
         <input
@@ -117,10 +112,7 @@ export function QRPage() {
 
       {/* サイズ選択 */}
       <div className="mb-4">
-        <label
-          className="mb-1 block text-sm"
-          style={{ color: appTheme.textMuted }}
-        >
+        <label className="mb-1 block text-sm" style={{ color: appTheme.textMuted }}>
           {t('qr.sizeLabel')}
         </label>
         <div className="flex gap-2">

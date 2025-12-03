@@ -66,8 +66,7 @@ export function AppHeader() {
                 className="block w-full px-4 py-2 text-left text-sm transition-opacity hover:opacity-70"
                 style={{
                   color: appTheme.text,
-                  backgroundColor:
-                    page.path === currentPage.path ? appTheme.bg : 'transparent',
+                  backgroundColor: page.path === currentPage.path ? appTheme.bg : 'transparent',
                 }}
               >
                 {t(page.titleKey)}
