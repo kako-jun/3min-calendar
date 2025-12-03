@@ -50,8 +50,8 @@ export function Calendar() {
         <MonthSelector title={title} />
         <button
           onClick={() => setSettingsOpen(true)}
-          className="rounded px-2 py-0.5 text-xs transition-colors hover:opacity-80"
-          style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
+          className="p-1 text-base transition-opacity hover:opacity-60"
+          style={{ color: appTheme.textMuted }}
         >
           <FontAwesomeIcon icon={faGear} />
         </button>
