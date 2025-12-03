@@ -119,6 +119,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
         style={
           isLinedStyle
             ? {
+                border: `1px solid ${lineColor}`,
                 borderBottom: `1px solid ${lineColor}`,
               }
             : undefined
