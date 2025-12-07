@@ -3,7 +3,10 @@ import type { CountryCode } from './holidays'
 /** 日ごとのテキストデータ */
 export interface DayEntry {
   date: string // YYYY-MM-DD
-  text: string
+  text: string // 自由テキストのみ
+  stamp?: string | null // スタンプキー: 'closed', 'available', etc.
+  timeFrom?: string // 開始時刻: '10:00'
+  timeTo?: string // 終了時刻: '18:00'
 }
 
 /** アプリテーマ（ライト/ダーク） */

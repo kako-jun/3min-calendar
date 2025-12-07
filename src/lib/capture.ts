@@ -11,19 +11,33 @@ export async function captureElementAsBlob(element: HTMLElement): Promise<Blob |
   try {
     const html2canvas = (await import('html2canvas')).default
 
-    // 要素の背景色を取得
-    const computedStyle = window.getComputedStyle(element)
-    const bgColor = computedStyle.backgroundColor || '#1f2937'
+    // キャプチャ前に選択枠を非表示にする
+    const selectionElement = element.querySelector('[data-selection-frame]') as HTMLElement | null
+    if (selectionElement) {
+      selectionElement.style.display = 'none'
+    }
 
-    // 要素をそのままキャプチャ（scale: 2で1080px相当に）
+    // フォントの読み込みを待つ
+    await document.fonts.ready
+
+    // 要素の実際のサイズを取得
+    const rect = element.getBoundingClientRect()
+
+    // 要素をそのままキャプチャ（scale: 2で高解像度化）
     const canvas = await html2canvas(element, {
-      backgroundColor: bgColor,
-      scale: 2, // 500px * 2 = 1000px（≒1080px）
+      scale: 2,
       logging: false,
       useCORS: true,
       allowTaint: true,
-      removeContainer: true,
+      width: rect.width,
+      height: rect.height,
+      backgroundColor: null,
     })
+
+    // 選択枠を復元
+    if (selectionElement) {
+      selectionElement.style.display = ''
+    }
 
     // Blobに変換
     return new Promise((resolve) => {

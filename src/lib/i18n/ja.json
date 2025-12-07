@@ -116,7 +116,8 @@
     "en": "English"
   },
   "editor": {
-    "selectDay": "カレンダーの日付をクリックして編集"
+    "selectDay": "カレンダーの日付をクリックして編集",
+    "freeTextPlaceholder": "コメントを入力"
   },
   "emoji": {
     "title": "絵文字を追加",

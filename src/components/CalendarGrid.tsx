@@ -1,24 +1,32 @@
-import { forwardRef, useRef, useEffect, useState, useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { useCalendarStore } from '../lib/store'
 import { getCalendarDays, getWeekdayHeaders, getYearMonthParams } from '../lib/calendar'
 import { isHoliday, getHolidayName } from '../lib/holidays'
-import { THEMES, parseStampedText } from '../lib/types'
+import { THEMES, QUICK_INPUT_STYLES } from '../lib/types'
 
-/** テキスト長に応じたフォントサイズを返す（セル内で収まるように自動縮小、最大サイズを大きく） */
+/** テキスト長に応じたフォントサイズを返す（セル内で収まるように自動縮小） */
 function getTextFontSize(text: string): string {
   const len = text.length
-  if (len <= 2) return '14px'
-  if (len <= 4) return '12px'
-  if (len <= 6) return '10px'
-  if (len <= 9) return '9px'
+  if (len <= 6) return '9px'
   if (len <= 12) return '8px'
-  return '7px'
+  if (len <= 20) return '7px'
+  if (len <= 30) return '6px'
+  return '5px'
 }
 
 /** スタンプのフォントサイズ */
-const STAMP_FONT_SIZE = '10px'
+const STAMP_FONT_SIZE = '8px'
+
+/** 時刻のフォントサイズ */
+const TIME_FONT_SIZE = '8px'
+
+/** スタンプキーからスタイルを取得 */
+function getStampStyle(stampKey: string | null | undefined) {
+  if (!stampKey) return null
+  return QUICK_INPUT_STYLES.find((s) => s.key === stampKey) ?? null
+}
 
 interface CalendarGridProps {
   comment?: string
@@ -54,35 +62,16 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
   const commentKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
   const storedComment = settings.calendarComments?.[commentKey] ?? ''
   const comment = propComment !== undefined ? propComment : storedComment
-  const commentRef = useRef<HTMLDivElement>(null)
-  const [commentScale, setCommentScale] = useState(1)
 
-  // コメントがオーバーフローする場合は縮小
-  useEffect(() => {
-    if (!commentRef.current || !comment) {
-      setCommentScale(1)
-      return
-    }
-    const container = commentRef.current.parentElement
-    if (!container) return
-    const containerWidth = container.clientWidth
-    const textWidth = commentRef.current.scrollWidth
-    if (textWidth > containerWidth) {
-      setCommentScale(containerWidth / textWidth)
-    } else {
-      setCommentScale(1)
-    }
-  }, [comment])
-
-  const getEntryText = (date: string) => {
-    const entry = entries.find((e) => e.date === date)
-    return entry?.text ?? ''
+  const getEntry = (date: string) => {
+    return entries.find((e) => e.date === date)
   }
 
   return (
     <div
       ref={ref}
-      className="relative flex aspect-square w-full max-w-[500px] flex-col rounded-lg p-3"
+      data-calendar-grid
+      className="relative flex aspect-square w-full max-w-[500px] flex-col overflow-hidden rounded-lg p-3"
       style={{ backgroundColor: theme.surface }}
     >
       {/* 背景画像 */}
@@ -148,9 +137,10 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
 
       {/* 日付グリッド（5行または6行 x 7列） */}
       <div
-        className={`relative grid min-h-0 flex-1 grid-cols-7 ${isLinedStyle ? 'gap-0' : 'gap-1'}`}
+        className={`relative grid grid-cols-7 ${isLinedStyle ? 'gap-0' : 'gap-1'}`}
         style={{
-          gridTemplateRows: `repeat(${rowCount}, 1fr)`,
+          gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
+          flex: '1 1 0%',
           ...(isLinedStyle
             ? {
                 border: `1px solid ${lineColor}`,
@@ -163,7 +153,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
           const dayOfWeek = day.date.getDay()
           const isSunday = dayOfWeek === 0
           const isSaturday = dayOfWeek === 6
-          const text = getEntryText(day.dateString)
+          const entry = getEntry(day.dateString)
           const holidayInfo =
             settings.showHolidays && day.isCurrentMonth ? isHoliday(day.date) : false
           const holidayName = holidayInfo ? getHolidayName(day.date) : null
@@ -191,6 +181,13 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
                 backgroundColor: day.isCurrentMonth ? theme.bg : `${theme.bg}80`,
               }
 
+          // エントリから値を取得
+          const stampStyle = getStampStyle(entry?.stamp)
+          const timeFrom = entry?.timeFrom ?? ''
+          const timeTo = entry?.timeTo ?? ''
+          const time = timeFrom || timeTo ? `${timeFrom}-${timeTo}`.replace(/^-|-$/g, '') : ''
+          const freeText = entry?.text ?? ''
+
           return (
             <div
               key={day.dateString}
@@ -203,7 +200,8 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
               {isSelected && (
                 <motion.div
                   layoutId="calendar-selection"
-                  className={`pointer-events-none absolute inset-[1px] ${isLinedStyle ? '' : 'rounded'}`}
+                  data-selection-frame
+                  className={`pointer-events-none absolute inset-0 ${isLinedStyle ? '' : 'rounded'}`}
                   style={{
                     boxShadow: `inset 0 0 0 2px ${theme.accent}`,
                   }}
@@ -215,56 +213,63 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
                 />
               )}
               {(() => {
-                const segments = text ? parseStampedText(text, t) : []
-                const stamps = segments.filter((s) => s.type === 'stamp')
-                const texts = segments.filter((s) => s.type === 'text')
-                const textContent = texts.map((s) => s.text).join('')
-
                 return (
-                  <>
-                    {/* 上部行: スタンプ（左上）と日付（右上） */}
-                    <div className="flex items-start justify-between">
+                  <div className="flex h-full flex-col">
+                    {/* 1行目: スタンプ（左上）と日付（右上） */}
+                    <div className="flex shrink-0 items-start justify-between">
                       {/* スタンプ（左上固定） */}
                       <div className="flex flex-wrap gap-0.5">
-                        {stamps.map((stamp, i) => (
+                        {stampStyle && (
                           <span
-                            key={i}
-                            className="inline-block shrink-0 rounded px-0.5 font-bold"
+                            className="inline-block shrink-0 px-1 py-0.5 font-bold"
                             style={{
-                              backgroundColor: stamp.style.bgColor,
-                              color: stamp.style.textColor,
+                              backgroundColor: stampStyle.bgColor,
+                              color: stampStyle.textColor,
                               fontSize: STAMP_FONT_SIZE,
-                              lineHeight: '1.3',
+                              lineHeight: '1.2',
+                              borderRadius: '2px',
                             }}
                           >
-                            {stamp.text}
+                            {t(`quickInput.${stampStyle.key}`)}
                           </span>
-                        ))}
+                        )}
                       </div>
                       {/* 日付（右上固定） */}
                       <div
-                        className={`shrink-0 text-[11px] leading-tight ${day.isToday ? 'font-bold' : ''}`}
+                        className={`shrink-0 text-[9px] leading-none ${day.isToday ? 'font-bold' : ''}`}
                         style={{ color: getDayColor() }}
                       >
                         {day.day}
                       </div>
                     </div>
-                    {/* 本文テキスト（下部） */}
-                    {textContent && (
+                    {/* 2行目: 時刻 */}
+                    {time && (
                       <div
-                        className="mt-0.5 overflow-hidden font-bold"
+                        className="shrink-0 font-bold"
+                        style={{
+                          color: theme.text,
+                          fontSize: TIME_FONT_SIZE,
+                          lineHeight: '1.2',
+                        }}
+                      >
+                        {time}
+                      </div>
+                    )}
+                    {/* 3行目以降: 自由作文 */}
+                    {freeText && (
+                      <div
+                        className="min-h-0 flex-1 font-bold"
                         style={{
                           color: theme.text,
                           wordBreak: 'break-all',
                           lineHeight: '1.2',
-                          fontSize: getTextFontSize(textContent),
+                          fontSize: getTextFontSize(freeText),
                         }}
-                        title={textContent}
                       >
-                        {textContent}
+                        {freeText}
                       </div>
                     )}
-                  </>
+                  </div>
                 )
               })()}
             </div>
@@ -272,23 +277,14 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
         })}
       </div>
 
-      {/* コメント表示（右下）- 常に表示してクリック可能に */}
-      <div
-        className="relative mt-1 flex shrink-0 cursor-pointer justify-end overflow-hidden"
-        onClick={() => document.getElementById('calendar-comment-input')?.focus()}
-      >
-        <div
-          ref={commentRef}
-          className="whitespace-nowrap text-xs"
-          style={{
-            color: comment ? theme.text : theme.textMuted,
-            transformOrigin: 'right center',
-            transform: `scaleX(${commentScale})`,
-          }}
-        >
-          {comment || t('calendar.commentPlaceholder')}
+      {/* コメント表示（右下）- コメントがある場合のみ表示 */}
+      {comment && (
+        <div className="relative mt-1 shrink-0 overflow-hidden text-right">
+          <div className="truncate text-xs" style={{ color: theme.text }}>
+            {comment}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 })

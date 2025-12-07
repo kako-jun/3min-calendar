@@ -116,7 +116,8 @@
     "en": "English"
   },
   "editor": {
-    "selectDay": "Click a date on the calendar to edit"
+    "selectDay": "Click a date on the calendar to edit",
+    "freeTextPlaceholder": "Enter comment"
   },
   "emoji": {
     "title": "Add emoji",

@@ -29,7 +29,8 @@ interface CalendarActions {
   setSelectedDate: (date: string | null) => void
 
   // エントリ操作
-  updateEntry: (date: string, text: string) => Promise<void>
+  updateEntry: (date: string, updates: Partial<Omit<DayEntry, 'date'>>) => Promise<void>
+  getEntry: (date: string) => DayEntry | undefined
   getEntryText: (date: string) => string
 
   // テンプレート操作
@@ -152,18 +153,29 @@ export const useCalendarStore = create<
   },
 
   // エントリ操作
-  updateEntry: async (date, text) => {
-    const entry: DayEntry = { date, text }
+  updateEntry: async (date, updates) => {
+    const existing = get().entries.find((e) => e.date === date)
+    const entry: DayEntry = {
+      date,
+      text: updates.text ?? existing?.text ?? '',
+      stamp: updates.stamp !== undefined ? updates.stamp : existing?.stamp,
+      timeFrom: updates.timeFrom !== undefined ? updates.timeFrom : existing?.timeFrom,
+      timeTo: updates.timeTo !== undefined ? updates.timeTo : existing?.timeTo,
+    }
     await saveEntry(entry)
     set((state) => {
-      const existing = state.entries.find((e) => e.date === date)
-      if (existing) {
+      const existingEntry = state.entries.find((e) => e.date === date)
+      if (existingEntry) {
         return {
           entries: state.entries.map((e) => (e.date === date ? entry : e)),
         }
       }
       return { entries: [...state.entries, entry] }
     })
+  },
+
+  getEntry: (date) => {
+    return get().entries.find((e) => e.date === date)
   },
 
   getEntryText: (date) => {
@@ -203,7 +215,7 @@ export const useCalendarStore = create<
       const defaultText = template.weekdayDefaults[dayOfWeek]
       if (defaultText) {
         const dateString = format(date, 'yyyy-MM-dd')
-        await get().updateEntry(dateString, defaultText)
+        await get().updateEntry(dateString, { text: defaultText })
       }
     }
   },
@@ -310,7 +322,7 @@ export const useCalendarStore = create<
       const defaultText = weekdayDefaults[dayOfWeek]
       if (defaultText) {
         const dateString = format(date, 'yyyy-MM-dd')
-        await get().updateEntry(dateString, defaultText)
+        await get().updateEntry(dateString, { text: defaultText })
       }
     }
   },

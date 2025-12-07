@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faClipboard } from '@fortawesome/free-solid-svg-icons'
@@ -8,6 +8,7 @@ import { format, addDays } from 'date-fns'
 import { QuickInputButtons } from './QuickInputButtons'
 import { EmojiPicker } from './EmojiPicker'
 import { APP_THEMES, THEMES } from '../lib/types'
+import type { DayEntry } from '../lib/types'
 import { isHoliday } from '../lib/holidays'
 
 /** 30分刻みの時刻オプションを生成 */
@@ -31,58 +32,43 @@ function getTimeColor(time: string | undefined): string {
   return ''
 }
 
-/** 時刻パターン: HH:MM-HH:MM, HH:MM-, -HH:MM */
-const TIME_PATTERN = /(\d{1,2}:\d{2})?-(\d{1,2}:\d{2})?/
-
-/** テキストから時刻部分を抽出 */
-function parseTimeFromText(text: string): { from: string; to: string } | null {
-  const match = text.match(TIME_PATTERN)
-  if (!match || (!match[1] && !match[2])) return null
-  return { from: match[1] || '', to: match[2] || '' }
+/** コピー/ペースト用にエントリをシリアライズ */
+function serializeEntry(entry: Partial<DayEntry>): string {
+  return JSON.stringify({
+    stamp: entry.stamp,
+    timeFrom: entry.timeFrom,
+    timeTo: entry.timeTo,
+    text: entry.text,
+  })
 }
 
-/** テキストに時刻を追加/更新 */
-function updateTimeInText(text: string, from: string, to: string): string {
-  const timeStr = from || to ? `${from}-${to}` : ''
-  const existing = text.match(TIME_PATTERN)
-
-  if (existing) {
-    // 既存の時刻部分を置換
-    if (!timeStr) {
-      // 時刻を削除
-      return text.replace(TIME_PATTERN, '').trim()
+/** コピー/ペースト用にエントリをデシリアライズ */
+function deserializeEntry(str: string): Partial<DayEntry> | null {
+  try {
+    const data = JSON.parse(str)
+    return {
+      stamp: data.stamp ?? null,
+      timeFrom: data.timeFrom ?? '',
+      timeTo: data.timeTo ?? '',
+      text: data.text ?? '',
     }
-    return text.replace(TIME_PATTERN, timeStr)
-  } else if (timeStr) {
-    // 時刻がない場合は末尾に追加
-    return text ? `${text}${timeStr}` : timeStr
+  } catch {
+    // JSONでない場合は従来のテキストとして扱う
+    return { text: str }
   }
-  return text
 }
 
 interface DayRowProps {
   date: Date
-  text: string
+  entry: DayEntry | undefined
   isSelected: boolean
-  onTextChange: (date: string, text: string) => void
-  onCopy: (text: string) => void
+  onUpdate: (date: string, updates: Partial<Omit<DayEntry, 'date'>>) => void
+  onCopy: (entry: Partial<DayEntry>) => void
   onPaste: (date: string) => void
-  onQuickInput: (date: string, value: string) => void
-  onEmojiSelect: (date: string, emoji: string) => void
   onSelect: (date: string) => void
 }
 
-function DayRow({
-  date,
-  text,
-  isSelected,
-  onTextChange,
-  onCopy,
-  onPaste,
-  onQuickInput,
-  onEmojiSelect,
-  onSelect,
-}: DayRowProps) {
+function DayRow({ date, entry, isSelected, onUpdate, onCopy, onPaste, onSelect }: DayRowProps) {
   const { t } = useTranslation()
   const settings = useCalendarStore((state) => state.settings)
   const appTheme = APP_THEMES[settings.appTheme]
@@ -98,30 +84,53 @@ function DayRow({
   const weekdayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
   const weekdayName = t(`weekdays.${weekdayKeys[dayOfWeek]}`)
 
-  // テキストから現在の時刻を解析
-  const currentTime = useMemo(() => parseTimeFromText(text), [text])
+  // エントリから値を取得
+  const stamp = entry?.stamp ?? null
+  const timeFrom = entry?.timeFrom ?? ''
+  const timeTo = entry?.timeTo ?? ''
+  const freeText = entry?.text ?? ''
 
   // IME入力中フラグ（Android日本語入力対応）
   const isComposingRef = useRef(false)
-  const [localText, setLocalText] = useState(text)
+  const [localFreeText, setLocalFreeText] = useState(freeText)
 
   // 親からのtext変更を反映（IME入力中でなければ）
   useEffect(() => {
     if (!isComposingRef.current) {
-      setLocalText(text)
+      setLocalFreeText(freeText)
     }
-  }, [text])
+  }, [freeText])
 
   // 入力欄やボタンにフォーカス/クリックしたらこの日を選択
   const handleFocus = () => onSelect(dateString)
 
+  // スタンプ変更ハンドラ
+  const handleStampChange = (stampKey: string | null) => {
+    handleFocus()
+    onUpdate(dateString, { stamp: stampKey })
+  }
+
   // 時刻変更ハンドラ
   const handleTimeChange = (type: 'from' | 'to', value: string) => {
     handleFocus()
-    const from = type === 'from' ? value : currentTime?.from || ''
-    const to = type === 'to' ? value : currentTime?.to || ''
-    const newText = updateTimeInText(text, from, to)
-    onTextChange(dateString, newText)
+    if (type === 'from') {
+      onUpdate(dateString, { timeFrom: value })
+    } else {
+      onUpdate(dateString, { timeTo: value })
+    }
+  }
+
+  // 自由テキスト変更ハンドラ
+  const handleFreeTextChange = (newFreeText: string) => {
+    onUpdate(dateString, { text: newFreeText })
+  }
+
+  // 絵文字追加ハンドラ
+  const handleEmojiSelect = (emoji: string) => {
+    handleFocus()
+    const newFreeText = localFreeText + emoji
+    setLocalFreeText(newFreeText)
+    handleFreeTextChange(newFreeText)
   }
 
   return (
@@ -151,17 +160,17 @@ function DayRow({
           <span className="ml-1 text-xs">({weekdayName})</span>
         </div>
 
-        {/* テキスト入力 */}
+        {/* テキスト入力（自由作文のみ） */}
         <div className="relative min-w-0 flex-1">
           <input
             type="text"
-            value={localText}
+            value={localFreeText}
             onChange={(e) => {
               const newValue = e.target.value
-              setLocalText(newValue)
+              setLocalFreeText(newValue)
               // IME入力中でなければ即座に親に反映
               if (!isComposingRef.current) {
-                onTextChange(dateString, newValue)
+                handleFreeTextChange(newValue)
               }
             }}
             onCompositionStart={() => {
@@ -170,10 +179,10 @@ function DayRow({
             onCompositionEnd={(e) => {
               isComposingRef.current = false
               // IME確定時に親に反映
-              onTextChange(dateString, e.currentTarget.value)
+              handleFreeTextChange(e.currentTarget.value)
             }}
             onFocus={handleFocus}
-            maxLength={10}
+            placeholder={t('editor.freeTextPlaceholder')}
             className="w-full rounded border py-1 pl-2 pr-7 text-sm focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
@@ -181,12 +190,12 @@ function DayRow({
               color: appTheme.text,
             }}
           />
-          {localText && (
+          {localFreeText && (
             <button
               onClick={() => {
                 handleFocus()
-                setLocalText('')
-                onTextChange(dateString, '')
+                setLocalFreeText('')
+                handleFreeTextChange('')
               }}
               className="absolute right-1 top-1/2 -translate-y-1/2 rounded px-1"
               style={{ color: appTheme.textMuted }}
@@ -201,7 +210,7 @@ function DayRow({
         <button
           onClick={() => {
             handleFocus()
-            onCopy(text)
+            onCopy({ stamp, timeFrom, timeTo, text: freeText })
           }}
           className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
           style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
@@ -224,25 +233,20 @@ function DayRow({
         </button>
       </div>
 
-      {/* クイック入力ボタンと時刻入力 */}
+      {/* スタンプボタンと時刻入力 */}
       <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
-        <QuickInputButtons
-          onSelect={(value) => {
-            handleFocus()
-            onQuickInput(dateString, value)
-          }}
-        />
+        <QuickInputButtons selectedStamp={stamp} onSelect={handleStampChange} />
 
         {/* 時刻入力 */}
         <div className="flex items-center gap-1">
           <select
-            value={currentTime?.from || ''}
+            value={timeFrom}
             onChange={(e) => handleTimeChange('from', e.target.value)}
             className="rounded border px-1 py-0.5 text-xs font-medium focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
               borderColor: appTheme.textMuted,
-              color: getTimeColor(currentTime?.from || '') || appTheme.text,
+              color: getTimeColor(timeFrom) || appTheme.text,
             }}
             title={t('time.from')}
           >
@@ -255,13 +259,13 @@ function DayRow({
           </select>
           <span style={{ color: appTheme.textMuted }}>-</span>
           <select
-            value={currentTime?.to || ''}
+            value={timeTo}
             onChange={(e) => handleTimeChange('to', e.target.value)}
             className="rounded border px-1 py-0.5 text-xs font-medium focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
               borderColor: appTheme.textMuted,
-              color: getTimeColor(currentTime?.to || '') || appTheme.text,
+              color: getTimeColor(timeTo) || appTheme.text,
             }}
             title={t('time.to')}
           >
@@ -275,13 +279,7 @@ function DayRow({
         </div>
 
         {/* 絵文字ピッカー */}
-        <EmojiPicker
-          appTheme={settings.appTheme}
-          onSelect={(emoji) => {
-            handleFocus()
-            onEmojiSelect(dateString, emoji)
-          }}
-        />
+        <EmojiPicker appTheme={settings.appTheme} onSelect={handleEmojiSelect} />
       </div>
     </div>
   )
@@ -290,13 +288,13 @@ function DayRow({
 export function DayEditor() {
   const { t } = useTranslation()
   const view = useCalendarStore((state) => state.view)
-  const entries = useCalendarStore((state) => state.entries)
+  const getEntry = useCalendarStore((state) => state.getEntry)
   const updateEntry = useCalendarStore((state) => state.updateEntry)
   const selectedDate = useCalendarStore((state) => state.selectedDate)
   const setSelectedDate = useCalendarStore((state) => state.setSelectedDate)
   const settings = useCalendarStore((state) => state.settings)
   const appTheme = APP_THEMES[settings.appTheme]
-  const [clipboard, setClipboard] = useState('')
+  const [clipboard, setClipboard] = useState<Partial<DayEntry>>({})
 
   // アニメーション方向を追跡（1: 下へ移動=次の日を選択, -1: 上へ移動=前の日を選択）
   const prevSelectedDateRef = useRef<string | null>(null)
@@ -314,17 +312,9 @@ export function DayEditor() {
     prevSelectedDateRef.current = selectedDate
   })
 
-  const getEntryText = useCallback(
-    (date: string) => {
-      const entry = entries.find((e) => e.date === date)
-      return entry?.text ?? ''
-    },
-    [entries]
-  )
-
-  const handleCopy = useCallback((text: string) => {
-    setClipboard(text)
-    navigator.clipboard.writeText(text).catch(() => {})
+  const handleCopy = useCallback((entry: Partial<DayEntry>) => {
+    setClipboard(entry)
+    navigator.clipboard.writeText(serializeEntry(entry)).catch(() => {})
   }, [])
 
   const handlePaste = useCallback(
@@ -332,48 +322,18 @@ export function DayEditor() {
       try {
         const systemClipboard = await navigator.clipboard.readText()
         if (systemClipboard) {
-          updateEntry(date, systemClipboard)
-          return
+          const parsed = deserializeEntry(systemClipboard)
+          if (parsed) {
+            updateEntry(date, parsed)
+            return
+          }
         }
       } catch {}
-      if (clipboard) {
+      if (Object.keys(clipboard).length > 0) {
         updateEntry(date, clipboard)
       }
     },
     [clipboard, updateEntry]
-  )
-
-  const handleQuickInput = useCallback(
-    (date: string, newStamp: string) => {
-      const currentText = getEntryText(date)
-
-      // 現在のテキストにスタンプがあるか確認
-      const stampMatch = currentText.match(/^\[([^\]]+)\]/)
-
-      if (stampMatch) {
-        const currentStamp = stampMatch[0]
-        if (currentStamp === newStamp) {
-          // 同じスタンプなら除去（トグル）
-          updateEntry(date, currentText.replace(currentStamp, '').trim())
-        } else {
-          // 違うスタンプなら置換
-          updateEntry(date, currentText.replace(currentStamp, newStamp))
-        }
-      } else {
-        // スタンプがない場合は先頭に追加
-        updateEntry(date, currentText ? `${newStamp}${currentText}` : newStamp)
-      }
-    },
-    [getEntryText, updateEntry]
-  )
-
-  const handleEmojiSelect = useCallback(
-    (date: string, emoji: string) => {
-      const currentText = getEntryText(date)
-      // 絵文字は排他ではなく、末尾に追加
-      updateEntry(date, currentText + emoji)
-    },
-    [getEntryText, updateEntry]
   )
 
   // 選択された日がない、または現在表示中の月と異なる場合
@@ -402,7 +362,7 @@ export function DayEditor() {
       return {
         date,
         dateString,
-        text: getEntryText(dateString),
+        entry: getEntry(dateString),
         isSelected: offset === 0,
       }
     })
@@ -437,7 +397,7 @@ export function DayEditor() {
   return (
     <div className="flex flex-col gap-2 overflow-hidden">
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
-        {daysToShow.map(({ date, dateString, text, isSelected }) => (
+        {daysToShow.map(({ date, dateString, entry, isSelected }) => (
           <motion.div
             key={dateString}
             custom={direction}
@@ -448,13 +408,11 @@ export function DayEditor() {
           >
             <DayRow
               date={date}
-              text={text}
+              entry={entry}
               isSelected={isSelected}
-              onTextChange={updateEntry}
+              onUpdate={updateEntry}
               onCopy={handleCopy}
               onPaste={handlePaste}
-              onQuickInput={handleQuickInput}
-              onEmojiSelect={handleEmojiSelect}
               onSelect={setSelectedDate}
             />
           </motion.div>
