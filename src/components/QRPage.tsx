@@ -80,17 +80,43 @@ export function QRPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // 次回同じファイルも選択可能にするためリセット
+    if (logoInputRef.current) {
+      logoInputRef.current.value = ''
+    }
+
     const reader = new FileReader()
     reader.onload = (event) => {
       const dataUrl = event.target?.result as string
+      if (!dataUrl) return
+
       // 画像のアスペクト比を取得
       const img = new Image()
+      const currentFile = file.name + file.lastModified // 競合状態防止用
+
       img.onload = () => {
+        // 別の画像が選択されていたら無視
+        if (logoInputRef.current?.dataset.pending !== currentFile) return
         setLogoAspectRatio(img.width / img.height)
         setLogoImage(dataUrl)
+        delete logoInputRef.current?.dataset.pending
+      }
+
+      img.onerror = () => {
+        console.error('Failed to load logo image')
+        delete logoInputRef.current?.dataset.pending
+      }
+
+      if (logoInputRef.current) {
+        logoInputRef.current.dataset.pending = currentFile
       }
       img.src = dataUrl
     }
+
+    reader.onerror = () => {
+      console.error('Failed to read file')
+    }
+
     reader.readAsDataURL(file)
   }, [])
 
