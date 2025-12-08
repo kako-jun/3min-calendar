@@ -69,6 +69,7 @@ export function QRPage() {
   const [qrStyle, setQrStyle] = useState<QRStyle>('squares')
   const [eyeStyle, setEyeStyle] = useState<EyeStyle>('square')
   const [logoImage, setLogoImage] = useState<string | null>(null)
+  const [logoAspectRatio, setLogoAspectRatio] = useState(1) // 幅/高さ
 
   const qrRef = useRef<HTMLDivElement>(null)
   const logoInputRef = useRef<HTMLInputElement>(null)
@@ -81,7 +82,14 @@ export function QRPage() {
 
     const reader = new FileReader()
     reader.onload = (event) => {
-      setLogoImage(event.target?.result as string)
+      const dataUrl = event.target?.result as string
+      // 画像のアスペクト比を取得
+      const img = new Image()
+      img.onload = () => {
+        setLogoAspectRatio(img.width / img.height)
+        setLogoImage(dataUrl)
+      }
+      img.src = dataUrl
     }
     reader.readAsDataURL(file)
   }, [])
@@ -392,10 +400,10 @@ export function QRPage() {
                   qrStyle={qrStyle}
                   eyeRadius={getEyeRadius(size, eyeStyle)}
                   logoImage={logoImage || undefined}
-                  logoWidth={size * 0.25}
-                  logoHeight={size * 0.25}
+                  logoWidth={logoAspectRatio >= 1 ? size * 0.25 : size * 0.25 * logoAspectRatio}
+                  logoHeight={logoAspectRatio >= 1 ? (size * 0.25) / logoAspectRatio : size * 0.25}
                   removeQrCodeBehindLogo
-                  logoPaddingStyle="circle"
+                  logoPaddingStyle="square"
                 />
               </motion.div>
             ) : (
