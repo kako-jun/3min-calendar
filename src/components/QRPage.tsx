@@ -18,12 +18,25 @@ import { AppHeader } from './AppHeader'
 import { SettingsPanel } from './SettingsPanel'
 
 const QR_SIZES = [128, 256, 512] as const
-const ERROR_LEVELS = ['L', 'M', 'Q', 'H'] as const
 const QR_STYLES = ['squares', 'dots', 'fluid'] as const
-const EYE_RADIUS_OPTIONS = [0, 5, 10, 15] as const
+const EYE_STYLES = ['square', 'rounded', 'circle'] as const
 
-type ErrorLevel = (typeof ERROR_LEVELS)[number]
 type QRStyle = (typeof QR_STYLES)[number]
+type EyeStyle = (typeof EYE_STYLES)[number]
+
+// サイズに応じてeyeRadiusを自動計算
+const getEyeRadius = (size: number, style: EyeStyle): number => {
+  const moduleSize = size / 21 // Version 1想定
+  const eyeSize = moduleSize * 7
+  switch (style) {
+    case 'square':
+      return 0
+    case 'rounded':
+      return eyeSize * 0.2 // 軽く丸める
+    case 'circle':
+      return eyeSize / 2 // 完全な円
+  }
+}
 
 // 任天堂風ホワンホワンアニメーション
 const qrAnimation = {
@@ -50,12 +63,11 @@ export function QRPage() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   // カスタマイズオプション
-  const [errorLevel, setErrorLevel] = useState<ErrorLevel>('H')
   const [fgColor, setFgColor] = useState('#000000')
   const [bgColor, setBgColor] = useState('#ffffff')
   const [isTransparent, setIsTransparent] = useState(false)
   const [qrStyle, setQrStyle] = useState<QRStyle>('squares')
-  const [eyeRadius, setEyeRadius] = useState<(typeof EYE_RADIUS_OPTIONS)[number]>(0)
+  const [eyeStyle, setEyeStyle] = useState<EyeStyle>('square')
   const [logoImage, setLogoImage] = useState<string | null>(null)
 
   const qrRef = useRef<HTMLDivElement>(null)
@@ -161,55 +173,29 @@ export function QRPage() {
 
       {/* カスタマイズオプション */}
       <div className="mb-4 space-y-3">
-        {/* サイズ & 誤り訂正レベル */}
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="mb-1 block text-sm" style={{ color: appTheme.textMuted }}>
-              {t('qr.sizeLabel')}
-            </label>
-            <div className="flex gap-1">
-              {QR_SIZES.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setSize(s)}
-                  className={`flex-1 rounded px-2 py-1 text-xs transition-colors ${
-                    size === s ? 'ring-2' : 'opacity-70 hover:opacity-100'
-                  }`}
-                  style={{
-                    backgroundColor: appTheme.surface,
-                    color: appTheme.text,
-                    // @ts-expect-error CSS custom property for Tailwind ring color
-                    '--tw-ring-color': appTheme.accent,
-                  }}
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="flex-1">
-            <label className="mb-1 block text-sm" style={{ color: appTheme.textMuted }}>
-              {t('qr.errorLevel')}
-            </label>
-            <div className="flex gap-1">
-              {ERROR_LEVELS.map((level) => (
-                <button
-                  key={level}
-                  onClick={() => setErrorLevel(level)}
-                  className={`flex-1 rounded px-2 py-1 text-xs transition-colors ${
-                    errorLevel === level ? 'ring-2' : 'opacity-70 hover:opacity-100'
-                  }`}
-                  style={{
-                    backgroundColor: appTheme.surface,
-                    color: appTheme.text,
-                    // @ts-expect-error CSS custom property for Tailwind ring color
-                    '--tw-ring-color': appTheme.accent,
-                  }}
-                >
-                  {level}
-                </button>
-              ))}
-            </div>
+        {/* サイズ */}
+        <div>
+          <label className="mb-1 block text-sm" style={{ color: appTheme.textMuted }}>
+            {t('qr.sizeLabel')}
+          </label>
+          <div className="flex gap-1">
+            {QR_SIZES.map((s) => (
+              <button
+                key={s}
+                onClick={() => setSize(s)}
+                className={`flex-1 rounded px-2 py-1 text-xs transition-colors ${
+                  size === s ? 'ring-2' : 'opacity-70 hover:opacity-100'
+                }`}
+                style={{
+                  backgroundColor: appTheme.surface,
+                  color: appTheme.text,
+                  // @ts-expect-error CSS custom property for Tailwind ring color
+                  '--tw-ring-color': appTheme.accent,
+                }}
+              >
+                {s}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -316,15 +302,15 @@ export function QRPage() {
           </div>
           <div className="flex-1">
             <label className="mb-1 block text-sm" style={{ color: appTheme.textMuted }}>
-              {t('qr.eyeRadius')}
+              {t('qr.eyeStyle')}
             </label>
             <div className="flex gap-1">
-              {EYE_RADIUS_OPTIONS.map((r) => (
+              {EYE_STYLES.map((style) => (
                 <button
-                  key={r}
-                  onClick={() => setEyeRadius(r)}
+                  key={style}
+                  onClick={() => setEyeStyle(style)}
                   className={`flex-1 rounded px-2 py-1 text-xs transition-colors ${
-                    eyeRadius === r ? 'ring-2' : 'opacity-70 hover:opacity-100'
+                    eyeStyle === style ? 'ring-2' : 'opacity-70 hover:opacity-100'
                   }`}
                   style={{
                     backgroundColor: appTheme.surface,
@@ -333,7 +319,7 @@ export function QRPage() {
                     '--tw-ring-color': appTheme.accent,
                   }}
                 >
-                  {r}
+                  {t(`qr.eyeStyles.${style}`)}
                 </button>
               ))}
             </div>
@@ -391,7 +377,7 @@ export function QRPage() {
           <AnimatePresence mode="wait">
             {isValidUrl ? (
               <motion.div
-                key={`${url}-${fgColor}-${bgColor}-${isTransparent}-${qrStyle}-${eyeRadius}-${logoImage}`}
+                key={`${url}-${fgColor}-${bgColor}-${isTransparent}-${qrStyle}-${eyeStyle}-${logoImage}`}
                 variants={qrAnimation}
                 initial="initial"
                 animate="animate"
@@ -400,11 +386,11 @@ export function QRPage() {
                 <QRCode
                   value={url}
                   size={size}
-                  ecLevel={errorLevel}
+                  ecLevel="H"
                   bgColor={isTransparent ? 'transparent' : bgColor}
                   fgColor={fgColor}
                   qrStyle={qrStyle}
-                  eyeRadius={eyeRadius}
+                  eyeRadius={getEyeRadius(size, eyeStyle)}
                   logoImage={logoImage || undefined}
                   logoWidth={size * 0.25}
                   logoHeight={size * 0.25}

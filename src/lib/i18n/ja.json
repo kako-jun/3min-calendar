@@ -13,7 +13,6 @@
     "urlPlaceholder": "https://example.com",
     "generate": "生成",
     "sizeLabel": "サイズ",
-    "errorLevel": "訂正レベル",
     "fgColor": "コード色",
     "bgColor": "背景色",
     "invert": "色を反転",
@@ -24,7 +23,12 @@
       "dots": "ドット",
       "fluid": "流体"
     },
-    "eyeRadius": "目の角丸",
+    "eyeStyle": "目の形",
+    "eyeStyles": {
+      "square": "四角",
+      "rounded": "丸め",
+      "circle": "円"
+    },
     "logo": "中央ロゴ",
     "selectLogo": "画像を選択",
     "removeLogo": "ロゴを削除",
