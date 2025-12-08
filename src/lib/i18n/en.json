@@ -13,7 +13,6 @@
     "urlPlaceholder": "https://example.com",
     "generate": "Generate",
     "sizeLabel": "Size",
-    "errorLevel": "Error Level",
     "fgColor": "Code Color",
     "bgColor": "Background",
     "invert": "Invert colors",
@@ -24,7 +23,12 @@
       "dots": "Dots",
       "fluid": "Fluid"
     },
-    "eyeRadius": "Eye Radius",
+    "eyeStyle": "Eye Shape",
+    "eyeStyles": {
+      "square": "Square",
+      "rounded": "Round",
+      "circle": "Circle"
+    },
     "logo": "Center Logo",
     "selectLogo": "Select image",
     "removeLogo": "Remove logo",

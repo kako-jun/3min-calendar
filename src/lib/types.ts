@@ -271,10 +271,15 @@ export const defaultSettings: Settings = {
 }
 
 /** アプリテーマの色定義 */
-export const APP_THEMES: Record<
-  AppTheme,
-  { bg: string; surface: string; text: string; textMuted: string; accent: string }
-> = {
+export interface AppThemeColors {
+  bg: string
+  surface: string
+  text: string
+  textMuted: string
+  accent: string
+}
+
+export const APP_THEMES: Record<AppTheme, AppThemeColors> = {
   dark: {
     bg: '#111827',
     surface: '#1f2937',
