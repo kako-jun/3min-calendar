@@ -27,6 +27,89 @@ function getStampStyle(stampKey: string | null | undefined) {
   return QUICK_INPUT_STYLES.find((s) => s.key === stampKey) ?? null
 }
 
+/** アニメーション付き選択枠 */
+interface SelectionRectProps {
+  days: ReturnType<typeof getCalendarDays>
+  selectedDate: string | null
+  getCellPosition: (index: number) => { x: number; y: number }
+  cellWidth: number
+  cellHeight: number
+  theme: (typeof THEMES)[keyof typeof THEMES]
+  isLinedStyle: boolean
+}
+
+function SelectionRect({
+  days,
+  selectedDate,
+  getCellPosition,
+  cellWidth,
+  cellHeight,
+  theme,
+  isLinedStyle,
+}: SelectionRectProps) {
+  const [animatedPos, setAnimatedPos] = useState<{ x: number; y: number } | null>(null)
+  const animationRef = useRef<number | null>(null)
+
+  const selectedIndex = days.findIndex((d) => d.dateString === selectedDate)
+  const targetPos = selectedIndex !== -1 ? getCellPosition(selectedIndex) : null
+
+  useEffect(() => {
+    if (!targetPos) {
+      setAnimatedPos(null)
+      return
+    }
+
+    // 初回または月が変わった場合は即座に移動
+    if (!animatedPos) {
+      setAnimatedPos(targetPos)
+      return
+    }
+
+    // アニメーション
+    const startPos = { ...animatedPos }
+    const startTime = performance.now()
+    const duration = 150 // ms
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      // easeOutCubic
+      const eased = 1 - Math.pow(1 - progress, 3)
+
+      setAnimatedPos({
+        x: startPos.x + (targetPos.x - startPos.x) * eased,
+        y: startPos.y + (targetPos.y - startPos.y) * eased,
+      })
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate)
+      }
+    }
+
+    animationRef.current = requestAnimationFrame(animate)
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [targetPos?.x, targetPos?.y])
+
+  if (!animatedPos) return null
+
+  return (
+    <Rect
+      x={animatedPos.x}
+      y={animatedPos.y}
+      width={cellWidth}
+      height={cellHeight}
+      stroke={theme.accent}
+      strokeWidth={2}
+      cornerRadius={isLinedStyle ? 0 : CELL_RADIUS}
+    />
+  )
+}
+
 /** 画像をロードする */
 function useLoadImage(src: string | null): HTMLImageElement | null {
   const [image, setImage] = useState<HTMLImageElement | null>(null)
@@ -396,7 +479,45 @@ export const CalendarGridCanvas = forwardRef<CalendarGridCanvasHandle, CalendarG
                     strokeWidth={isLinedStyle ? 0.5 : 0}
                   />
 
-                  {/* スタンプ（左上） - padding: 4px, icon size: 10 */}
+                  {/* 六曜と日付（右上） - 日付は右揃え、六曜は日付の左 */}
+                  {(() => {
+                    const dayStr = String(day.day)
+                    // 日付の幅を推定（六曜の位置決めに使用）
+                    const dayWidth = dayStr.length === 1 ? 8 : 14
+                    return (
+                      <Group y={4}>
+                        {/* 六曜 - 日付の左に4pxの間隔で配置 */}
+                        {settings.showRokuyo && day.isCurrentMonth && (
+                          <Text
+                            x={cellWidth - 4 - dayWidth - 4}
+                            y={6}
+                            text={getRokuyoName(day.date)}
+                            fontSize={6}
+                            fontFamily={FONT_FAMILY}
+                            fill={dayColor}
+                            align="right"
+                            width={30}
+                            offsetX={30}
+                          />
+                        )}
+                        {/* 日付 - 右端から4pxの位置に右揃え */}
+                        <Text
+                          x={cellWidth - 4}
+                          y={0}
+                          text={dayStr}
+                          fontSize={12}
+                          fontStyle="bold"
+                          fontFamily={FONT_FAMILY}
+                          fill={dayColor}
+                          align="right"
+                          width={30}
+                          offsetX={30}
+                        />
+                      </Group>
+                    )
+                  })()}
+
+                  {/* スタンプ（左上） - padding: 4px, icon size: 10, 六曜より前面 */}
                   {stampStyle && (
                     <Group x={4} y={4}>
                       {/* アイコン系スタンプ */}
@@ -466,44 +587,6 @@ export const CalendarGridCanvas = forwardRef<CalendarGridCanvasHandle, CalendarG
                     </Group>
                   )}
 
-                  {/* 六曜と日付（右上） - 日付は右揃え、六曜は日付の左 */}
-                  {(() => {
-                    const dayStr = String(day.day)
-                    // 日付の幅を推定（六曜の位置決めに使用）
-                    const dayWidth = dayStr.length === 1 ? 8 : 14
-                    return (
-                      <Group y={4}>
-                        {/* 日付 - 右端から4pxの位置に右揃え */}
-                        <Text
-                          x={cellWidth - 4}
-                          y={0}
-                          text={dayStr}
-                          fontSize={12}
-                          fontStyle="bold"
-                          fontFamily={FONT_FAMILY}
-                          fill={dayColor}
-                          align="right"
-                          width={30}
-                          offsetX={30}
-                        />
-                        {/* 六曜 - 日付の左に4pxの間隔で配置 */}
-                        {settings.showRokuyo && day.isCurrentMonth && (
-                          <Text
-                            x={cellWidth - 4 - dayWidth - 4}
-                            y={6}
-                            text={getRokuyoName(day.date)}
-                            fontSize={6}
-                            fontFamily={FONT_FAMILY}
-                            fill={dayColor}
-                            align="right"
-                            width={30}
-                            offsetX={30}
-                          />
-                        )}
-                      </Group>
-                    )
-                  })()}
-
                   {/* 時刻 - marginTop: 4px from first row (~18px) */}
                   {time && (
                     <Text
@@ -553,22 +636,15 @@ export const CalendarGridCanvas = forwardRef<CalendarGridCanvasHandle, CalendarG
 
           {/* 選択枠レイヤー（エクスポート時は非表示） */}
           <Layer ref={selectionLayerRef}>
-            {(() => {
-              const selectedIndex = days.findIndex((d) => d.dateString === selectedDate)
-              if (selectedIndex === -1) return null
-              const pos = getCellPosition(selectedIndex)
-              return (
-                <Rect
-                  x={pos.x}
-                  y={pos.y}
-                  width={cellWidth}
-                  height={cellHeight}
-                  stroke={theme.accent}
-                  strokeWidth={2}
-                  cornerRadius={isLinedStyle ? 0 : CELL_RADIUS}
-                />
-              )
-            })()}
+            <SelectionRect
+              days={days}
+              selectedDate={selectedDate}
+              getCellPosition={getCellPosition}
+              cellWidth={cellWidth}
+              cellHeight={cellHeight}
+              theme={theme}
+              isLinedStyle={isLinedStyle}
+            />
           </Layer>
         </Stage>
       </div>
