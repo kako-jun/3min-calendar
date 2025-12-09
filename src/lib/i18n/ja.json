@@ -11,6 +11,7 @@
   "qr": {
     "urlLabel": "URL",
     "urlPlaceholder": "https://example.com",
+    "enterUrl": "URLを入力してください",
     "generate": "生成",
     "sizeLabel": "サイズ",
     "fgColor": "コード色",
@@ -33,6 +34,7 @@
     "selectLogo": "画像を選択",
     "removeLogo": "ロゴを削除",
     "safety": "入力されたURLはサーバーに送信されません。ブラウザ内で生成され、転送URLなどは一切仕込まれていません。",
+    "madeInJapan": "Made in Japan",
     "openSource": "ソースコードはGitHubで公開中",
     "trademark": "QRコードは株式会社デンソーウェーブの登録商標です"
   },
