@@ -72,14 +72,30 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
     <div
       ref={ref}
       data-calendar-grid
-      className="relative flex aspect-square w-full max-w-[500px] flex-col overflow-hidden rounded-lg p-3"
-      style={{ backgroundColor: theme.surface }}
+      style={{
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        aspectRatio: '1 / 1',
+        width: '100%',
+        maxWidth: '500px',
+        overflow: 'hidden',
+        borderRadius: '8px',
+        padding: '12px',
+        backgroundColor: theme.surface,
+        boxSizing: 'border-box',
+      }}
     >
       {/* 背景画像 */}
       {settings.backgroundImage && (
         <div
-          className="pointer-events-none absolute inset-0"
           style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            pointerEvents: 'none',
             backgroundImage: `url(${settings.backgroundImage})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
@@ -90,47 +106,80 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
 
       {/* ヘッダー：店名（左）と年月（右） */}
       <div
-        className="relative mb-1 flex shrink-0 items-center justify-between"
-        style={{ color: theme.text }}
+        style={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexShrink: 0,
+          marginBottom: '4px',
+          color: theme.text,
+        }}
       >
         {/* 店名（ロゴと文字） */}
-        <div className="flex items-center gap-1 text-sm font-medium">
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: '4px',
+            fontSize: '14px',
+            fontWeight: 500,
+          }}
+        >
           {settings.shopLogo && (
-            <img src={settings.shopLogo} alt="Shop logo" className="h-5 w-5 object-contain" />
+            <img
+              src={settings.shopLogo}
+              alt="Shop logo"
+              style={{
+                height: '20px',
+                width: '20px',
+                objectFit: 'contain',
+              }}
+            />
           )}
           {settings.shopName && <span>{settings.shopName}</span>}
         </div>
 
         {/* 年月 */}
-        <div className="font-bold">
-          <span className="text-base opacity-60">
+        <div style={{ fontWeight: 700 }}>
+          <span style={{ fontSize: '16px', opacity: 0.6 }}>
             {settings.useWareki
               ? getWarekiYear(new Date(view.year, view.month, 1))
               : yearMonthParams.year}
             {t('calendar.yearSuffix')}
           </span>
-          <span className="ml-1 text-2xl">{yearMonthParams.month}</span>
-          <span className="text-base">{t('calendar.monthSuffix')}</span>
+          <span style={{ marginLeft: '4px', fontSize: '24px' }}>{yearMonthParams.month}</span>
+          <span style={{ fontSize: '16px' }}>{t('calendar.monthSuffix')}</span>
         </div>
       </div>
 
       {/* 曜日ヘッダー */}
       <div
-        className={`relative grid shrink-0 grid-cols-7 ${isLinedStyle ? 'mb-0' : 'mb-1 gap-1'}`}
-        style={
-          isLinedStyle
+        style={{
+          position: 'relative',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)',
+          flexShrink: 0,
+          marginBottom: isLinedStyle ? 0 : '4px',
+          gap: isLinedStyle ? 0 : '4px',
+          ...(isLinedStyle
             ? {
                 border: `1px solid ${lineColor}`,
                 borderBottom: `1px solid ${lineColor}`,
               }
-            : undefined
-        }
+            : {}),
+        }}
       >
         {weekdays.map((day, index) => (
           <div
             key={day.dayOfWeek}
-            className="py-1 text-center text-sm font-semibold"
             style={{
+              padding: '4px 0',
+              textAlign: 'center',
+              fontSize: '14px',
+              fontWeight: 600,
               color:
                 day.dayOfWeek === 0
                   ? theme.sunday
@@ -146,11 +195,21 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
       </div>
 
       {/* 日付グリッド（5行または6行 x 7列） */}
-      <div className="relative min-h-0 flex-1">
+      <div
+        style={{
+          position: 'relative',
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
         <div
-          className={`grid h-full grid-cols-7 overflow-hidden ${isLinedStyle ? 'gap-0' : 'gap-1'}`}
           style={{
-            gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gridTemplateRows: `repeat(${rowCount}, 1fr)`,
+            height: '100%',
+            overflow: 'hidden',
+            gap: isLinedStyle ? 0 : '4px',
             ...(isLinedStyle
               ? {
                   border: `1px solid ${lineColor}`,
@@ -200,92 +259,141 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
             return (
               <div
                 key={day.dateString}
-                className={`relative overflow-hidden p-0.5 ${isLinedStyle ? '' : 'rounded'} ${day.isCurrentMonth ? 'cursor-pointer' : ''} ${isLinedStyle && day.isCurrentMonth ? 'transition-colors hover:bg-black/5' : ''}`}
                 style={{
-                  ...linedCellStyle,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  padding: '2px',
+                  borderRadius: isLinedStyle ? 0 : '4px',
+                  cursor: day.isCurrentMonth ? 'pointer' : 'default',
                   height: '100%',
                   maxHeight: '100%',
+                  boxSizing: 'border-box',
+                  ...linedCellStyle,
                 }}
                 title={holidayName || undefined}
                 onClick={() => day.isCurrentMonth && setSelectedDate(day.dateString)}
               >
-                {(() => {
-                  return (
-                    <div className="flex h-full flex-col overflow-hidden">
-                      {/* 1行目: スタンプ（左上）と日付（右上） */}
-                      <div className="flex shrink-0 items-start justify-between">
-                        {/* スタンプ（左上固定） */}
-                        <div className="flex flex-wrap gap-0.5">
-                          {stampStyle && (
-                            <span
-                              className="inline-flex shrink-0 items-center justify-center px-1 py-0.5 font-bold"
-                              style={{
-                                backgroundColor: stampStyle.bgColor,
-                                color: stampStyle.textColor,
-                                fontSize: STAMP_FONT_SIZE,
-                                lineHeight: '1.2',
-                                borderRadius: '2px',
-                              }}
-                            >
-                              {(() => {
-                                const IconComponent = STAMP_ICONS[stampStyle.key]
-                                return IconComponent ? (
-                                  <IconComponent size={10} />
-                                ) : (
-                                  t(`quickInput.${stampStyle.key}`)
-                                )
-                              })()}
-                            </span>
-                          )}
-                        </div>
-                        {/* 六曜と日付（右上固定） */}
-                        <div className="flex shrink-0 items-baseline gap-1">
-                          {settings.showRokuyo && day.isCurrentMonth && (
-                            <div
-                              className="text-[6px] leading-none"
-                              style={{ color: getDayColor() }}
-                            >
-                              {getRokuyoName(day.date)}
-                            </div>
-                          )}
-                          <div
-                            className="text-xs font-bold leading-none"
-                            style={{ color: getDayColor() }}
-                          >
-                            {day.day}
-                          </div>
-                        </div>
-                      </div>
-                      {/* 2行目: 時刻 */}
-                      {time && (
-                        <div
-                          className="mt-1 shrink-0 font-bold"
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {/* 1行目: スタンプ（左上）と日付（右上） */}
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'flex-start',
+                      justifyContent: 'space-between',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {/* スタンプ（左上固定） */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        gap: '2px',
+                      }}
+                    >
+                      {stampStyle && (
+                        <span
                           style={{
-                            color: theme.textMuted,
-                            fontSize: TIME_FONT_SIZE,
+                            display: 'inline-flex',
+                            flexShrink: 0,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '2px 4px',
+                            fontWeight: 700,
+                            backgroundColor: stampStyle.bgColor,
+                            color: stampStyle.textColor,
+                            fontSize: STAMP_FONT_SIZE,
                             lineHeight: '1.2',
+                            borderRadius: '2px',
                           }}
                         >
-                          {time}
-                        </div>
-                      )}
-                      {/* 3行目以降: 予定コメント */}
-                      {freeText && (
-                        <div
-                          className="mt-1 min-h-0 flex-1 overflow-hidden font-bold"
-                          style={{
-                            color: theme.text,
-                            wordBreak: 'break-all',
-                            lineHeight: '1.2',
-                            fontSize: TEXT_FONT_SIZE,
-                          }}
-                        >
-                          {freeText}
-                        </div>
+                          {(() => {
+                            const IconComponent = STAMP_ICONS[stampStyle.key]
+                            return IconComponent ? (
+                              <IconComponent size={10} />
+                            ) : (
+                              t(`quickInput.${stampStyle.key}`)
+                            )
+                          })()}
+                        </span>
                       )}
                     </div>
-                  )
-                })()}
+                    {/* 六曜と日付（右上固定） */}
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        flexShrink: 0,
+                        alignItems: 'baseline',
+                        gap: '4px',
+                      }}
+                    >
+                      {settings.showRokuyo && day.isCurrentMonth && (
+                        <div
+                          style={{
+                            fontSize: '6px',
+                            lineHeight: 1,
+                            color: getDayColor(),
+                          }}
+                        >
+                          {getRokuyoName(day.date)}
+                        </div>
+                      )}
+                      <div
+                        style={{
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          lineHeight: 1,
+                          color: getDayColor(),
+                        }}
+                      >
+                        {day.day}
+                      </div>
+                    </div>
+                  </div>
+                  {/* 2行目: 時刻 */}
+                  {time && (
+                    <div
+                      style={{
+                        marginTop: '4px',
+                        flexShrink: 0,
+                        fontWeight: 700,
+                        color: theme.textMuted,
+                        fontSize: TIME_FONT_SIZE,
+                        lineHeight: '1.2',
+                      }}
+                    >
+                      {time}
+                    </div>
+                  )}
+                  {/* 3行目以降: 予定コメント */}
+                  {freeText && (
+                    <div
+                      style={{
+                        marginTop: '4px',
+                        flex: 1,
+                        minHeight: 0,
+                        overflow: 'hidden',
+                        fontWeight: 700,
+                        color: theme.text,
+                        wordBreak: 'break-all',
+                        lineHeight: '1.2',
+                        fontSize: TEXT_FONT_SIZE,
+                      }}
+                    >
+                      {freeText}
+                    </div>
+                  )}
+                </div>
               </div>
             )
           })}
@@ -304,8 +412,10 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
             <motion.div
               layoutId="calendar-selection"
               data-selection-frame
-              className={`pointer-events-none absolute ${isLinedStyle ? '' : 'rounded'}`}
               style={{
+                position: 'absolute',
+                pointerEvents: 'none',
+                borderRadius: isLinedStyle ? 0 : '4px',
                 left: `calc(${col * cellWidthPercent}% + ${(col * gap) / 7}px)`,
                 top: `calc(${row * cellHeightPercent}% + ${(row * gap) / rowCount}px)`,
                 width: `calc(${cellWidthPercent}% - ${((7 - 1) * gap) / 7}px)`,
@@ -325,8 +435,24 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
 
       {/* コメント表示（右下）- コメントがある場合のみ表示 */}
       {comment && (
-        <div className="relative mt-1 shrink-0 overflow-hidden text-right">
-          <div className="truncate text-xs" style={{ color: theme.text }}>
+        <div
+          style={{
+            position: 'relative',
+            marginTop: '4px',
+            flexShrink: 0,
+            overflow: 'hidden',
+            textAlign: 'right',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '12px',
+              color: theme.text,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
             {comment}
           </div>
         </div>
