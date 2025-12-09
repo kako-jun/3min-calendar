@@ -19,7 +19,7 @@
 | 日付操作       | date-fns 4              |
 | 祝日判定       | date-holidays           |
 | 国際化         | i18next + react-i18next |
-| 画像キャプチャ | html2canvas             |
+| 画像キャプチャ | Screen Capture API      |
 | QRコード生成   | react-qrcode-logo       |
 | アニメーション | framer-motion           |
 | PWA            | vite-plugin-pwa         |
@@ -38,11 +38,12 @@ src/
 │   ├── qr.ts, time.ts, entry.ts, rokuyo.ts, wareki.ts
 │   └── i18n/ (index.ts, ja.json, en.json)
 └── components/
-    ├── ui/ (SegmentedControl, ColorInput, ToggleSwitch, ImageSelector)
-    ├── Calendar.tsx, CalendarGrid.tsx, DayEditor.tsx, DayRow.tsx
+    ├── ui/ (SegmentedControl, ColorInput, ToggleSwitch, ImageSelector, StampIcons)
+    ├── Calendar.tsx, CalendarGrid.tsx, CalendarThemeSelector.tsx
+    ├── DayEditor.tsx, DayRow.tsx
     ├── AppHeader.tsx, MonthSelector.tsx, ActionButtons.tsx
     ├── QuickInputButtons.tsx, EmojiPicker.tsx
-    ├── SettingsPanel.tsx, QRPage.tsx
+    ├── SettingsPanel.tsx, QRPage.tsx, SponsorFooter.tsx
 ```
 
 ## 開発コマンド
