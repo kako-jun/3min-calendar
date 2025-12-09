@@ -39,7 +39,7 @@
   "calendar": {
     "today": "Today",
     "yearMonth": "{{month}}/{{year}}",
-    "commentPlaceholder": "Comment (shown at bottom right of calendar)"
+    "commentPlaceholder": "Note (shown at bottom right of calendar)"
   },
   "weekdays": {
     "sun": "Sun",
@@ -120,8 +120,8 @@
     "en": "English"
   },
   "editor": {
-    "selectDay": "Click a date on the calendar to edit",
-    "freeTextPlaceholder": "Enter comment"
+    "selectDay": "Click a date on the calendar you want to edit",
+    "freeTextPlaceholder": "Enter schedule comment"
   },
   "emoji": {
     "title": "Add emoji",

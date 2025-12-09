@@ -76,6 +76,7 @@ export function DayEditor({ showAllDays = false }: DayEditorProps) {
           dateString,
           entry: getEntry(dateString),
           isSelected: dateString === selectedDate,
+          isPlaceholder: false,
         }
       })
     : []
@@ -84,18 +85,18 @@ export function DayEditor({ showAllDays = false }: DayEditorProps) {
   const selectedDateObj = selectedDate ? new Date(selectedDate) : new Date(view.year, view.month, 1)
   const daysToShow = showAllDays
     ? allDaysOfMonth
-    : [-1, 0, 1]
-        .map((offset) => {
-          const date = addDays(selectedDateObj, offset)
-          const dateString = format(date, 'yyyy-MM-dd')
-          return {
-            date,
-            dateString,
-            entry: getEntry(dateString),
-            isSelected: offset === 0,
-          }
-        })
-        .filter((day) => day.dateString.startsWith(currentMonthPrefix))
+    : [-1, 0, 1].map((offset) => {
+        const date = addDays(selectedDateObj, offset)
+        const dateString = format(date, 'yyyy-MM-dd')
+        const isInCurrentMonth = dateString.startsWith(currentMonthPrefix)
+        return {
+          date,
+          dateString,
+          entry: isInCurrentMonth ? getEntry(dateString) : undefined,
+          isSelected: offset === 0,
+          isPlaceholder: !isInCurrentMonth,
+        }
+      })
 
   // 選択日が変わったらスクロール（showAllDaysモードのみ）
   useEffect(() => {
@@ -156,26 +157,39 @@ export function DayEditor({ showAllDays = false }: DayEditorProps) {
   return (
     <div className="flex flex-col gap-2 overflow-hidden">
       <AnimatePresence initial={false} custom={direction} mode="popLayout">
-        {daysToShow.map(({ date, dateString, entry, isSelected }) => (
-          <motion.div
-            key={dateString}
-            custom={direction}
-            variants={rowVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <DayRow
-              date={date}
-              entry={entry}
-              isSelected={isSelected}
-              onUpdate={updateEntry}
-              onCopy={handleCopy}
-              onPaste={handlePaste}
-              onSelect={setSelectedDate}
+        {daysToShow.map(({ date, dateString, entry, isSelected, isPlaceholder }) =>
+          isPlaceholder ? (
+            <motion.div
+              key={dateString}
+              custom={direction}
+              variants={rowVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="h-[88px] rounded"
+              style={{ backgroundColor: appTheme.surface, opacity: 0.3 }}
             />
-          </motion.div>
-        ))}
+          ) : (
+            <motion.div
+              key={dateString}
+              custom={direction}
+              variants={rowVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <DayRow
+                date={date}
+                entry={entry}
+                isSelected={isSelected}
+                onUpdate={updateEntry}
+                onCopy={handleCopy}
+                onPaste={handlePaste}
+                onSelect={setSelectedDate}
+              />
+            </motion.div>
+          )
+        )}
       </AnimatePresence>
     </div>
   )

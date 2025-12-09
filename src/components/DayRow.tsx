@@ -48,20 +48,31 @@ export function DayRow({
 
   // エントリから値を取得
   const stamp = entry?.stamp ?? null
-  const timeFrom = entry?.timeFrom ?? ''
-  const timeTo = entry?.timeTo ?? ''
+  const entryTimeFrom = entry?.timeFrom ?? ''
+  const entryTimeTo = entry?.timeTo ?? ''
   const freeText = entry?.text ?? ''
 
   // IME入力中フラグ（Android日本語入力対応）
   const isComposingRef = useRef(false)
+  const inputRef = useRef<HTMLInputElement>(null)
   const [localFreeText, setLocalFreeText] = useState(freeText)
+  const [localTimeFrom, setLocalTimeFrom] = useState(entryTimeFrom)
+  const [localTimeTo, setLocalTimeTo] = useState(entryTimeTo)
 
-  // 親からのtext変更を反映（IME入力中でなければ）
+  // 親からの変更を反映
   useEffect(() => {
     if (!isComposingRef.current) {
       setLocalFreeText(freeText)
     }
   }, [freeText])
+
+  useEffect(() => {
+    setLocalTimeFrom(entryTimeFrom)
+  }, [entryTimeFrom])
+
+  useEffect(() => {
+    setLocalTimeTo(entryTimeTo)
+  }, [entryTimeTo])
 
   // 入力欄やボタンにフォーカス/クリックしたらこの日を選択
   const handleFocus = () => onSelect(dateString)
@@ -76,8 +87,10 @@ export function DayRow({
   const handleTimeChange = (type: 'from' | 'to', value: string) => {
     handleFocus()
     if (type === 'from') {
+      setLocalTimeFrom(value)
       onUpdate(dateString, { timeFrom: value })
     } else {
+      setLocalTimeTo(value)
       onUpdate(dateString, { timeTo: value })
     }
   }
@@ -87,12 +100,26 @@ export function DayRow({
     onUpdate(dateString, { text: newFreeText })
   }
 
-  // 絵文字追加ハンドラ
+  // 絵文字追加ハンドラ（カーソル位置に挿入）
   const handleEmojiSelect = (emoji: string) => {
     handleFocus()
-    const newFreeText = localFreeText + emoji
-    setLocalFreeText(newFreeText)
-    handleFreeTextChange(newFreeText)
+    const input = inputRef.current
+    if (input) {
+      const start = input.selectionStart ?? localFreeText.length
+      const end = input.selectionEnd ?? localFreeText.length
+      const newFreeText = localFreeText.slice(0, start) + emoji + localFreeText.slice(end)
+      setLocalFreeText(newFreeText)
+      handleFreeTextChange(newFreeText)
+      // カーソル位置を絵文字の後ろに移動
+      requestAnimationFrame(() => {
+        input.setSelectionRange(start + emoji.length, start + emoji.length)
+        input.focus()
+      })
+    } else {
+      const newFreeText = localFreeText + emoji
+      setLocalFreeText(newFreeText)
+      handleFreeTextChange(newFreeText)
+    }
   }
 
   return (
@@ -136,6 +163,7 @@ export function DayRow({
         {/* テキスト入力（自由作文のみ） */}
         <div className="relative min-w-0 flex-1">
           <input
+            ref={inputRef}
             type="text"
             value={localFreeText}
             onChange={(e) => {
@@ -183,7 +211,7 @@ export function DayRow({
         <button
           onClick={() => {
             handleFocus()
-            onCopy({ stamp, timeFrom, timeTo, text: freeText })
+            onCopy({ stamp, timeFrom: localTimeFrom, timeTo: localTimeTo, text: localFreeText })
           }}
           className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
           style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
@@ -213,38 +241,38 @@ export function DayRow({
         {/* 時刻入力 */}
         <div className="flex items-center gap-1">
           <select
-            value={timeFrom}
+            value={localTimeFrom}
             onChange={(e) => handleTimeChange('from', e.target.value)}
             className="rounded border px-1 py-0.5 text-xs font-medium focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
               borderColor: appTheme.textMuted,
-              color: getTimeColor(timeFrom) || appTheme.text,
+              color: getTimeColor(localTimeFrom) || appTheme.text,
             }}
             title={t('time.from')}
           >
             <option value="">{t('time.none')}</option>
             {TIME_OPTIONS.map((time) => (
-              <option key={time} value={time}>
+              <option key={time} value={time} style={{ color: getTimeColor(time) || undefined }}>
                 {time}
               </option>
             ))}
           </select>
           <span style={{ color: appTheme.textMuted }}>-</span>
           <select
-            value={timeTo}
+            value={localTimeTo}
             onChange={(e) => handleTimeChange('to', e.target.value)}
             className="rounded border px-1 py-0.5 text-xs font-medium focus:outline-none"
             style={{
               backgroundColor: appTheme.bg,
               borderColor: appTheme.textMuted,
-              color: getTimeColor(timeTo) || appTheme.text,
+              color: getTimeColor(localTimeTo) || appTheme.text,
             }}
             title={t('time.to')}
           >
             <option value="">{t('time.none')}</option>
             {TIME_OPTIONS.map((time) => (
-              <option key={time} value={time}>
+              <option key={time} value={time} style={{ color: getTimeColor(time) || undefined }}>
                 {time}
               </option>
             ))}

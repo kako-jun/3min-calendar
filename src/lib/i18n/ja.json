@@ -39,7 +39,7 @@
   "calendar": {
     "today": "今日",
     "yearMonth": "{{year}}年{{month}}月",
-    "commentPlaceholder": "コメント（カレンダー右下に表示）"
+    "commentPlaceholder": "注釈（カレンダー右下に表示）"
   },
   "weekdays": {
     "sun": "日",
@@ -120,8 +120,8 @@
     "en": "English"
   },
   "editor": {
-    "selectDay": "カレンダーの日付をクリックして編集",
-    "freeTextPlaceholder": "コメントを入力"
+    "selectDay": "編集したいカレンダーの日付をクリックしてください",
+    "freeTextPlaceholder": "予定コメントを入力"
   },
   "emoji": {
     "title": "絵文字を追加",
