@@ -219,15 +219,17 @@ export async function saveCalendarThemes(themes: CalendarThemes): Promise<void> 
 export interface ExportData {
   version: number
   exportedAt: string
-  entries: DayEntry[]
-  calendarComments: CalendarComments
-  calendarThemes: CalendarThemes
-  settings: Settings
+  calendar: {
+    entries: DayEntry[]
+    comments: CalendarComments
+    themes: CalendarThemes
+    settings: Settings
+  }
 }
 
 /** 全データをエクスポート */
 export async function exportData(): Promise<ExportData> {
-  const [entries, calendarComments, calendarThemes, settings] = await Promise.all([
+  const [entries, comments, themes, settings] = await Promise.all([
     loadEntries(),
     loadCalendarComments(),
     loadCalendarThemes(),
@@ -236,16 +238,19 @@ export async function exportData(): Promise<ExportData> {
   return {
     version: DB_VERSION,
     exportedAt: new Date().toISOString(),
-    entries,
-    calendarComments,
-    calendarThemes,
-    settings,
+    calendar: {
+      entries,
+      comments,
+      themes,
+      settings,
+    },
   }
 }
 
 /** データをインポート（既存データを上書き） */
 export async function importData(data: ExportData): Promise<void> {
   const database = await openDB()
+  const calendar = data.calendar
 
   // エントリをクリアして新しいデータを書き込む
   await new Promise<void>((resolve, reject) => {
@@ -256,7 +261,7 @@ export async function importData(data: ExportData): Promise<void> {
     clearRequest.onerror = () => reject(clearRequest.error)
     clearRequest.onsuccess = () => {
       // 新しいエントリを追加
-      for (const entry of data.entries) {
+      for (const entry of calendar.entries) {
         store.put(entry)
       }
       transaction.oncomplete = () => resolve()
@@ -265,11 +270,11 @@ export async function importData(data: ExportData): Promise<void> {
   })
 
   // カレンダーコメントを上書き
-  await saveCalendarComments(data.calendarComments || {})
+  await saveCalendarComments(calendar.comments || {})
 
   // カレンダーテーマを上書き
-  await saveCalendarThemes(data.calendarThemes || {})
+  await saveCalendarThemes(calendar.themes || {})
 
   // 設定を上書き
-  await saveSettings(data.settings)
+  await saveSettings(calendar.settings)
 }

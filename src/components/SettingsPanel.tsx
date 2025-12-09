@@ -49,7 +49,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = `3min-calendar-${new Date().toISOString().slice(0, 10)}.json`
+      a.download = `3min-${new Date().toISOString().slice(0, 10)}.json`
       a.click()
       URL.revokeObjectURL(url)
     } catch (error) {
@@ -67,7 +67,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
       const data = JSON.parse(text) as ExportData
 
       // 簡易バリデーション
-      if (!data.entries || !data.settings) {
+      if (!data.calendar?.entries || !data.calendar?.settings) {
         alert(t('dataManagement.invalidFile'))
         return
       }

@@ -109,10 +109,12 @@ interface ThemeColors {
 interface ExportData {
   version: number
   exportedAt: string
-  entries: DayEntry[]
-  calendarComments: CalendarComments
-  calendarThemes: CalendarThemes
-  settings: Settings
+  calendar: {
+    entries: DayEntry[]
+    comments: CalendarComments
+    themes: CalendarThemes
+    settings: Settings
+  }
 }
 ```
 

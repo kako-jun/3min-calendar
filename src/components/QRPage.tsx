@@ -328,7 +328,7 @@ export function QRPage() {
           <span>{t('qr.safety')}</span>
         </div>
         <a
-          href="https://github.com/kako-jun/3min-calendar"
+          href="https://github.com/kako-jun/3min"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1 underline transition-opacity hover:opacity-70"
