@@ -193,7 +193,8 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
             const stampStyle = getStampStyle(entry?.stamp)
             const timeFrom = entry?.timeFrom ?? ''
             const timeTo = entry?.timeTo ?? ''
-            const time = timeFrom || timeTo ? `${timeFrom}-${timeTo}`.replace(/^-|-$/g, '') : ''
+            // 片方だけ入力の場合もハイフンを表示（「10:00-」=10:00から、「-12:00」=12:00まで）
+            const time = timeFrom || timeTo ? `${timeFrom}-${timeTo}` : ''
             const freeText = entry?.text ?? ''
 
             return (

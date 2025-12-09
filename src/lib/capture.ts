@@ -1,17 +1,62 @@
 /**
  * カレンダーを画像としてキャプチャするユーティリティ
- * Screen Capture APIを使用してブラウザの実際の表示をそのままキャプチャ
- * CSS zoomで拡大してから高解像度でキャプチャ
+ * デスクトップ: Screen Capture APIを使用
+ * モバイル: html2canvasを使用（Screen Capture APIがサポートされていないため）
  */
+
+import html2canvas from 'html2canvas'
 
 /** キャプチャ時の拡大倍率 */
 const CAPTURE_SCALE = 2
 
+/** モバイルデバイスかどうかを判定 */
+function isMobile(): boolean {
+  return /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+}
+
+/** Screen Capture APIがサポートされているか判定 */
+function isScreenCaptureSupported(): boolean {
+  return !!(navigator.mediaDevices && 'getDisplayMedia' in navigator.mediaDevices) && !isMobile()
+}
+
 /**
- * Screen Capture APIを使用して要素をキャプチャ
+ * html2canvasを使用して要素をキャプチャ（モバイル向け）
+ */
+async function captureWithHtml2Canvas(element: HTMLElement): Promise<Blob | null> {
+  try {
+    // キャプチャ前に選択枠を非表示にする
+    const selectionElement = element.querySelector('[data-selection-frame]') as HTMLElement | null
+    if (selectionElement) {
+      selectionElement.style.display = 'none'
+    }
+
+    const canvas = await html2canvas(element, {
+      scale: CAPTURE_SCALE,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: null,
+      logging: false,
+    })
+
+    // 選択枠を復元
+    if (selectionElement) {
+      selectionElement.style.display = ''
+    }
+
+    return new Promise((resolve) => {
+      canvas.toBlob((blob) => resolve(blob), 'image/png')
+    })
+  } catch (error) {
+    console.error('html2canvas キャプチャに失敗:', error)
+    return null
+  }
+}
+
+/**
+ * Screen Capture APIを使用して要素をキャプチャ（デスクトップ向け）
  * CSS zoomで拡大して高解像度化、要素以外は黒背景で隠す
  */
-export async function captureElementAsBlob(element: HTMLElement): Promise<Blob | null> {
+async function captureWithScreenCapture(element: HTMLElement): Promise<Blob | null> {
   let stream: MediaStream | null = null
   let overlay: HTMLDivElement | null = null
   const originalBodyOverflow = document.body.style.overflow
@@ -190,11 +235,23 @@ export async function captureElementAsBlob(element: HTMLElement): Promise<Blob |
 }
 
 /**
+ * 要素を画像としてキャプチャ
+ * デスクトップではScreen Capture API、モバイルではhtml2canvasを使用
+ */
+export async function captureElementAsBlob(element: HTMLElement): Promise<Blob | null> {
+  if (isScreenCaptureSupported()) {
+    return captureWithScreenCapture(element)
+  } else {
+    return captureWithHtml2Canvas(element)
+  }
+}
+
+/**
  * 画像をダウンロード
  */
 export async function downloadImage(element: HTMLElement, filename: string): Promise<void> {
   const blob = await captureElementAsBlob(element)
-  if (!blob) return
+  if (!blob) throw new Error('キャプチャに失敗')
 
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
