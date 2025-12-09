@@ -48,7 +48,7 @@ export function AppHeader() {
         <img
           src="/logo.webp"
           alt=""
-          className="mt-[5px] h-9 w-9"
+          className="mt-[4px] h-9 w-9"
           style={{
             filter: settings.appTheme === 'light' ? 'brightness(0)' : 'brightness(0) invert(1)',
           }}

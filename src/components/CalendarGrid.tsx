@@ -253,22 +253,19 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
                           </span>
                         )}
                       </div>
-                      {/* 日付（右上固定） */}
-                      <div className="shrink-0 text-right">
+                      {/* 六曜と日付（右上固定） */}
+                      <div className="flex shrink-0 items-baseline gap-1">
+                        {settings.showRokuyo && day.isCurrentMonth && (
+                          <div className="text-[6px] leading-none" style={{ color: getDayColor() }}>
+                            {getRokuyoName(day.date)}
+                          </div>
+                        )}
                         <div
                           className="text-xs font-bold leading-none"
                           style={{ color: getDayColor() }}
                         >
                           {day.day}
                         </div>
-                        {settings.showRokuyo && day.isCurrentMonth && (
-                          <div
-                            className="text-[6px] leading-none"
-                            style={{ color: theme.textMuted }}
-                          >
-                            {getRokuyoName(day.date)}
-                          </div>
-                        )}
                       </div>
                     </div>
                     {/* 2行目: 時刻 */}
