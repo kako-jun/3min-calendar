@@ -1,0 +1,170 @@
+{
+  "app": {
+    "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
+    "tagline": "ประหยัดเวลาสำหรับเจ้าของกิจการที่ยุ่ง"
+  },
+  "nav": {
+    "calendar": "ปฏิทิน",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "enterUrl": "กรุณาใส่ URL",
+    "generate": "สร้าง",
+    "sizeLabel": "ขนาด",
+    "fgColor": "สีโค้ด",
+    "bgColor": "สีพื้นหลัง",
+    "invert": "กลับสี",
+    "transparent": "พื้นหลังโปร่งใส",
+    "style": "สไตล์",
+    "styles": {
+      "squares": "สี่เหลี่ยม",
+      "dots": "จุด",
+      "fluid": "ไหล"
+    },
+    "eyeStyle": "รูปทรงตา",
+    "eyeStyles": {
+      "square": "สี่เหลี่ยม",
+      "rounded": "มน",
+      "circle": "วงกลม"
+    },
+    "logo": "โลโก้กลาง",
+    "selectLogo": "เลือกรูปภาพ",
+    "removeLogo": "ลบโลโก้",
+    "safety": "URL ของคุณจะไม่ถูกส่งไปยังเซิร์ฟเวอร์ใดๆ สร้างในเบราว์เซอร์โดยไม่มีการติดตามหรือ URL เปลี่ยนเส้นทาง",
+    "madeInJapan": "Made in Japan",
+    "openSource": "ซอร์สโค้ดมีให้บน GitHub",
+    "trademark": "QR Code เป็นเครื่องหมายการค้าจดทะเบียนของ DENSO WAVE INCORPORATED"
+  },
+  "calendar": {
+    "today": "วันนี้",
+    "yearMonth": "{{month}}/{{year}}",
+    "yearSuffix": "",
+    "monthSuffix": "",
+    "commentPlaceholder": "หมายเหตุ (แสดงที่มุมขวาล่างของปฏิทิน)"
+  },
+  "weekdays": {
+    "sun": "อา",
+    "mon": "จ",
+    "tue": "อ",
+    "wed": "พ",
+    "thu": "พฤ",
+    "fri": "ศ",
+    "sat": "ส"
+  },
+  "settings": {
+    "weekStart": "เริ่มสัปดาห์",
+    "sunday": "วันอาทิตย์",
+    "monday": "วันจันทร์",
+    "country": "ประเทศ/ภูมิภาค",
+    "language": "ภาษา",
+    "appTheme": "ธีมแอป",
+    "calendarTheme": "ธีมปฏิทิน",
+    "shopName": "ชื่อร้าน",
+    "shopLogo": "โลโก้ร้าน",
+    "showHolidays": "แสดงวันหยุด",
+    "showRokuyo": "แสดง Rokuyo",
+    "useWareki": "ใช้ศักราชญี่ปุ่น",
+    "backgroundImage": "ภาพพื้นหลัง",
+    "selectImage": "เลือกรูปภาพ",
+    "removeImage": "ลบ",
+    "backgroundOpacity": "ความทึบพื้นหลัง",
+    "qrCodeComingSoon": "QR Code (เร็วๆ นี้)"
+  },
+  "about": {
+    "author": "ผู้สร้าง"
+  },
+  "actions": {
+    "share": "แชร์",
+    "download": "ดาวน์โหลด",
+    "copy": "คัดลอก",
+    "paste": "วาง",
+    "clear": "ล้าง",
+    "settings": "ตั้งค่า",
+    "copyFromPrev": "คัดลอกจากเดือนที่แล้ว",
+    "copyFromPrevShort": "เดือนที่แล้ว"
+  },
+  "time": {
+    "from": "จาก",
+    "to": "ถึง",
+    "none": "-"
+  },
+  "quickInput": {
+    "closed": "ปิด",
+    "available": "◯",
+    "few": "△",
+    "full": "เต็ม",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "คัดลอกไปยังคลิปบอร์ดแล้ว",
+    "downloaded": "ดาวน์โหลดแล้ว",
+    "shareFailed": "แชร์ล้มเหลว",
+    "downloadFailed": "ดาวน์โหลดล้มเหลว"
+  },
+  "dataManagement": {
+    "title": "จัดการข้อมูล",
+    "export": "ส่งออก",
+    "import": "นำเข้า",
+    "exportSuccess": "ส่งออกข้อมูลแล้ว",
+    "importSuccess": "นำเข้าข้อมูลแล้ว กำลังโหลดหน้าใหม่",
+    "importConfirm": "การนำเข้าจะเขียนทับข้อมูลปัจจุบัน ต้องการดำเนินการต่อหรือไม่?",
+    "invalidFile": "ไฟล์ไม่ถูกต้อง"
+  },
+  "appThemes": {
+    "dark": "มืด",
+    "light": "สว่าง"
+  },
+  "calendarThemes": {
+    "light": "สว่าง",
+    "light-red": "สว่างแดง",
+    "light-orange": "สว่างส้ม",
+    "light-yellow": "สว่างเหลือง",
+    "light-green": "สว่างเขียว",
+    "light-blue": "สว่างน้ำเงิน",
+    "light-purple": "สว่างม่วง",
+    "dark": "มืด",
+    "dark-red": "มืดแดง",
+    "dark-orange": "มืดส้ม",
+    "dark-yellow": "มืดเหลือง",
+    "dark-green": "มืดเขียว",
+    "dark-blue": "มืดน้ำเงิน",
+    "dark-purple": "มืดม่วง"
+  },
+  "gridStyles": {
+    "rounded": "มน",
+    "lined": "ตาราง"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文",
+    "ko": "한국어",
+    "ne": "नेपाली",
+    "th": "ไทย",
+    "vi": "Tiếng Việt",
+    "tl": "Filipino",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
+  },
+  "editor": {
+    "selectDay": "คลิกวันที่ในปฏิทินที่ต้องการแก้ไข",
+    "freeTextPlaceholder": "ใส่ความคิดเห็นตารางเวลา"
+  },
+  "emoji": {
+    "title": "เพิ่มอีโมจิ",
+    "categories": {
+      "events": "กิจกรรม",
+      "food": "อาหาร",
+      "beauty": "ความงาม",
+      "nature": "ธรรมชาติ",
+      "symbols": "สัญลักษณ์",
+      "status": "สถานะ",
+      "faces": "หน้า",
+      "hands": "มือ"
+    }
+  }
+}

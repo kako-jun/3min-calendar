@@ -226,6 +226,18 @@ Turn it off if you don't need it.
 
 ---
 
+## Supported Languages
+
+日本語, English, 中文, 한국어, नेपाली, ไทย, Tiếng Việt, Filipino, Español, Português, Français
+
+Languages were selected based on shop owners the author has seen in Japan.
+
+If you know a shop owner who wants to use this app but their native language isn't supported, please request it!
+
+Starting a business is admirable. We hope your business thrives.
+
+---
+
 ## Supported Countries (Holidays)
 
 Japan, USA, UK, Germany, France, Italy, Spain,
@@ -252,6 +264,16 @@ If something isn't working, try these:
 4. **If "Share screen" doesn't appear**
    - Check if screen sharing is enabled in your browser settings
    - Some older browsers may not support this feature
+
+---
+
+## A Small Request
+
+If you find this app useful, please recommend it to other small business owners you know.
+
+Requests like "I don't want my design to match my friend's, can you add more themes?" are very welcome.
+
+As long as it can still be done in 3 minutes, we'll do our best to make it happen.
 
 ---
 

@@ -1,0 +1,170 @@
+{
+  "app": {
+    "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
+    "tagline": "바쁜 자영업자를 위한 시간 절약"
+  },
+  "nav": {
+    "calendar": "캘린더",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "enterUrl": "URL을 입력하세요",
+    "generate": "생성",
+    "sizeLabel": "크기",
+    "fgColor": "코드 색상",
+    "bgColor": "배경색",
+    "invert": "색상 반전",
+    "transparent": "투명 배경",
+    "style": "스타일",
+    "styles": {
+      "squares": "사각형",
+      "dots": "도트",
+      "fluid": "유체"
+    },
+    "eyeStyle": "눈 모양",
+    "eyeStyles": {
+      "square": "사각형",
+      "rounded": "둥근",
+      "circle": "원형"
+    },
+    "logo": "중앙 로고",
+    "selectLogo": "이미지 선택",
+    "removeLogo": "로고 삭제",
+    "safety": "입력한 URL은 서버로 전송되지 않습니다. 브라우저에서 생성되며 리디렉션 URL이 추가되지 않습니다.",
+    "madeInJapan": "Made in Japan",
+    "openSource": "소스 코드는 GitHub에서 공개 중",
+    "trademark": "QR 코드는 주식회사 덴소웨이브의 등록상표입니다"
+  },
+  "calendar": {
+    "today": "오늘",
+    "yearMonth": "{{year}}년 {{month}}월",
+    "yearSuffix": "년",
+    "monthSuffix": "월",
+    "commentPlaceholder": "메모 (캘린더 오른쪽 하단에 표시)"
+  },
+  "weekdays": {
+    "sun": "일",
+    "mon": "월",
+    "tue": "화",
+    "wed": "수",
+    "thu": "목",
+    "fri": "금",
+    "sat": "토"
+  },
+  "settings": {
+    "weekStart": "주 시작일",
+    "sunday": "일요일",
+    "monday": "월요일",
+    "country": "국가/지역",
+    "language": "언어",
+    "appTheme": "앱 테마",
+    "calendarTheme": "캘린더 테마",
+    "shopName": "상호명",
+    "shopLogo": "상호 로고",
+    "showHolidays": "공휴일 표시",
+    "showRokuyo": "육요 표시",
+    "useWareki": "일본 연호 사용",
+    "backgroundImage": "배경 이미지",
+    "selectImage": "이미지 선택",
+    "removeImage": "삭제",
+    "backgroundOpacity": "배경 투명도",
+    "qrCodeComingSoon": "QR 코드 기능 (예정)"
+  },
+  "about": {
+    "author": "제작자"
+  },
+  "actions": {
+    "share": "공유",
+    "download": "다운로드",
+    "copy": "복사",
+    "paste": "붙여넣기",
+    "clear": "지우기",
+    "settings": "설정",
+    "copyFromPrev": "지난달에서 복사",
+    "copyFromPrevShort": "지난달에서"
+  },
+  "time": {
+    "from": "시작",
+    "to": "종료",
+    "none": "-"
+  },
+  "quickInput": {
+    "closed": "휴무",
+    "available": "◯",
+    "few": "△",
+    "full": "만석",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "클립보드에 복사되었습니다",
+    "downloaded": "다운로드 완료",
+    "shareFailed": "공유 실패",
+    "downloadFailed": "다운로드 실패"
+  },
+  "dataManagement": {
+    "title": "데이터 관리",
+    "export": "내보내기",
+    "import": "가져오기",
+    "exportSuccess": "데이터를 내보냈습니다",
+    "importSuccess": "데이터를 가져왔습니다. 페이지를 새로고침합니다.",
+    "importConfirm": "가져오기를 하면 현재 데이터가 덮어쓰기됩니다. 계속하시겠습니까?",
+    "invalidFile": "잘못된 파일입니다"
+  },
+  "appThemes": {
+    "dark": "다크",
+    "light": "라이트"
+  },
+  "calendarThemes": {
+    "light": "라이트",
+    "light-red": "라이트 레드",
+    "light-orange": "라이트 오렌지",
+    "light-yellow": "라이트 옐로우",
+    "light-green": "라이트 그린",
+    "light-blue": "라이트 블루",
+    "light-purple": "라이트 퍼플",
+    "dark": "다크",
+    "dark-red": "다크 레드",
+    "dark-orange": "다크 오렌지",
+    "dark-yellow": "다크 옐로우",
+    "dark-green": "다크 그린",
+    "dark-blue": "다크 블루",
+    "dark-purple": "다크 퍼플"
+  },
+  "gridStyles": {
+    "rounded": "둥근 모서리",
+    "lined": "격자"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文",
+    "ko": "한국어",
+    "ne": "नेपाली",
+    "th": "ไทย",
+    "vi": "Tiếng Việt",
+    "tl": "Filipino",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
+  },
+  "editor": {
+    "selectDay": "편집할 날짜를 캘린더에서 클릭하세요",
+    "freeTextPlaceholder": "일정 메모 입력"
+  },
+  "emoji": {
+    "title": "이모지 추가",
+    "categories": {
+      "events": "이벤트",
+      "food": "음식",
+      "beauty": "뷰티",
+      "nature": "자연",
+      "symbols": "기호",
+      "status": "상태",
+      "faces": "표정",
+      "hands": "손"
+    }
+  }
+}

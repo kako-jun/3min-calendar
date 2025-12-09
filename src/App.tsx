@@ -4,11 +4,15 @@ import { useCalendarStore } from './lib/store'
 import { APP_THEMES } from './lib/types'
 import { Calendar } from './components/Calendar'
 import { QRPage } from './components/QRPage'
+import { useLanguageFont } from './hooks/useLanguageFont'
 
 function App() {
   const initialize = useCalendarStore((state) => state.initialize)
   const settings = useCalendarStore((state) => state.settings)
   const initialized = useCalendarStore((state) => state.initialized)
+
+  // 言語に応じたフォントを動的に読み込む
+  useLanguageFont(settings.language)
 
   useEffect(() => {
     initialize()

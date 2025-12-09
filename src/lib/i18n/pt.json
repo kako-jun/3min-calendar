@@ -1,0 +1,170 @@
+{
+  "app": {
+    "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
+    "tagline": "Economize tempo para proprietários ocupados"
+  },
+  "nav": {
+    "calendar": "Calendário",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "enterUrl": "Digite uma URL",
+    "generate": "Gerar",
+    "sizeLabel": "Tamanho",
+    "fgColor": "Cor do código",
+    "bgColor": "Fundo",
+    "invert": "Inverter cores",
+    "transparent": "Fundo transparente",
+    "style": "Estilo",
+    "styles": {
+      "squares": "Quadrados",
+      "dots": "Pontos",
+      "fluid": "Fluido"
+    },
+    "eyeStyle": "Formato do olho",
+    "eyeStyles": {
+      "square": "Quadrado",
+      "rounded": "Arredondado",
+      "circle": "Círculo"
+    },
+    "logo": "Logo central",
+    "selectLogo": "Selecionar imagem",
+    "removeLogo": "Remover logo",
+    "safety": "Sua URL nunca é enviada para nenhum servidor. Gerada localmente no seu navegador sem rastreamento ou URLs de redirecionamento.",
+    "madeInJapan": "Made in Japan",
+    "openSource": "Código fonte disponível no GitHub",
+    "trademark": "QR Code é uma marca registrada da DENSO WAVE INCORPORATED"
+  },
+  "calendar": {
+    "today": "Hoje",
+    "yearMonth": "{{month}}/{{year}}",
+    "yearSuffix": "",
+    "monthSuffix": "",
+    "commentPlaceholder": "Nota (exibida no canto inferior direito do calendário)"
+  },
+  "weekdays": {
+    "sun": "Dom",
+    "mon": "Seg",
+    "tue": "Ter",
+    "wed": "Qua",
+    "thu": "Qui",
+    "fri": "Sex",
+    "sat": "Sáb"
+  },
+  "settings": {
+    "weekStart": "Semana começa",
+    "sunday": "Domingo",
+    "monday": "Segunda",
+    "country": "País/Região",
+    "language": "Idioma",
+    "appTheme": "Aparência",
+    "calendarTheme": "Tema do calendário",
+    "shopName": "Nome da loja",
+    "shopLogo": "Logo da loja",
+    "showHolidays": "Mostrar feriados",
+    "showRokuyo": "Mostrar Rokuyo",
+    "useWareki": "Usar era japonesa",
+    "backgroundImage": "Imagem de fundo",
+    "selectImage": "Selecionar imagem",
+    "removeImage": "Remover",
+    "backgroundOpacity": "Opacidade do fundo",
+    "qrCodeComingSoon": "Código QR (Em breve)"
+  },
+  "about": {
+    "author": "Autor"
+  },
+  "actions": {
+    "share": "Compartilhar",
+    "download": "Baixar",
+    "copy": "Copiar",
+    "paste": "Colar",
+    "clear": "Limpar",
+    "settings": "Configurações",
+    "copyFromPrev": "Copiar do mês anterior",
+    "copyFromPrevShort": "Mês anterior"
+  },
+  "time": {
+    "from": "De",
+    "to": "Até",
+    "none": "-"
+  },
+  "quickInput": {
+    "closed": "Fechado",
+    "available": "◯",
+    "few": "△",
+    "full": "Lotado",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "Copiado para a área de transferência",
+    "downloaded": "Baixado",
+    "shareFailed": "Falha ao compartilhar",
+    "downloadFailed": "Falha ao baixar"
+  },
+  "dataManagement": {
+    "title": "Gerenciamento de dados",
+    "export": "Exportar",
+    "import": "Importar",
+    "exportSuccess": "Dados exportados",
+    "importSuccess": "Dados importados. Recarregando página.",
+    "importConfirm": "A importação substituirá os dados atuais. Continuar?",
+    "invalidFile": "Arquivo inválido"
+  },
+  "appThemes": {
+    "dark": "Escuro",
+    "light": "Claro"
+  },
+  "calendarThemes": {
+    "light": "Claro",
+    "light-red": "Claro Vermelho",
+    "light-orange": "Claro Laranja",
+    "light-yellow": "Claro Amarelo",
+    "light-green": "Claro Verde",
+    "light-blue": "Claro Azul",
+    "light-purple": "Claro Roxo",
+    "dark": "Escuro",
+    "dark-red": "Escuro Vermelho",
+    "dark-orange": "Escuro Laranja",
+    "dark-yellow": "Escuro Amarelo",
+    "dark-green": "Escuro Verde",
+    "dark-blue": "Escuro Azul",
+    "dark-purple": "Escuro Roxo"
+  },
+  "gridStyles": {
+    "rounded": "Arredondado",
+    "lined": "Grade"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文",
+    "ko": "한국어",
+    "ne": "नेपाली",
+    "th": "ไทย",
+    "vi": "Tiếng Việt",
+    "tl": "Filipino",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
+  },
+  "editor": {
+    "selectDay": "Clique em uma data no calendário que você quer editar",
+    "freeTextPlaceholder": "Digite um comentário de agenda"
+  },
+  "emoji": {
+    "title": "Adicionar emoji",
+    "categories": {
+      "events": "Eventos",
+      "food": "Comida",
+      "beauty": "Beleza",
+      "nature": "Natureza",
+      "symbols": "Símbolos",
+      "status": "Status",
+      "faces": "Rostos",
+      "hands": "Mãos"
+    }
+  }
+}

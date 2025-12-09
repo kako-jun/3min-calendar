@@ -8,7 +8,16 @@
 </p>
 
 <p align="center">
-  <a href="./README.en.md">English</a> ・ <a href="./README.zh.md">中文</a>
+  <a href="./README.en.md">English</a> ・
+  <a href="./README.zh.md">中文</a> ・
+  <a href="./README.ko.md">한국어</a> ・
+  <a href="./README.th.md">ไทย</a> ・
+  <a href="./README.vi.md">Tiếng Việt</a> ・
+  <a href="./README.ne.md">नेपाली</a> ・
+  <a href="./README.tl.md">Filipino</a> ・
+  <a href="./README.es.md">Español</a> ・
+  <a href="./README.pt.md">Português</a> ・
+  <a href="./README.fr.md">Français</a>
 </p>
 
 **がんばる個人経営者の時短に**
@@ -225,6 +234,18 @@ InstagramやLINEで、お客様にサッと共有できます。
 
 ---
 
+## 対応言語
+
+日本語、English、中文、한국어、नेपाली、ไทย、Tiếng Việt、Filipino、Español、Português、Français
+
+作者が日本で見かけたお店のオーナーさんが使う言語から選びました。
+
+もし、あなたの知り合いのオーナーさんがこのアプリを使いたいけど、母国語に対応していないという場合は、ぜひリクエストしてください。
+
+商売を始める人は尊い。あなたの商売がうまくいきますように。
+
+---
+
 ## 対応している国（祝日）
 
 日本、アメリカ、イギリス、ドイツ、フランス、イタリア、スペイン、
@@ -251,6 +272,16 @@ InstagramやLINEで、お客様にサッと共有できます。
 4. **「画面の共有」が出ない場合**
    - ブラウザの設定で「画面の共有」が許可されているか確認してください
    - 一部の古いブラウザでは対応していない場合があります
+
+---
+
+## お願い
+
+このアプリを便利だと感じたら、ぜひお知り合いの個人経営者さんにもすすめてください。
+
+「友達とデザインがかぶるから、もっと種類を増やして」などのリクエストも大歓迎です。
+
+3分で操作できる範囲であれば、できるだけ叶えます。
 
 ---
 

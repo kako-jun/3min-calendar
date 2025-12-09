@@ -21,13 +21,13 @@ import {
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { useCalendarStore } from '../lib/store'
 import { SUPPORTED_COUNTRIES, type CountryCode } from '../lib/holidays'
-import { APP_THEMES, type AppTheme } from '../lib/types'
+import { APP_THEMES, type AppTheme, type Settings } from '../lib/types'
+import { SUPPORTED_LANGUAGES } from '../lib/i18n'
 import { exportData, importData, type ExportData } from '../lib/storage'
 import { ToggleSwitch } from './ui/ToggleSwitch'
 import { ImageSelector } from './ui/ImageSelector'
 
 const APP_THEME_IDS: AppTheme[] = ['light', 'dark']
-const LANGUAGES = ['ja', 'en', 'zh'] as const
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -212,7 +212,9 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
               </span>
               <select
                 value={settings.language}
-                onChange={(e) => updateSettings({ language: e.target.value as 'ja' | 'en' | 'zh' })}
+                onChange={(e) =>
+                  updateSettings({ language: e.target.value as Settings['language'] })
+                }
                 className="rounded border px-3 py-1 text-sm"
                 style={{
                   backgroundColor: appTheme.bg,
@@ -220,7 +222,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                   color: appTheme.text,
                 }}
               >
-                {LANGUAGES.map((lang) => (
+                {SUPPORTED_LANGUAGES.map((lang) => (
                   <option key={lang} value={lang}>
                     {t(`languages.${lang}`)}
                   </option>

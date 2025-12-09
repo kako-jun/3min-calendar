@@ -1,0 +1,170 @@
+{
+  "app": {
+    "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
+    "tagline": "Makatipid ng oras para sa abalang mga may-ari ng negosyo"
+  },
+  "nav": {
+    "calendar": "Kalendaryo",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "enterUrl": "Maglagay ng URL",
+    "generate": "Gumawa",
+    "sizeLabel": "Laki",
+    "fgColor": "Kulay ng Code",
+    "bgColor": "Background",
+    "invert": "Baligtarin ang kulay",
+    "transparent": "Transparent na background",
+    "style": "Istilo",
+    "styles": {
+      "squares": "Parisukat",
+      "dots": "Tuldok",
+      "fluid": "Likido"
+    },
+    "eyeStyle": "Hugis ng Mata",
+    "eyeStyles": {
+      "square": "Parisukat",
+      "rounded": "Bilog",
+      "circle": "Bilog"
+    },
+    "logo": "Gitnang Logo",
+    "selectLogo": "Pumili ng larawan",
+    "removeLogo": "Alisin ang logo",
+    "safety": "Ang iyong URL ay hindi ipinapadala sa anumang server. Nalikha nang lokal sa iyong browser nang walang pagsubaybay o mga redirect URL.",
+    "madeInJapan": "Made in Japan",
+    "openSource": "Available ang source code sa GitHub",
+    "trademark": "Ang QR Code ay registered trademark ng DENSO WAVE INCORPORATED"
+  },
+  "calendar": {
+    "today": "Ngayon",
+    "yearMonth": "{{month}}/{{year}}",
+    "yearSuffix": "",
+    "monthSuffix": "",
+    "commentPlaceholder": "Tala (ipinapakita sa kanang ibaba ng kalendaryo)"
+  },
+  "weekdays": {
+    "sun": "Lin",
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Miy",
+    "thu": "Huw",
+    "fri": "Biy",
+    "sat": "Sab"
+  },
+  "settings": {
+    "weekStart": "Simula ng linggo",
+    "sunday": "Linggo",
+    "monday": "Lunes",
+    "country": "Bansa/Rehiyon",
+    "language": "Wika",
+    "appTheme": "Hitsura",
+    "calendarTheme": "Tema ng kalendaryo",
+    "shopName": "Pangalan ng tindahan",
+    "shopLogo": "Logo ng tindahan",
+    "showHolidays": "Ipakita ang mga piyesta opisyal",
+    "showRokuyo": "Ipakita ang Rokuyo",
+    "useWareki": "Gamitin ang Japanese era",
+    "backgroundImage": "Larawan sa likod",
+    "selectImage": "Pumili ng larawan",
+    "removeImage": "Alisin",
+    "backgroundOpacity": "Opacity ng background",
+    "qrCodeComingSoon": "QR Code (Malapit Na)"
+  },
+  "about": {
+    "author": "May-akda"
+  },
+  "actions": {
+    "share": "Ibahagi",
+    "download": "I-download",
+    "copy": "Kopyahin",
+    "paste": "I-paste",
+    "clear": "Burahin",
+    "settings": "Mga Setting",
+    "copyFromPrev": "Kopyahin mula sa nakaraang buwan",
+    "copyFromPrevShort": "Nakaraang buwan"
+  },
+  "time": {
+    "from": "Mula",
+    "to": "Hanggang",
+    "none": "-"
+  },
+  "quickInput": {
+    "closed": "Sarado",
+    "available": "◯",
+    "few": "△",
+    "full": "Puno",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "Nakopya sa clipboard",
+    "downloaded": "Na-download",
+    "shareFailed": "Nabigo ang pagbabahagi",
+    "downloadFailed": "Nabigo ang pag-download"
+  },
+  "dataManagement": {
+    "title": "Pamamahala ng Data",
+    "export": "I-export",
+    "import": "I-import",
+    "exportSuccess": "Na-export ang data",
+    "importSuccess": "Na-import ang data. Nire-reload ang pahina.",
+    "importConfirm": "Ang pag-import ay mapapalitan ang kasalukuyang data. Magpatuloy?",
+    "invalidFile": "Hindi wastong file"
+  },
+  "appThemes": {
+    "dark": "Madilim",
+    "light": "Maliwanag"
+  },
+  "calendarThemes": {
+    "light": "Maliwanag",
+    "light-red": "Maliwanag na Pula",
+    "light-orange": "Maliwanag na Kahel",
+    "light-yellow": "Maliwanag na Dilaw",
+    "light-green": "Maliwanag na Berde",
+    "light-blue": "Maliwanag na Asul",
+    "light-purple": "Maliwanag na Lila",
+    "dark": "Madilim",
+    "dark-red": "Madilim na Pula",
+    "dark-orange": "Madilim na Kahel",
+    "dark-yellow": "Madilim na Dilaw",
+    "dark-green": "Madilim na Berde",
+    "dark-blue": "Madilim na Asul",
+    "dark-purple": "Madilim na Lila"
+  },
+  "gridStyles": {
+    "rounded": "Bilugan",
+    "lined": "Grid"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文",
+    "ko": "한국어",
+    "ne": "नेपाली",
+    "th": "ไทย",
+    "vi": "Tiếng Việt",
+    "tl": "Filipino",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
+  },
+  "editor": {
+    "selectDay": "I-click ang petsa sa kalendaryo na gusto mong i-edit",
+    "freeTextPlaceholder": "Maglagay ng komento sa iskedyul"
+  },
+  "emoji": {
+    "title": "Magdagdag ng emoji",
+    "categories": {
+      "events": "Mga Kaganapan",
+      "food": "Pagkain",
+      "beauty": "Kagandahan",
+      "nature": "Kalikasan",
+      "symbols": "Mga Simbolo",
+      "status": "Katayuan",
+      "faces": "Mga Mukha",
+      "hands": "Mga Kamay"
+    }
+  }
+}

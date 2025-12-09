@@ -140,7 +140,15 @@
   "languages": {
     "ja": "日本語",
     "en": "English",
-    "zh": "中文"
+    "zh": "中文",
+    "ko": "한국어",
+    "ne": "नेपाली",
+    "th": "ไทย",
+    "vi": "Tiếng Việt",
+    "tl": "Filipino",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
   },
   "editor": {
     "selectDay": "Click a date on the calendar you want to edit",

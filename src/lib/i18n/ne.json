@@ -1,0 +1,170 @@
+{
+  "app": {
+    "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
+    "tagline": "व्यस्त व्यवसायीहरूको समय बचत"
+  },
+  "nav": {
+    "calendar": "क्यालेन्डर",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "enterUrl": "URL प्रविष्ट गर्नुहोस्",
+    "generate": "बनाउनुहोस्",
+    "sizeLabel": "आकार",
+    "fgColor": "कोड रंग",
+    "bgColor": "पृष्ठभूमि",
+    "invert": "रंग उल्टो",
+    "transparent": "पारदर्शी पृष्ठभूमि",
+    "style": "शैली",
+    "styles": {
+      "squares": "वर्ग",
+      "dots": "बिन्दु",
+      "fluid": "तरल"
+    },
+    "eyeStyle": "आँखा आकार",
+    "eyeStyles": {
+      "square": "वर्ग",
+      "rounded": "गोलाकार",
+      "circle": "वृत्त"
+    },
+    "logo": "केन्द्र लोगो",
+    "selectLogo": "छवि छान्नुहोस्",
+    "removeLogo": "लोगो हटाउनुहोस्",
+    "safety": "तपाईंको URL सर्भरमा पठाइँदैन। ब्राउजरमा बनाइन्छ, कुनै ट्र्याकिङ वा रिडाइरेक्ट छैन।",
+    "madeInJapan": "Made in Japan",
+    "openSource": "स्रोत कोड GitHub मा उपलब्ध",
+    "trademark": "QR कोड DENSO WAVE INCORPORATED को दर्ता ट्रेडमार्क हो"
+  },
+  "calendar": {
+    "today": "आज",
+    "yearMonth": "{{year}} {{month}}",
+    "yearSuffix": "",
+    "monthSuffix": "",
+    "commentPlaceholder": "नोट (क्यालेन्डरको तल दायाँमा देखिन्छ)"
+  },
+  "weekdays": {
+    "sun": "आइत",
+    "mon": "सोम",
+    "tue": "मंगल",
+    "wed": "बुध",
+    "thu": "बिही",
+    "fri": "शुक्र",
+    "sat": "शनि"
+  },
+  "settings": {
+    "weekStart": "हप्ता सुरु",
+    "sunday": "आइतबार",
+    "monday": "सोमबार",
+    "country": "देश/क्षेत्र",
+    "language": "भाषा",
+    "appTheme": "एप थिम",
+    "calendarTheme": "क्यालेन्डर थिम",
+    "shopName": "पसलको नाम",
+    "shopLogo": "पसलको लोगो",
+    "showHolidays": "बिदाहरू देखाउनुहोस्",
+    "showRokuyo": "रोकुयो देखाउनुहोस्",
+    "useWareki": "जापानी युग प्रयोग",
+    "backgroundImage": "पृष्ठभूमि छवि",
+    "selectImage": "छवि छान्नुहोस्",
+    "removeImage": "हटाउनुहोस्",
+    "backgroundOpacity": "पृष्ठभूमि अपारदर्शिता",
+    "qrCodeComingSoon": "QR कोड (आउँदैछ)"
+  },
+  "about": {
+    "author": "लेखक"
+  },
+  "actions": {
+    "share": "साझा गर्नुहोस्",
+    "download": "डाउनलोड",
+    "copy": "प्रतिलिपि",
+    "paste": "टाँस्नुहोस्",
+    "clear": "खाली गर्नुहोस्",
+    "settings": "सेटिङ",
+    "copyFromPrev": "गत महिनाबाट प्रतिलिपि",
+    "copyFromPrevShort": "गत महिना"
+  },
+  "time": {
+    "from": "देखि",
+    "to": "सम्म",
+    "none": "-"
+  },
+  "quickInput": {
+    "closed": "बन्द",
+    "available": "◯",
+    "few": "△",
+    "full": "भरियो",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "क्लिपबोर्डमा प्रतिलिपि गरियो",
+    "downloaded": "डाउनलोड भयो",
+    "shareFailed": "साझा गर्न असफल",
+    "downloadFailed": "डाउनलोड असफल"
+  },
+  "dataManagement": {
+    "title": "डाटा व्यवस्थापन",
+    "export": "निर्यात",
+    "import": "आयात",
+    "exportSuccess": "डाटा निर्यात भयो",
+    "importSuccess": "डाटा आयात भयो। पृष्ठ पुन: लोड हुँदैछ।",
+    "importConfirm": "आयातले हालको डाटा मेटाउनेछ। जारी राख्ने?",
+    "invalidFile": "अमान्य फाइल"
+  },
+  "appThemes": {
+    "dark": "गाढा",
+    "light": "हल्का"
+  },
+  "calendarThemes": {
+    "light": "हल्का",
+    "light-red": "हल्का रातो",
+    "light-orange": "हल्का सुन्तला",
+    "light-yellow": "हल्का पहेंलो",
+    "light-green": "हल्का हरियो",
+    "light-blue": "हल्का निलो",
+    "light-purple": "हल्का बैजनी",
+    "dark": "गाढा",
+    "dark-red": "गाढा रातो",
+    "dark-orange": "गाढा सुन्तला",
+    "dark-yellow": "गाढा पहेंलो",
+    "dark-green": "गाढा हरियो",
+    "dark-blue": "गाढा निलो",
+    "dark-purple": "गाढा बैजनी"
+  },
+  "gridStyles": {
+    "rounded": "गोलाकार",
+    "lined": "ग्रिड"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文",
+    "ko": "한국어",
+    "ne": "नेपाली",
+    "th": "ไทย",
+    "vi": "Tiếng Việt",
+    "tl": "Filipino",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
+  },
+  "editor": {
+    "selectDay": "सम्पादन गर्न क्यालेन्डरमा मिति क्लिक गर्नुहोस्",
+    "freeTextPlaceholder": "तालिका टिप्पणी प्रविष्ट गर्नुहोस्"
+  },
+  "emoji": {
+    "title": "इमोजी थप्नुहोस्",
+    "categories": {
+      "events": "कार्यक्रम",
+      "food": "खाना",
+      "beauty": "सौन्दर्य",
+      "nature": "प्रकृति",
+      "symbols": "प्रतीक",
+      "status": "स्थिति",
+      "faces": "अनुहार",
+      "hands": "हात"
+    }
+  }
+}

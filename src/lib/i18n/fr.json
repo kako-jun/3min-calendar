@@ -1,0 +1,170 @@
+{
+  "app": {
+    "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
+    "tagline": "Gagnez du temps pour les propriétaires occupés"
+  },
+  "nav": {
+    "calendar": "Calendrier",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "enterUrl": "Entrez une URL",
+    "generate": "Générer",
+    "sizeLabel": "Taille",
+    "fgColor": "Couleur du code",
+    "bgColor": "Arrière-plan",
+    "invert": "Inverser les couleurs",
+    "transparent": "Arrière-plan transparent",
+    "style": "Style",
+    "styles": {
+      "squares": "Carrés",
+      "dots": "Points",
+      "fluid": "Fluide"
+    },
+    "eyeStyle": "Forme de l'œil",
+    "eyeStyles": {
+      "square": "Carré",
+      "rounded": "Arrondi",
+      "circle": "Cercle"
+    },
+    "logo": "Logo central",
+    "selectLogo": "Sélectionner une image",
+    "removeLogo": "Supprimer le logo",
+    "safety": "Votre URL n'est jamais envoyée à aucun serveur. Générée localement dans votre navigateur sans suivi ni URL de redirection.",
+    "madeInJapan": "Made in Japan",
+    "openSource": "Code source disponible sur GitHub",
+    "trademark": "QR Code est une marque déposée de DENSO WAVE INCORPORATED"
+  },
+  "calendar": {
+    "today": "Aujourd'hui",
+    "yearMonth": "{{month}}/{{year}}",
+    "yearSuffix": "",
+    "monthSuffix": "",
+    "commentPlaceholder": "Note (affichée en bas à droite du calendrier)"
+  },
+  "weekdays": {
+    "sun": "Dim",
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Mer",
+    "thu": "Jeu",
+    "fri": "Ven",
+    "sat": "Sam"
+  },
+  "settings": {
+    "weekStart": "La semaine commence",
+    "sunday": "Dimanche",
+    "monday": "Lundi",
+    "country": "Pays/Région",
+    "language": "Langue",
+    "appTheme": "Apparence",
+    "calendarTheme": "Thème du calendrier",
+    "shopName": "Nom du commerce",
+    "shopLogo": "Logo du commerce",
+    "showHolidays": "Afficher les jours fériés",
+    "showRokuyo": "Afficher Rokuyo",
+    "useWareki": "Utiliser l'ère japonaise",
+    "backgroundImage": "Image de fond",
+    "selectImage": "Sélectionner une image",
+    "removeImage": "Supprimer",
+    "backgroundOpacity": "Opacité du fond",
+    "qrCodeComingSoon": "Code QR (Bientôt)"
+  },
+  "about": {
+    "author": "Auteur"
+  },
+  "actions": {
+    "share": "Partager",
+    "download": "Télécharger",
+    "copy": "Copier",
+    "paste": "Coller",
+    "clear": "Effacer",
+    "settings": "Paramètres",
+    "copyFromPrev": "Copier du mois précédent",
+    "copyFromPrevShort": "Mois précédent"
+  },
+  "time": {
+    "from": "De",
+    "to": "À",
+    "none": "-"
+  },
+  "quickInput": {
+    "closed": "Fermé",
+    "available": "◯",
+    "few": "△",
+    "full": "Complet",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "Copié dans le presse-papiers",
+    "downloaded": "Téléchargé",
+    "shareFailed": "Échec du partage",
+    "downloadFailed": "Échec du téléchargement"
+  },
+  "dataManagement": {
+    "title": "Gestion des données",
+    "export": "Exporter",
+    "import": "Importer",
+    "exportSuccess": "Données exportées",
+    "importSuccess": "Données importées. Rechargement de la page.",
+    "importConfirm": "L'importation écrasera les données actuelles. Continuer ?",
+    "invalidFile": "Fichier invalide"
+  },
+  "appThemes": {
+    "dark": "Sombre",
+    "light": "Clair"
+  },
+  "calendarThemes": {
+    "light": "Clair",
+    "light-red": "Clair Rouge",
+    "light-orange": "Clair Orange",
+    "light-yellow": "Clair Jaune",
+    "light-green": "Clair Vert",
+    "light-blue": "Clair Bleu",
+    "light-purple": "Clair Violet",
+    "dark": "Sombre",
+    "dark-red": "Sombre Rouge",
+    "dark-orange": "Sombre Orange",
+    "dark-yellow": "Sombre Jaune",
+    "dark-green": "Sombre Vert",
+    "dark-blue": "Sombre Bleu",
+    "dark-purple": "Sombre Violet"
+  },
+  "gridStyles": {
+    "rounded": "Arrondi",
+    "lined": "Grille"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文",
+    "ko": "한국어",
+    "ne": "नेपाली",
+    "th": "ไทย",
+    "vi": "Tiếng Việt",
+    "tl": "Filipino",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
+  },
+  "editor": {
+    "selectDay": "Cliquez sur une date du calendrier que vous souhaitez modifier",
+    "freeTextPlaceholder": "Entrez un commentaire d'horaire"
+  },
+  "emoji": {
+    "title": "Ajouter un emoji",
+    "categories": {
+      "events": "Événements",
+      "food": "Nourriture",
+      "beauty": "Beauté",
+      "nature": "Nature",
+      "symbols": "Symboles",
+      "status": "Statut",
+      "faces": "Visages",
+      "hands": "Mains"
+    }
+  }
+}

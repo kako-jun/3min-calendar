@@ -1,0 +1,170 @@
+{
+  "app": {
+    "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
+    "tagline": "Tiết kiệm thời gian cho chủ doanh nghiệp bận rộn"
+  },
+  "nav": {
+    "calendar": "Lịch",
+    "qr": "QR"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "enterUrl": "Nhập URL",
+    "generate": "Tạo",
+    "sizeLabel": "Kích thước",
+    "fgColor": "Màu mã",
+    "bgColor": "Nền",
+    "invert": "Đảo màu",
+    "transparent": "Nền trong suốt",
+    "style": "Kiểu",
+    "styles": {
+      "squares": "Vuông",
+      "dots": "Chấm",
+      "fluid": "Lỏng"
+    },
+    "eyeStyle": "Hình dạng mắt",
+    "eyeStyles": {
+      "square": "Vuông",
+      "rounded": "Bo tròn",
+      "circle": "Tròn"
+    },
+    "logo": "Logo giữa",
+    "selectLogo": "Chọn ảnh",
+    "removeLogo": "Xóa logo",
+    "safety": "URL của bạn không bao giờ được gửi đến bất kỳ máy chủ nào. Được tạo cục bộ trong trình duyệt mà không có theo dõi hoặc URL chuyển hướng.",
+    "madeInJapan": "Made in Japan",
+    "openSource": "Mã nguồn có sẵn trên GitHub",
+    "trademark": "Mã QR là nhãn hiệu đã đăng ký của DENSO WAVE INCORPORATED"
+  },
+  "calendar": {
+    "today": "Hôm nay",
+    "yearMonth": "{{month}}/{{year}}",
+    "yearSuffix": "",
+    "monthSuffix": "",
+    "commentPlaceholder": "Ghi chú (hiển thị ở góc phải dưới của lịch)"
+  },
+  "weekdays": {
+    "sun": "CN",
+    "mon": "T2",
+    "tue": "T3",
+    "wed": "T4",
+    "thu": "T5",
+    "fri": "T6",
+    "sat": "T7"
+  },
+  "settings": {
+    "weekStart": "Tuần bắt đầu",
+    "sunday": "Chủ nhật",
+    "monday": "Thứ hai",
+    "country": "Quốc gia/Khu vực",
+    "language": "Ngôn ngữ",
+    "appTheme": "Giao diện",
+    "calendarTheme": "Chủ đề lịch",
+    "shopName": "Tên cửa hàng",
+    "shopLogo": "Logo cửa hàng",
+    "showHolidays": "Hiển thị ngày lễ",
+    "showRokuyo": "Hiển thị Rokuyo",
+    "useWareki": "Dùng niên đại Nhật",
+    "backgroundImage": "Ảnh nền",
+    "selectImage": "Chọn ảnh",
+    "removeImage": "Xóa",
+    "backgroundOpacity": "Độ mờ nền",
+    "qrCodeComingSoon": "Mã QR (Sắp ra mắt)"
+  },
+  "about": {
+    "author": "Tác giả"
+  },
+  "actions": {
+    "share": "Chia sẻ",
+    "download": "Tải xuống",
+    "copy": "Sao chép",
+    "paste": "Dán",
+    "clear": "Xóa",
+    "settings": "Cài đặt",
+    "copyFromPrev": "Sao chép từ tháng trước",
+    "copyFromPrevShort": "Tháng trước"
+  },
+  "time": {
+    "from": "Từ",
+    "to": "Đến",
+    "none": "-"
+  },
+  "quickInput": {
+    "closed": "Đóng",
+    "available": "◯",
+    "few": "△",
+    "full": "Hết",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "Đã sao chép vào clipboard",
+    "downloaded": "Đã tải xuống",
+    "shareFailed": "Chia sẻ thất bại",
+    "downloadFailed": "Tải xuống thất bại"
+  },
+  "dataManagement": {
+    "title": "Quản lý dữ liệu",
+    "export": "Xuất",
+    "import": "Nhập",
+    "exportSuccess": "Đã xuất dữ liệu",
+    "importSuccess": "Đã nhập dữ liệu. Đang tải lại trang.",
+    "importConfirm": "Nhập sẽ ghi đè dữ liệu hiện tại. Tiếp tục?",
+    "invalidFile": "Tệp không hợp lệ"
+  },
+  "appThemes": {
+    "dark": "Tối",
+    "light": "Sáng"
+  },
+  "calendarThemes": {
+    "light": "Sáng",
+    "light-red": "Sáng đỏ",
+    "light-orange": "Sáng cam",
+    "light-yellow": "Sáng vàng",
+    "light-green": "Sáng xanh lá",
+    "light-blue": "Sáng xanh",
+    "light-purple": "Sáng tím",
+    "dark": "Tối",
+    "dark-red": "Tối đỏ",
+    "dark-orange": "Tối cam",
+    "dark-yellow": "Tối vàng",
+    "dark-green": "Tối xanh lá",
+    "dark-blue": "Tối xanh",
+    "dark-purple": "Tối tím"
+  },
+  "gridStyles": {
+    "rounded": "Bo tròn",
+    "lined": "Lưới"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文",
+    "ko": "한국어",
+    "ne": "नेपाली",
+    "th": "ไทย",
+    "vi": "Tiếng Việt",
+    "tl": "Filipino",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
+  },
+  "editor": {
+    "selectDay": "Nhấp vào ngày trên lịch bạn muốn chỉnh sửa",
+    "freeTextPlaceholder": "Nhập ghi chú lịch trình"
+  },
+  "emoji": {
+    "title": "Thêm emoji",
+    "categories": {
+      "events": "Sự kiện",
+      "food": "Ẩm thực",
+      "beauty": "Làm đẹp",
+      "nature": "Thiên nhiên",
+      "symbols": "Ký hiệu",
+      "status": "Trạng thái",
+      "faces": "Khuôn mặt",
+      "hands": "Tay"
+    }
+  }
+}
