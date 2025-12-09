@@ -1,15 +1,16 @@
 import { create } from 'zustand'
 import i18n from './i18n'
-import type { DayEntry, CalendarState, Settings, Template } from './types'
+import type { DayEntry, CalendarState, Settings, CalendarThemeId } from './types'
 import { defaultSettings } from './types'
 import {
   loadEntries,
   loadSettings,
-  loadTemplates,
+  loadCalendarComments,
+  loadCalendarThemes,
   saveEntry,
   saveSettings,
-  saveTemplate,
-  deleteTemplate,
+  saveCalendarComments,
+  saveCalendarThemes,
   StorageError,
 } from './storage'
 import { initHolidays } from './holidays'
@@ -33,11 +34,6 @@ interface CalendarActions {
   getEntry: (date: string) => DayEntry | undefined
   getEntryText: (date: string) => string
 
-  // テンプレート操作
-  addTemplate: (template: Omit<Template, 'id'>) => Promise<void>
-  removeTemplate: (id: string) => Promise<void>
-  applyTemplate: (templateId: string, year: number, month: number) => Promise<void>
-
   // 先月からコピー
   copyFromPreviousMonth: () => Promise<void>
 
@@ -47,6 +43,10 @@ interface CalendarActions {
   // カレンダーコメント
   getCalendarComment: (year: number, month: number) => string
   updateCalendarComment: (year: number, month: number, comment: string) => Promise<void>
+
+  // カレンダーテーマ
+  getCalendarTheme: (year: number, month: number) => CalendarThemeId
+  updateCalendarTheme: (year: number, month: number, theme: CalendarThemeId) => Promise<void>
 }
 
 const now = new Date()
@@ -60,7 +60,8 @@ export const useCalendarStore = create<
     month: now.getMonth(),
   },
   entries: [],
-  templates: [],
+  calendarComments: {},
+  calendarThemes: {},
   settings: defaultSettings,
   initialized: false,
   selectedDate: null,
@@ -71,15 +72,19 @@ export const useCalendarStore = create<
     if (get().initialized) return
 
     try {
-      const [entries, settings, templates] = await Promise.all([
+      const [entries, calendarComments, calendarThemes, settings] = await Promise.all([
         loadEntries(),
+        loadCalendarComments(),
+        loadCalendarThemes(),
         loadSettings(),
-        loadTemplates(),
       ])
 
       // データの整合性チェック - 有効なデータのみ使用
       const validEntries = Array.isArray(entries) ? entries : []
-      const validTemplates = Array.isArray(templates) ? templates : []
+      const validCalendarComments =
+        calendarComments && typeof calendarComments === 'object' ? calendarComments : {}
+      const validCalendarThemes =
+        calendarThemes && typeof calendarThemes === 'object' ? calendarThemes : {}
       const validSettings = settings && typeof settings === 'object' ? settings : defaultSettings
 
       // 言語を設定
@@ -90,15 +95,14 @@ export const useCalendarStore = create<
 
       set({
         entries: validEntries,
+        calendarComments: validCalendarComments,
+        calendarThemes: validCalendarThemes,
         settings: validSettings,
-        templates: validTemplates,
         initialized: true,
         initError: null,
       })
 
-      console.log(
-        `Storage loaded: ${validEntries.length} entries, ${validTemplates.length} templates`
-      )
+      console.log(`Storage loaded: ${validEntries.length} entries`)
     } catch (error) {
       console.error('Failed to initialize storage:', error)
 
@@ -186,43 +190,6 @@ export const useCalendarStore = create<
     return entry?.text ?? ''
   },
 
-  // テンプレート操作
-  addTemplate: async (templateData) => {
-    const template: Template = {
-      ...templateData,
-      id: crypto.randomUUID(),
-    }
-    await saveTemplate(template)
-    set((state) => ({ templates: [...state.templates, template] }))
-  },
-
-  removeTemplate: async (id) => {
-    await deleteTemplate(id)
-    set((state) => ({
-      templates: state.templates.filter((t) => t.id !== id),
-    }))
-  },
-
-  applyTemplate: async (templateId, year, month) => {
-    const template = get().templates.find((t) => t.id === templateId)
-    if (!template) return
-
-    const { getDaysInMonth } = await import('date-fns')
-    const { format } = await import('date-fns')
-
-    const daysInMonth = getDaysInMonth(new Date(year, month))
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const date = new Date(year, month, day)
-      const dayOfWeek = date.getDay()
-      const defaultText = template.weekdayDefaults[dayOfWeek]
-      if (defaultText) {
-        const dateString = format(date, 'yyyy-MM-dd')
-        await get().updateEntry(dateString, { text: defaultText })
-      }
-    }
-  },
-
   // 設定
   updateSettings: async (newSettings) => {
     const settings = { ...get().settings, ...newSettings }
@@ -244,18 +211,33 @@ export const useCalendarStore = create<
   // カレンダーコメント
   getCalendarComment: (year, month) => {
     const key = `${year}-${String(month + 1).padStart(2, '0')}`
-    return get().settings.calendarComments[key] ?? ''
+    return get().calendarComments[key] ?? ''
   },
 
   updateCalendarComment: async (year, month, comment) => {
     const key = `${year}-${String(month + 1).padStart(2, '0')}`
-    const calendarComments = { ...get().settings.calendarComments }
+    const calendarComments = { ...get().calendarComments }
     if (comment.trim()) {
       calendarComments[key] = comment
     } else {
       delete calendarComments[key]
     }
-    await get().updateSettings({ calendarComments })
+    await saveCalendarComments(calendarComments)
+    set({ calendarComments })
+  },
+
+  // カレンダーテーマ
+  getCalendarTheme: (year, month) => {
+    const key = `${year}-${String(month + 1).padStart(2, '0')}`
+    return get().calendarThemes[key] ?? get().settings.calendarTheme
+  },
+
+  updateCalendarTheme: async (year, month, theme) => {
+    const key = `${year}-${String(month + 1).padStart(2, '0')}`
+    const calendarThemes = { ...get().calendarThemes }
+    calendarThemes[key] = theme
+    await saveCalendarThemes(calendarThemes)
+    set({ calendarThemes })
   },
 
   // 先月からコピー（曜日パターンを推測して適用）

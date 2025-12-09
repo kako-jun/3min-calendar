@@ -1,4 +1,4 @@
-import type { DayEntry, Settings, Template } from './types'
+import type { DayEntry, Settings, CalendarComments, CalendarThemes } from './types'
 import { defaultSettings } from './types'
 
 const DB_NAME = '3min-calendar-db'
@@ -6,7 +6,6 @@ const DB_VERSION = 2
 
 const STORE_ENTRIES = 'entries'
 const STORE_SETTINGS = 'settings'
-const STORE_TEMPLATES = 'templates'
 
 let db: IDBDatabase | null = null
 
@@ -85,11 +84,6 @@ function openDBInternal(): Promise<IDBDatabase> {
         if (!database.objectStoreNames.contains(STORE_SETTINGS)) {
           database.createObjectStore(STORE_SETTINGS, { keyPath: 'key' })
         }
-
-        // templatesストア
-        if (!database.objectStoreNames.contains(STORE_TEMPLATES)) {
-          database.createObjectStore(STORE_TEMPLATES, { keyPath: 'id' })
-        }
       }
 
       // バージョン1→2へのマイグレーション
@@ -102,13 +96,7 @@ function openDBInternal(): Promise<IDBDatabase> {
         if (!database.objectStoreNames.contains(STORE_SETTINGS)) {
           database.createObjectStore(STORE_SETTINGS, { keyPath: 'key' })
         }
-        if (!database.objectStoreNames.contains(STORE_TEMPLATES)) {
-          database.createObjectStore(STORE_TEMPLATES, { keyPath: 'id' })
-        }
       }
-
-      // 将来のバージョンアップ用
-      // if (oldVersion < 3) { ... }
     }
 
     request.onblocked = () => {
@@ -186,41 +174,134 @@ export async function saveSettings(settings: Settings): Promise<void> {
   })
 }
 
-/** 全テンプレートを取得 */
-export async function loadTemplates(): Promise<Template[]> {
+/** カレンダーコメントを読み込み（後方互換対応） */
+export async function loadCalendarComments(): Promise<CalendarComments> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_TEMPLATES, 'readonly')
-    const store = transaction.objectStore(STORE_TEMPLATES)
-    const request = store.getAll()
+    const transaction = database.transaction(STORE_SETTINGS, 'readonly')
+    const store = transaction.objectStore(STORE_SETTINGS)
 
+    // 新しい場所から読み込み
+    const request = store.get('calendarComments')
     request.onerror = () => reject(request.error)
-    request.onsuccess = () => resolve(request.result as Template[])
+    request.onsuccess = () => {
+      const result = request.result as { key: string; value: CalendarComments } | undefined
+      if (result?.value) {
+        resolve(result.value)
+        return
+      }
+
+      // 後方互換: 旧settings.calendarCommentsから移行
+      const settingsRequest = store.get('settings')
+      settingsRequest.onerror = () => reject(settingsRequest.error)
+      settingsRequest.onsuccess = () => {
+        const settingsResult = settingsRequest.result as
+          | { key: string; value: Record<string, unknown> }
+          | undefined
+        const oldComments = settingsResult?.value?.calendarComments as CalendarComments | undefined
+        resolve(oldComments || {})
+      }
+    }
   })
 }
 
-/** テンプレートを保存 */
-export async function saveTemplate(template: Template): Promise<void> {
+/** カレンダーコメントを保存 */
+export async function saveCalendarComments(comments: CalendarComments): Promise<void> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_TEMPLATES, 'readwrite')
-    const store = transaction.objectStore(STORE_TEMPLATES)
-    const request = store.put(template)
+    const transaction = database.transaction(STORE_SETTINGS, 'readwrite')
+    const store = transaction.objectStore(STORE_SETTINGS)
+    const request = store.put({ key: 'calendarComments', value: comments })
 
     request.onerror = () => reject(request.error)
     request.onsuccess = () => resolve()
   })
 }
 
-/** テンプレートを削除 */
-export async function deleteTemplate(id: string): Promise<void> {
+/** 月ごとのカレンダーテーマを読み込み */
+export async function loadCalendarThemes(): Promise<CalendarThemes> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_TEMPLATES, 'readwrite')
-    const store = transaction.objectStore(STORE_TEMPLATES)
-    const request = store.delete(id)
+    const transaction = database.transaction(STORE_SETTINGS, 'readonly')
+    const store = transaction.objectStore(STORE_SETTINGS)
+    const request = store.get('calendarThemes')
+
+    request.onerror = () => reject(request.error)
+    request.onsuccess = () => {
+      const result = request.result as { key: string; value: CalendarThemes } | undefined
+      resolve(result?.value || {})
+    }
+  })
+}
+
+/** 月ごとのカレンダーテーマを保存 */
+export async function saveCalendarThemes(themes: CalendarThemes): Promise<void> {
+  const database = await openDB()
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction(STORE_SETTINGS, 'readwrite')
+    const store = transaction.objectStore(STORE_SETTINGS)
+    const request = store.put({ key: 'calendarThemes', value: themes })
 
     request.onerror = () => reject(request.error)
     request.onsuccess = () => resolve()
   })
+}
+
+/** エクスポート用データ構造 */
+export interface ExportData {
+  version: number
+  exportedAt: string
+  entries: DayEntry[]
+  calendarComments: CalendarComments
+  calendarThemes: CalendarThemes
+  settings: Settings
+}
+
+/** 全データをエクスポート */
+export async function exportData(): Promise<ExportData> {
+  const [entries, calendarComments, calendarThemes, settings] = await Promise.all([
+    loadEntries(),
+    loadCalendarComments(),
+    loadCalendarThemes(),
+    loadSettings(),
+  ])
+  return {
+    version: DB_VERSION,
+    exportedAt: new Date().toISOString(),
+    entries,
+    calendarComments,
+    calendarThemes,
+    settings,
+  }
+}
+
+/** データをインポート（既存データを上書き） */
+export async function importData(data: ExportData): Promise<void> {
+  const database = await openDB()
+
+  // エントリをクリアして新しいデータを書き込む
+  await new Promise<void>((resolve, reject) => {
+    const transaction = database.transaction(STORE_ENTRIES, 'readwrite')
+    const store = transaction.objectStore(STORE_ENTRIES)
+    const clearRequest = store.clear()
+
+    clearRequest.onerror = () => reject(clearRequest.error)
+    clearRequest.onsuccess = () => {
+      // 新しいエントリを追加
+      for (const entry of data.entries) {
+        store.put(entry)
+      }
+      transaction.oncomplete = () => resolve()
+      transaction.onerror = () => reject(transaction.error)
+    }
+  })
+
+  // カレンダーコメントを上書き
+  await saveCalendarComments(data.calendarComments || {})
+
+  // カレンダーテーマを上書き
+  await saveCalendarThemes(data.calendarThemes || {})
+
+  // 設定を上書き
+  await saveSettings(data.settings)
 }

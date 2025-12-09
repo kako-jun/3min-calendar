@@ -98,10 +98,14 @@
     "shareFailed": "共有に失敗しました",
     "downloadFailed": "ダウンロードに失敗しました"
   },
-  "template": {
-    "save": "テンプレート保存",
-    "apply": "テンプレート適用",
-    "name": "テンプレート名"
+  "dataManagement": {
+    "title": "データ管理",
+    "export": "エクスポート",
+    "import": "インポート",
+    "exportSuccess": "データをエクスポートしました",
+    "importSuccess": "データをインポートしました。ページを再読み込みします。",
+    "importConfirm": "インポートすると現在のデータが上書きされます。続けますか？",
+    "invalidFile": "無効なファイルです"
   },
   "appThemes": {
     "dark": "ダーク",

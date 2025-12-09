@@ -30,13 +30,20 @@ const DARK_THEME_IDS: CalendarThemeId[] = [
 export function CalendarThemeSelector() {
   const { t } = useTranslation()
   const settings = useCalendarStore((state) => state.settings)
+  const view = useCalendarStore((state) => state.view)
+  const calendarThemes = useCalendarStore((state) => state.calendarThemes)
   const updateSettings = useCalendarStore((state) => state.updateSettings)
+  const updateCalendarTheme = useCalendarStore((state) => state.updateCalendarTheme)
   const appTheme = APP_THEMES[settings.appTheme]
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
+  // 現在表示中の月のテーマを取得
+  const monthKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
+  const currentThemeId = calendarThemes[monthKey] ?? settings.calendarTheme
+
   const handleThemeChange = (theme: CalendarThemeId) => {
-    updateSettings({ calendarTheme: theme })
+    updateCalendarTheme(view.year, view.month, theme)
     // クリックしても閉じない（次々とプレビューできる）
   }
 
@@ -58,7 +65,7 @@ export function CalendarThemeSelector() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [isOpen])
 
-  const currentTheme = THEMES[settings.calendarTheme]
+  const currentTheme = THEMES[currentThemeId]
 
   return (
     <div className="relative" ref={containerRef}>
@@ -85,7 +92,7 @@ export function CalendarThemeSelector() {
             <div className="flex gap-1">
               {LIGHT_THEME_IDS.map((themeId) => {
                 const theme = THEMES[themeId]
-                const isSelected = settings.calendarTheme === themeId
+                const isSelected = currentThemeId === themeId
 
                 return (
                   <button
@@ -113,7 +120,7 @@ export function CalendarThemeSelector() {
             <div className="flex gap-1">
               {DARK_THEME_IDS.map((themeId) => {
                 const theme = THEMES[themeId]
-                const isSelected = settings.calendarTheme === themeId
+                const isSelected = currentThemeId === themeId
 
                 return (
                   <button

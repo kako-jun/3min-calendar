@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -13,10 +13,13 @@ import {
   faGlobe,
   faStore,
   faImage,
+  faFileExport,
+  faFileImport,
 } from '@fortawesome/free-solid-svg-icons'
 import { useCalendarStore } from '../lib/store'
 import { SUPPORTED_COUNTRIES, type CountryCode } from '../lib/holidays'
 import { APP_THEMES, type AppTheme } from '../lib/types'
+import { exportData, importData, type ExportData } from '../lib/storage'
 import { ToggleSwitch } from './ui/ToggleSwitch'
 import { ImageSelector } from './ui/ImageSelector'
 
@@ -32,6 +35,57 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
   const { t, i18n } = useTranslation()
   const settings = useCalendarStore((state) => state.settings)
   const updateSettings = useCalendarStore((state) => state.updateSettings)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // エクスポート処理
+  const handleExport = async () => {
+    try {
+      const data = await exportData()
+      const json = JSON.stringify(data, null, 2)
+      const blob = new Blob([json], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `3min-calendar-${new Date().toISOString().slice(0, 10)}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Export failed:', error)
+    }
+  }
+
+  // インポート処理
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    try {
+      const text = await file.text()
+      const data = JSON.parse(text) as ExportData
+
+      // 簡易バリデーション
+      if (!data.entries || !data.settings) {
+        alert(t('dataManagement.invalidFile'))
+        return
+      }
+
+      if (!confirm(t('dataManagement.importConfirm'))) {
+        return
+      }
+
+      await importData(data)
+      alert(t('dataManagement.importSuccess'))
+      window.location.reload()
+    } catch (error) {
+      console.error('Import failed:', error)
+      alert(t('dataManagement.invalidFile'))
+    } finally {
+      // ファイル選択をリセット
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }
 
   // モーダルが開いている間、背景のスクロールを無効化
   useEffect(() => {
@@ -320,6 +374,39 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
               <div className="mt-1 text-right text-xs" style={{ color: appTheme.textMuted }}>
                 {Math.round(settings.backgroundOpacity * 100)}%
               </div>
+            </div>
+          </div>
+
+          <hr style={{ borderColor: appTheme.textMuted, opacity: 0.3 }} />
+
+          {/* データ管理 */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold" style={{ color: appTheme.textMuted }}>
+              {t('dataManagement.title')}
+            </h3>
+            <div className="flex gap-2">
+              <button
+                onClick={handleExport}
+                className="flex flex-1 items-center justify-center gap-2 rounded px-4 py-2 text-sm transition-opacity hover:opacity-80"
+                style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
+              >
+                <FontAwesomeIcon icon={faFileExport} />
+                {t('dataManagement.export')}
+              </button>
+              <label
+                className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded px-4 py-2 text-sm transition-opacity hover:opacity-80"
+                style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
+              >
+                <FontAwesomeIcon icon={faFileImport} />
+                {t('dataManagement.import')}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".json"
+                  onChange={handleImport}
+                  className="hidden"
+                />
+              </label>
             </div>
           </div>
         </div>

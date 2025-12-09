@@ -33,8 +33,12 @@ export function DayRow({
 }: DayRowProps) {
   const { t } = useTranslation()
   const settings = useCalendarStore((state) => state.settings)
+  const view = useCalendarStore((state) => state.view)
+  const calendarThemes = useCalendarStore((state) => state.calendarThemes)
   const appTheme = APP_THEMES[settings.appTheme]
-  const calendarTheme = THEMES[settings.calendarTheme]
+  const monthKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
+  const calendarThemeId = calendarThemes[monthKey] ?? settings.calendarTheme
+  const calendarTheme = THEMES[calendarThemeId]
   const dayOfWeek = date.getDay()
   const isSunday = dayOfWeek === 0
   const isSaturday = dayOfWeek === 6

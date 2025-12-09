@@ -193,14 +193,6 @@ export const THEMES: Record<ThemeId, ThemeColors> = {
   },
 }
 
-/** テンプレート（定休日パターン） */
-export interface Template {
-  id: string
-  name: string
-  // 曜日ごとのデフォルト値（0=日曜〜6=土曜）
-  weekdayDefaults: Record<number, string>
-}
-
 /** アプリ設定 */
 export interface Settings {
   weekStartsOn: 0 | 1 // 0: 日曜, 1: 月曜
@@ -216,8 +208,13 @@ export interface Settings {
   useWareki: boolean // 和暦を使用
   backgroundImage: string | null // Base64エンコードされた背景画像
   backgroundOpacity: number // 背景画像の透明度 (0-1)
-  calendarComments: Record<string, string> // 月ごとのコメント（キー: "YYYY-MM"）
 }
+
+/** 月ごとのコメント（キー: "YYYY-MM"） */
+export type CalendarComments = Record<string, string>
+
+/** 月ごとのカレンダーテーマ（キー: "YYYY-MM"） */
+export type CalendarThemes = Record<string, CalendarThemeId>
 
 /** @deprecated 後方互換用 */
 export interface LegacySettings extends Omit<Settings, 'appTheme' | 'calendarTheme'> {
@@ -236,7 +233,8 @@ export interface CalendarState {
   view: CalendarView
   // データ
   entries: DayEntry[]
-  templates: Template[]
+  calendarComments: CalendarComments
+  calendarThemes: CalendarThemes
   settings: Settings
   // 初期化状態
   initialized: boolean
@@ -358,7 +356,7 @@ export function parseStampedText(text: string, t: (key: string) => string): Text
 export const defaultSettings: Settings = {
   weekStartsOn: 0,
   appTheme: 'dark',
-  calendarTheme: 'dark',
+  calendarTheme: 'light',
   gridStyle: 'rounded',
   language: 'ja',
   country: 'JP',
@@ -369,7 +367,6 @@ export const defaultSettings: Settings = {
   useWareki: false,
   backgroundImage: null,
   backgroundOpacity: 0.15,
-  calendarComments: {},
 }
 
 /** アプリテーマの色定義 */

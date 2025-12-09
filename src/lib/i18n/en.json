@@ -98,10 +98,14 @@
     "shareFailed": "Share failed",
     "downloadFailed": "Download failed"
   },
-  "template": {
-    "save": "Save template",
-    "apply": "Apply template",
-    "name": "Template name"
+  "dataManagement": {
+    "title": "Data Management",
+    "export": "Export",
+    "import": "Import",
+    "exportSuccess": "Data exported",
+    "importSuccess": "Data imported. Reloading page.",
+    "importConfirm": "Import will overwrite current data. Continue?",
+    "invalidFile": "Invalid file"
   },
   "appThemes": {
     "dark": "Dark",

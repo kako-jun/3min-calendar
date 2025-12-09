@@ -36,8 +36,11 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
   const view = useCalendarStore((state) => state.view)
   const settings = useCalendarStore((state) => state.settings)
   const entries = useCalendarStore((state) => state.entries)
+  const calendarComments = useCalendarStore((state) => state.calendarComments)
   const selectedDate = useCalendarStore((state) => state.selectedDate)
   const setSelectedDate = useCalendarStore((state) => state.setSelectedDate)
+
+  const calendarThemes = useCalendarStore((state) => state.calendarThemes)
 
   const days = getCalendarDays(view.year, view.month, settings.weekStartsOn)
   const weekdays = getWeekdayHeaders(settings.weekStartsOn)
@@ -45,8 +48,10 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
   const isLinedStyle = settings.gridStyle === 'lined'
   const rowCount = Math.ceil(days.length / 7) // 5行または6行
 
-  // カレンダー画像用のテーマ
-  const theme = THEMES[settings.calendarTheme]
+  // 月ごとのカレンダーテーマ（未設定の場合はsettingsのデフォルトを使用）
+  const monthKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
+  const calendarThemeId = calendarThemes[monthKey] ?? settings.calendarTheme
+  const theme = THEMES[calendarThemeId]
 
   // 罫線モード用の罫線色（テーマに合わせて調整）
   const lineColor = useMemo(() => {
@@ -56,7 +61,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
 
   // 月のコメント（propsがあればpropsを使用、なければストアから取得）
   const commentKey = `${view.year}-${String(view.month + 1).padStart(2, '0')}`
-  const storedComment = settings.calendarComments?.[commentKey] ?? ''
+  const storedComment = calendarComments[commentKey] ?? ''
   const comment = propComment !== undefined ? propComment : storedComment
 
   const getEntry = (date: string) => {
