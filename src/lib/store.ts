@@ -11,7 +11,6 @@ import {
   saveSettings,
   saveCalendarComments,
   saveCalendarThemes,
-  migrateFromLegacyDB,
   StorageError,
 } from './storage'
 import { initHolidays } from './holidays'
@@ -73,9 +72,6 @@ export const useCalendarStore = create<
     if (get().initialized) return
 
     try {
-      // 旧DBからのマイグレーションを試行
-      await migrateFromLegacyDB()
-
       const [entries, calendarComments, calendarThemes, settings] = await Promise.all([
         loadEntries(),
         loadCalendarComments(),

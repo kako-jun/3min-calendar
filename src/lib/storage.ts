@@ -4,12 +4,9 @@ import { defaultSettings } from './types'
 const DB_NAME = '3min-db'
 const DB_VERSION = 1
 
-// カレンダー関連のストア
-const STORE_CALENDAR_ENTRIES = 'calendar:entries'
-const STORE_DATA = 'data' // 汎用データストア（key-value）
-
-// 旧DB名（マイグレーション用）
-const LEGACY_DB_NAME = '3min-calendar-db'
+// カレンダー関連
+const OBJECT_STORE_CALENDAR_ENTRIES = 'calendar:entries'
+const OBJECT_STORE_DATA = 'data' // 汎用データ（key-value）
 
 let db: IDBDatabase | null = null
 
@@ -46,83 +43,6 @@ async function openDB(retryCount = 3): Promise<IDBDatabase> {
   throw new StorageError('IndexedDBを開けませんでした')
 }
 
-/** 旧DBからデータを読み込む */
-async function loadLegacyData(): Promise<{
-  entries: DayEntry[]
-  settings: Record<string, unknown>
-  calendarComments: CalendarComments
-  calendarThemes: CalendarThemes
-} | null> {
-  return new Promise((resolve) => {
-    const request = indexedDB.open(LEGACY_DB_NAME)
-
-    request.onerror = () => {
-      resolve(null)
-    }
-
-    request.onsuccess = () => {
-      const legacyDb = request.result
-
-      // 旧DBにストアがなければスキップ
-      if (
-        !legacyDb.objectStoreNames.contains('entries') ||
-        !legacyDb.objectStoreNames.contains('settings')
-      ) {
-        legacyDb.close()
-        resolve(null)
-        return
-      }
-
-      const transaction = legacyDb.transaction(['entries', 'settings'], 'readonly')
-      const entriesStore = transaction.objectStore('entries')
-      const settingsStore = transaction.objectStore('settings')
-
-      const entriesRequest = entriesStore.getAll()
-      const settingsRequest = settingsStore.get('settings')
-      const commentsRequest = settingsStore.get('calendarComments')
-      const themesRequest = settingsStore.get('calendarThemes')
-
-      transaction.oncomplete = () => {
-        const entries = (entriesRequest.result as DayEntry[]) || []
-        const settingsResult = settingsRequest.result as
-          | { value: Record<string, unknown> }
-          | undefined
-        const commentsResult = commentsRequest.result as { value: CalendarComments } | undefined
-        const themesResult = themesRequest.result as { value: CalendarThemes } | undefined
-
-        legacyDb.close()
-
-        resolve({
-          entries,
-          settings: settingsResult?.value || {},
-          calendarComments: commentsResult?.value || {},
-          calendarThemes: themesResult?.value || {},
-        })
-      }
-
-      transaction.onerror = () => {
-        legacyDb.close()
-        resolve(null)
-      }
-    }
-  })
-}
-
-/** 旧DBを削除 */
-async function deleteLegacyDB(): Promise<void> {
-  return new Promise((resolve) => {
-    const request = indexedDB.deleteDatabase(LEGACY_DB_NAME)
-    request.onsuccess = () => {
-      console.log('Legacy DB deleted')
-      resolve()
-    }
-    request.onerror = () => {
-      console.warn('Failed to delete legacy DB')
-      resolve()
-    }
-  })
-}
-
 /** IndexedDBを開く（内部実装） */
 function openDBInternal(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -154,16 +74,16 @@ function openDBInternal(): Promise<IDBDatabase> {
 
       console.log(`IndexedDB upgrade: v${oldVersion} → v${DB_VERSION}`)
 
-      // バージョン0（新規作成）からのマイグレーション
+      // バージョン0（新規作成）
       if (oldVersion < 1) {
-        // カレンダーエントリストア
-        if (!database.objectStoreNames.contains(STORE_CALENDAR_ENTRIES)) {
-          database.createObjectStore(STORE_CALENDAR_ENTRIES, { keyPath: 'date' })
+        // カレンダーエントリ
+        if (!database.objectStoreNames.contains(OBJECT_STORE_CALENDAR_ENTRIES)) {
+          database.createObjectStore(OBJECT_STORE_CALENDAR_ENTRIES, { keyPath: 'date' })
         }
 
-        // 汎用データストア
-        if (!database.objectStoreNames.contains(STORE_DATA)) {
-          database.createObjectStore(STORE_DATA, { keyPath: 'key' })
+        // 汎用データ
+        if (!database.objectStoreNames.contains(OBJECT_STORE_DATA)) {
+          database.createObjectStore(OBJECT_STORE_DATA, { keyPath: 'key' })
         }
       }
     }
@@ -175,63 +95,12 @@ function openDBInternal(): Promise<IDBDatabase> {
   })
 }
 
-/** 旧DBからのマイグレーションを実行 */
-export async function migrateFromLegacyDB(): Promise<boolean> {
-  const legacyData = await loadLegacyData()
-  if (!legacyData) return false
-
-  console.log('Migrating from legacy DB...')
-
-  const database = await openDB()
-
-  // エントリを移行
-  await new Promise<void>((resolve, reject) => {
-    const transaction = database.transaction(STORE_CALENDAR_ENTRIES, 'readwrite')
-    const store = transaction.objectStore(STORE_CALENDAR_ENTRIES)
-
-    for (const entry of legacyData.entries) {
-      store.put(entry)
-    }
-
-    transaction.oncomplete = () => resolve()
-    transaction.onerror = () => reject(transaction.error)
-  })
-
-  // 設定を移行
-  const migratedSettings: Settings = {
-    ...defaultSettings,
-    ...legacyData.settings,
-    appTheme: (legacyData.settings.appTheme as Settings['appTheme']) || defaultSettings.appTheme,
-    calendarTheme:
-      (legacyData.settings.calendarTheme as Settings['calendarTheme']) ||
-      (legacyData.settings.theme as Settings['calendarTheme']) ||
-      defaultSettings.calendarTheme,
-  }
-  await saveSettings(migratedSettings)
-
-  // カレンダーコメントを移行
-  if (Object.keys(legacyData.calendarComments).length > 0) {
-    await saveCalendarComments(legacyData.calendarComments)
-  }
-
-  // カレンダーテーマを移行
-  if (Object.keys(legacyData.calendarThemes).length > 0) {
-    await saveCalendarThemes(legacyData.calendarThemes)
-  }
-
-  // 旧DBを削除
-  await deleteLegacyDB()
-
-  console.log('Migration complete')
-  return true
-}
-
 /** 全エントリを取得 */
 export async function loadEntries(): Promise<DayEntry[]> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_CALENDAR_ENTRIES, 'readonly')
-    const store = transaction.objectStore(STORE_CALENDAR_ENTRIES)
+    const transaction = database.transaction(OBJECT_STORE_CALENDAR_ENTRIES, 'readonly')
+    const store = transaction.objectStore(OBJECT_STORE_CALENDAR_ENTRIES)
     const request = store.getAll()
 
     request.onerror = () => reject(request.error)
@@ -243,8 +112,8 @@ export async function loadEntries(): Promise<DayEntry[]> {
 export async function saveEntry(entry: DayEntry): Promise<void> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_CALENDAR_ENTRIES, 'readwrite')
-    const store = transaction.objectStore(STORE_CALENDAR_ENTRIES)
+    const transaction = database.transaction(OBJECT_STORE_CALENDAR_ENTRIES, 'readwrite')
+    const store = transaction.objectStore(OBJECT_STORE_CALENDAR_ENTRIES)
     const request = store.put(entry)
 
     request.onerror = () => reject(request.error)
@@ -256,8 +125,8 @@ export async function saveEntry(entry: DayEntry): Promise<void> {
 export async function loadSettings(): Promise<Settings> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_DATA, 'readonly')
-    const store = transaction.objectStore(STORE_DATA)
+    const transaction = database.transaction(OBJECT_STORE_DATA, 'readonly')
+    const store = transaction.objectStore(OBJECT_STORE_DATA)
     const request = store.get('calendar:settings')
 
     request.onerror = () => reject(request.error)
@@ -279,8 +148,8 @@ export async function loadSettings(): Promise<Settings> {
 export async function saveSettings(settings: Settings): Promise<void> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_DATA, 'readwrite')
-    const store = transaction.objectStore(STORE_DATA)
+    const transaction = database.transaction(OBJECT_STORE_DATA, 'readwrite')
+    const store = transaction.objectStore(OBJECT_STORE_DATA)
     const request = store.put({ key: 'calendar:settings', value: settings })
 
     request.onerror = () => reject(request.error)
@@ -292,8 +161,8 @@ export async function saveSettings(settings: Settings): Promise<void> {
 export async function loadCalendarComments(): Promise<CalendarComments> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_DATA, 'readonly')
-    const store = transaction.objectStore(STORE_DATA)
+    const transaction = database.transaction(OBJECT_STORE_DATA, 'readonly')
+    const store = transaction.objectStore(OBJECT_STORE_DATA)
     const request = store.get('calendar:comments')
 
     request.onerror = () => reject(request.error)
@@ -308,8 +177,8 @@ export async function loadCalendarComments(): Promise<CalendarComments> {
 export async function saveCalendarComments(comments: CalendarComments): Promise<void> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_DATA, 'readwrite')
-    const store = transaction.objectStore(STORE_DATA)
+    const transaction = database.transaction(OBJECT_STORE_DATA, 'readwrite')
+    const store = transaction.objectStore(OBJECT_STORE_DATA)
     const request = store.put({ key: 'calendar:comments', value: comments })
 
     request.onerror = () => reject(request.error)
@@ -321,8 +190,8 @@ export async function saveCalendarComments(comments: CalendarComments): Promise<
 export async function loadCalendarThemes(): Promise<CalendarThemes> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_DATA, 'readonly')
-    const store = transaction.objectStore(STORE_DATA)
+    const transaction = database.transaction(OBJECT_STORE_DATA, 'readonly')
+    const store = transaction.objectStore(OBJECT_STORE_DATA)
     const request = store.get('calendar:themes')
 
     request.onerror = () => reject(request.error)
@@ -337,8 +206,8 @@ export async function loadCalendarThemes(): Promise<CalendarThemes> {
 export async function saveCalendarThemes(themes: CalendarThemes): Promise<void> {
   const database = await openDB()
   return new Promise((resolve, reject) => {
-    const transaction = database.transaction(STORE_DATA, 'readwrite')
-    const store = transaction.objectStore(STORE_DATA)
+    const transaction = database.transaction(OBJECT_STORE_DATA, 'readwrite')
+    const store = transaction.objectStore(OBJECT_STORE_DATA)
     const request = store.put({ key: 'calendar:themes', value: themes })
 
     request.onerror = () => reject(request.error)
@@ -380,8 +249,8 @@ export async function importData(data: ExportData): Promise<void> {
 
   // エントリをクリアして新しいデータを書き込む
   await new Promise<void>((resolve, reject) => {
-    const transaction = database.transaction(STORE_CALENDAR_ENTRIES, 'readwrite')
-    const store = transaction.objectStore(STORE_CALENDAR_ENTRIES)
+    const transaction = database.transaction(OBJECT_STORE_CALENDAR_ENTRIES, 'readwrite')
+    const store = transaction.objectStore(OBJECT_STORE_CALENDAR_ENTRIES)
     const clearRequest = store.clear()
 
     clearRequest.onerror = () => reject(clearRequest.error)
