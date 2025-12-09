@@ -129,7 +129,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
       onClick={onClose}
     >
       <div
-        className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-lg p-6"
+        className="relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-lg p-6"
         style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -491,6 +491,11 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
               <span>Sponsor on GitHub</span>
             </a>
           </div>
+        </div>
+
+        {/* バージョン表示 */}
+        <div className="mt-4 text-right text-xs opacity-60" style={{ color: appTheme.textMuted }}>
+          v{__BUILD_DATE__}
         </div>
       </div>
     </div>
