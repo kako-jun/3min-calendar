@@ -9,21 +9,14 @@ import { getWarekiYear } from '../lib/wareki'
 import { THEMES, QUICK_INPUT_STYLES } from '../lib/types'
 import { STAMP_ICONS } from './ui/StampIcons'
 
-/** テキスト長に応じたフォントサイズを返す（セル内で収まるように自動縮小） */
-function getTextFontSize(text: string): string {
-  const len = text.length
-  if (len <= 6) return '9px'
-  if (len <= 12) return '8px'
-  if (len <= 20) return '7px'
-  if (len <= 30) return '6px'
-  return '5px'
-}
+/** 予定コメントのフォントサイズ */
+const TEXT_FONT_SIZE = '10px'
 
 /** スタンプのフォントサイズ */
 const STAMP_FONT_SIZE = '8px'
 
 /** 時刻のフォントサイズ */
-const TIME_FONT_SIZE = '8px'
+const TIME_FONT_SIZE = '9px'
 
 /** スタンプキーからスタイルを取得 */
 function getStampStyle(stampKey: string | null | undefined) {
@@ -149,7 +142,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
 
       {/* 日付グリッド（5行または6行 x 7列） */}
       <div
-        className={`relative grid grid-cols-7 ${isLinedStyle ? 'gap-0' : 'gap-1'}`}
+        className={`relative grid grid-cols-7 overflow-hidden ${isLinedStyle ? 'gap-0' : 'gap-1'}`}
         style={{
           gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
           flex: '1 1 0%',
@@ -203,8 +196,12 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
           return (
             <div
               key={day.dateString}
-              className={`relative p-0.5 ${isLinedStyle ? '' : 'rounded'} ${day.isCurrentMonth ? 'cursor-pointer' : ''} ${isLinedStyle && day.isCurrentMonth ? 'transition-colors hover:bg-black/5' : ''}`}
-              style={linedCellStyle}
+              className={`relative overflow-hidden p-0.5 ${isLinedStyle ? '' : 'rounded'} ${day.isCurrentMonth ? 'cursor-pointer' : ''} ${isLinedStyle && day.isCurrentMonth ? 'transition-colors hover:bg-black/5' : ''}`}
+              style={{
+                ...linedCellStyle,
+                height: '100%',
+                maxHeight: '100%',
+              }}
               title={holidayName || undefined}
               onClick={() => day.isCurrentMonth && setSelectedDate(day.dateString)}
             >
@@ -226,7 +223,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
               )}
               {(() => {
                 return (
-                  <div className="flex h-full flex-col">
+                  <div className="flex h-full flex-col overflow-hidden">
                     {/* 1行目: スタンプ（左上）と日付（右上） */}
                     <div className="flex shrink-0 items-start justify-between">
                       {/* スタンプ（左上固定） */}
@@ -271,9 +268,9 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
                     {/* 2行目: 時刻 */}
                     {time && (
                       <div
-                        className="shrink-0 font-bold"
+                        className="mt-1 shrink-0 font-bold"
                         style={{
-                          color: theme.text,
+                          color: theme.textMuted,
                           fontSize: TIME_FONT_SIZE,
                           lineHeight: '1.2',
                         }}
@@ -281,15 +278,15 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
                         {time}
                       </div>
                     )}
-                    {/* 3行目以降: 自由作文 */}
+                    {/* 3行目以降: 予定コメント */}
                     {freeText && (
                       <div
-                        className="min-h-0 flex-1 font-bold"
+                        className="mt-1 min-h-0 flex-1 overflow-hidden font-bold"
                         style={{
                           color: theme.text,
                           wordBreak: 'break-all',
                           lineHeight: '1.2',
-                          fontSize: getTextFontSize(freeText),
+                          fontSize: TEXT_FONT_SIZE,
                         }}
                       >
                         {freeText}
