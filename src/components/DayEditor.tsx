@@ -80,18 +80,6 @@ export function DayEditor({ showAllDays = false }: DayEditorProps) {
       })
     : []
 
-  // 選択された日がない場合（通常モードのみ）
-  if (!showAllDays && !isValidSelection) {
-    return (
-      <div
-        className="rounded p-4 text-center text-sm"
-        style={{ backgroundColor: appTheme.surface, color: appTheme.textMuted }}
-      >
-        {t('editor.selectDay')}
-      </div>
-    )
-  }
-
   // 通常モード: 選択日の前後1日を含む3日分
   const selectedDateObj = selectedDate ? new Date(selectedDate) : new Date(view.year, view.month, 1)
   const daysToShow = showAllDays
@@ -115,6 +103,18 @@ export function DayEditor({ showAllDays = false }: DayEditorProps) {
       selectedRowRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
   }, [showAllDays, selectedDate])
+
+  // 選択された日がない場合（通常モードのみ）
+  if (!showAllDays && !isValidSelection) {
+    return (
+      <div
+        className="rounded p-4 text-center text-sm"
+        style={{ backgroundColor: appTheme.surface, color: appTheme.textMuted }}
+      >
+        {t('editor.selectDay')}
+      </div>
+    )
+  }
 
   // アニメーションバリアント
   const rowVariants = {
