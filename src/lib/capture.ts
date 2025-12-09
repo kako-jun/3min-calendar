@@ -22,7 +22,9 @@ export async function captureElementAsBlob(element: HTMLElement): Promise<Blob |
     zIndex: element.style.zIndex,
     zoom: element.style.zoom,
     margin: element.style.margin,
+    cursor: element.style.cursor,
   }
+  const originalBodyCursor = document.body.style.cursor
 
   try {
     // キャプチャ前に選択枠を非表示にする
@@ -49,8 +51,13 @@ export async function captureElementAsBlob(element: HTMLElement): Promise<Blob |
       height: 100vh;
       background: black;
       z-index: 999998;
+      cursor: none;
     `
     document.body.appendChild(overlay)
+
+    // カーソルを非表示にする
+    document.body.style.cursor = 'none'
+    element.style.cursor = 'none'
 
     // 要素を左上に固定配置してzoomで拡大
     element.style.position = 'fixed'
@@ -67,10 +74,11 @@ export async function captureElementAsBlob(element: HTMLElement): Promise<Blob |
     await new Promise((resolve) => requestAnimationFrame(resolve))
     await new Promise((resolve) => setTimeout(resolve, 50))
 
-    // Screen Capture APIで画面をキャプチャ
+    // Screen Capture APIで画面をキャプチャ（カーソル非表示）
     stream = await navigator.mediaDevices.getDisplayMedia({
       video: {
         displaySurface: 'browser',
+        cursor: 'never',
       },
       preferCurrentTab: true,
     } as DisplayMediaStreamOptions)
@@ -112,7 +120,9 @@ export async function captureElementAsBlob(element: HTMLElement): Promise<Blob |
     element.style.zIndex = originalElementStyle.zIndex
     element.style.zoom = originalElementStyle.zoom
     element.style.margin = originalElementStyle.margin
+    element.style.cursor = originalElementStyle.cursor
     document.body.style.overflow = originalBodyOverflow
+    document.body.style.cursor = originalBodyCursor
 
     // 選択枠を復元
     if (selectionElement) {
@@ -164,7 +174,9 @@ export async function captureElementAsBlob(element: HTMLElement): Promise<Blob |
     element.style.zIndex = originalElementStyle.zIndex
     element.style.zoom = originalElementStyle.zoom
     element.style.margin = originalElementStyle.margin
+    element.style.cursor = originalElementStyle.cursor
     document.body.style.overflow = originalBodyOverflow
+    document.body.style.cursor = originalBodyCursor
 
     // 選択枠を復元
     const selectionElement = element.querySelector('[data-selection-frame]') as HTMLElement | null
