@@ -146,163 +146,179 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
       </div>
 
       {/* 日付グリッド（5行または6行 x 7列） */}
-      <div
-        className={`relative grid grid-cols-7 overflow-hidden ${isLinedStyle ? 'gap-0' : 'gap-1'}`}
-        style={{
-          gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
-          flex: '1 1 0%',
-          ...(isLinedStyle
-            ? {
-                border: `1px solid ${lineColor}`,
-                borderTop: 'none',
-              }
-            : {}),
-        }}
-      >
-        {days.map((day, index) => {
-          const dayOfWeek = day.date.getDay()
-          const isSunday = dayOfWeek === 0
-          const isSaturday = dayOfWeek === 6
-          const entry = getEntry(day.dateString)
-          const holidayInfo =
-            settings.showHolidays && day.isCurrentMonth ? isHoliday(day.date) : false
-          const holidayName = holidayInfo ? getHolidayName(day.date) : null
+      <div className="relative min-h-0 flex-1">
+        <div
+          className={`grid h-full grid-cols-7 overflow-hidden ${isLinedStyle ? 'gap-0' : 'gap-1'}`}
+          style={{
+            gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
+            ...(isLinedStyle
+              ? {
+                  border: `1px solid ${lineColor}`,
+                  borderTop: 'none',
+                }
+              : {}),
+          }}
+        >
+          {days.map((day, index) => {
+            const dayOfWeek = day.date.getDay()
+            const isSunday = dayOfWeek === 0
+            const isSaturday = dayOfWeek === 6
+            const entry = getEntry(day.dateString)
+            const holidayInfo =
+              settings.showHolidays && day.isCurrentMonth ? isHoliday(day.date) : false
+            const holidayName = holidayInfo ? getHolidayName(day.date) : null
 
-          // 日付の色を決定
-          const getDayColor = () => {
-            if (!day.isCurrentMonth) return theme.textMuted
-            if (holidayInfo || isSunday) return theme.sunday
-            if (isSaturday) return theme.saturday
-            return theme.text
-          }
+            // 日付の色を決定
+            const getDayColor = () => {
+              if (!day.isCurrentMonth) return theme.textMuted
+              if (holidayInfo || isSunday) return theme.sunday
+              if (isSaturday) return theme.saturday
+              return theme.text
+            }
 
-          const isSelected = selectedDate === day.dateString
+            // 罫線モード用のセルスタイル
+            const col = index % 7
+            const row = Math.floor(index / 7)
+            const linedCellStyle = isLinedStyle
+              ? {
+                  borderRight: col < 6 ? `1px solid ${lineColor}` : 'none',
+                  borderBottom: row < rowCount - 1 ? `1px solid ${lineColor}` : 'none',
+                  backgroundColor: day.isCurrentMonth ? 'transparent' : `${theme.bg}40`,
+                }
+              : {
+                  backgroundColor: day.isCurrentMonth ? theme.bg : `${theme.bg}80`,
+                }
 
-          // 罫線モード用のセルスタイル
-          const col = index % 7
-          const row = Math.floor(index / 7)
-          const linedCellStyle = isLinedStyle
-            ? {
-                borderRight: col < 6 ? `1px solid ${lineColor}` : 'none',
-                borderBottom: row < rowCount - 1 ? `1px solid ${lineColor}` : 'none',
-                backgroundColor: day.isCurrentMonth ? 'transparent' : `${theme.bg}40`,
-              }
-            : {
-                backgroundColor: day.isCurrentMonth ? theme.bg : `${theme.bg}80`,
-              }
+            // エントリから値を取得
+            const stampStyle = getStampStyle(entry?.stamp)
+            const timeFrom = entry?.timeFrom ?? ''
+            const timeTo = entry?.timeTo ?? ''
+            const time = timeFrom || timeTo ? `${timeFrom}-${timeTo}`.replace(/^-|-$/g, '') : ''
+            const freeText = entry?.text ?? ''
 
-          // エントリから値を取得
-          const stampStyle = getStampStyle(entry?.stamp)
-          const timeFrom = entry?.timeFrom ?? ''
-          const timeTo = entry?.timeTo ?? ''
-          const time = timeFrom || timeTo ? `${timeFrom}-${timeTo}`.replace(/^-|-$/g, '') : ''
-          const freeText = entry?.text ?? ''
-
-          return (
-            <div
-              key={day.dateString}
-              className={`relative overflow-hidden p-0.5 ${isLinedStyle ? '' : 'rounded'} ${day.isCurrentMonth ? 'cursor-pointer' : ''} ${isLinedStyle && day.isCurrentMonth ? 'transition-colors hover:bg-black/5' : ''}`}
-              style={{
-                ...linedCellStyle,
-                height: '100%',
-                maxHeight: '100%',
-              }}
-              title={holidayName || undefined}
-              onClick={() => day.isCurrentMonth && setSelectedDate(day.dateString)}
-            >
-              {/* 選択枠（アニメーション付き） */}
-              {isSelected && (
-                <motion.div
-                  layoutId="calendar-selection"
-                  data-selection-frame
-                  className={`pointer-events-none absolute inset-0 ${isLinedStyle ? '' : 'rounded'}`}
-                  style={{
-                    boxShadow: `inset 0 0 0 2px ${theme.accent}`,
-                  }}
-                  transition={{
-                    type: 'tween',
-                    duration: 0.15,
-                    ease: 'easeOut',
-                  }}
-                />
-              )}
-              {(() => {
-                return (
-                  <div className="flex h-full flex-col overflow-hidden">
-                    {/* 1行目: スタンプ（左上）と日付（右上） */}
-                    <div className="flex shrink-0 items-start justify-between">
-                      {/* スタンプ（左上固定） */}
-                      <div className="flex flex-wrap gap-0.5">
-                        {stampStyle && (
-                          <span
-                            className="inline-flex shrink-0 items-center justify-center px-1 py-0.5 font-bold"
-                            style={{
-                              backgroundColor: stampStyle.bgColor,
-                              color: stampStyle.textColor,
-                              fontSize: STAMP_FONT_SIZE,
-                              lineHeight: '1.2',
-                              borderRadius: '2px',
-                            }}
+            return (
+              <div
+                key={day.dateString}
+                className={`relative overflow-hidden p-0.5 ${isLinedStyle ? '' : 'rounded'} ${day.isCurrentMonth ? 'cursor-pointer' : ''} ${isLinedStyle && day.isCurrentMonth ? 'transition-colors hover:bg-black/5' : ''}`}
+                style={{
+                  ...linedCellStyle,
+                  height: '100%',
+                  maxHeight: '100%',
+                }}
+                title={holidayName || undefined}
+                onClick={() => day.isCurrentMonth && setSelectedDate(day.dateString)}
+              >
+                {(() => {
+                  return (
+                    <div className="flex h-full flex-col overflow-hidden">
+                      {/* 1行目: スタンプ（左上）と日付（右上） */}
+                      <div className="flex shrink-0 items-start justify-between">
+                        {/* スタンプ（左上固定） */}
+                        <div className="flex flex-wrap gap-0.5">
+                          {stampStyle && (
+                            <span
+                              className="inline-flex shrink-0 items-center justify-center px-1 py-0.5 font-bold"
+                              style={{
+                                backgroundColor: stampStyle.bgColor,
+                                color: stampStyle.textColor,
+                                fontSize: STAMP_FONT_SIZE,
+                                lineHeight: '1.2',
+                                borderRadius: '2px',
+                              }}
+                            >
+                              {(() => {
+                                const IconComponent = STAMP_ICONS[stampStyle.key]
+                                return IconComponent ? (
+                                  <IconComponent size={10} />
+                                ) : (
+                                  t(`quickInput.${stampStyle.key}`)
+                                )
+                              })()}
+                            </span>
+                          )}
+                        </div>
+                        {/* 六曜と日付（右上固定） */}
+                        <div className="flex shrink-0 items-baseline gap-1">
+                          {settings.showRokuyo && day.isCurrentMonth && (
+                            <div
+                              className="text-[6px] leading-none"
+                              style={{ color: getDayColor() }}
+                            >
+                              {getRokuyoName(day.date)}
+                            </div>
+                          )}
+                          <div
+                            className="text-xs font-bold leading-none"
+                            style={{ color: getDayColor() }}
                           >
-                            {(() => {
-                              const IconComponent = STAMP_ICONS[stampStyle.key]
-                              return IconComponent ? (
-                                <IconComponent size={10} />
-                              ) : (
-                                t(`quickInput.${stampStyle.key}`)
-                              )
-                            })()}
-                          </span>
-                        )}
-                      </div>
-                      {/* 六曜と日付（右上固定） */}
-                      <div className="flex shrink-0 items-baseline gap-1">
-                        {settings.showRokuyo && day.isCurrentMonth && (
-                          <div className="text-[6px] leading-none" style={{ color: getDayColor() }}>
-                            {getRokuyoName(day.date)}
+                            {day.day}
                           </div>
-                        )}
-                        <div
-                          className="text-xs font-bold leading-none"
-                          style={{ color: getDayColor() }}
-                        >
-                          {day.day}
                         </div>
                       </div>
+                      {/* 2行目: 時刻 */}
+                      {time && (
+                        <div
+                          className="mt-1 shrink-0 font-bold"
+                          style={{
+                            color: theme.textMuted,
+                            fontSize: TIME_FONT_SIZE,
+                            lineHeight: '1.2',
+                          }}
+                        >
+                          {time}
+                        </div>
+                      )}
+                      {/* 3行目以降: 予定コメント */}
+                      {freeText && (
+                        <div
+                          className="mt-1 min-h-0 flex-1 overflow-hidden font-bold"
+                          style={{
+                            color: theme.text,
+                            wordBreak: 'break-all',
+                            lineHeight: '1.2',
+                            fontSize: TEXT_FONT_SIZE,
+                          }}
+                        >
+                          {freeText}
+                        </div>
+                      )}
                     </div>
-                    {/* 2行目: 時刻 */}
-                    {time && (
-                      <div
-                        className="mt-1 shrink-0 font-bold"
-                        style={{
-                          color: theme.textMuted,
-                          fontSize: TIME_FONT_SIZE,
-                          lineHeight: '1.2',
-                        }}
-                      >
-                        {time}
-                      </div>
-                    )}
-                    {/* 3行目以降: 予定コメント */}
-                    {freeText && (
-                      <div
-                        className="mt-1 min-h-0 flex-1 overflow-hidden font-bold"
-                        style={{
-                          color: theme.text,
-                          wordBreak: 'break-all',
-                          lineHeight: '1.2',
-                          fontSize: TEXT_FONT_SIZE,
-                        }}
-                      >
-                        {freeText}
-                      </div>
-                    )}
-                  </div>
-                )
-              })()}
-            </div>
+                  )
+                })()}
+              </div>
+            )
+          })}
+        </div>
+
+        {/* 選択枠（グリッドの外側に配置してアニメーション） */}
+        {(() => {
+          const selectedIndex = days.findIndex((d) => d.dateString === selectedDate)
+          if (selectedIndex === -1) return null
+          const col = selectedIndex % 7
+          const row = Math.floor(selectedIndex / 7)
+          const gap = isLinedStyle ? 0 : 4 // gap-1 = 0.25rem = 4px
+          const cellWidthPercent = 100 / 7
+          const cellHeightPercent = 100 / rowCount
+          return (
+            <motion.div
+              layoutId="calendar-selection"
+              className={`pointer-events-none absolute ${isLinedStyle ? '' : 'rounded'}`}
+              style={{
+                left: `calc(${col * cellWidthPercent}% + ${(col * gap) / 7}px)`,
+                top: `calc(${row * cellHeightPercent}% + ${(row * gap) / rowCount}px)`,
+                width: `calc(${cellWidthPercent}% - ${((7 - 1) * gap) / 7}px)`,
+                height: `calc(${cellHeightPercent}% - ${((rowCount - 1) * gap) / rowCount}px)`,
+                boxShadow: `inset 0 0 0 2px ${theme.accent}`,
+                zIndex: 10,
+              }}
+              transition={{
+                type: 'tween',
+                duration: 0.15,
+                ease: 'easeOut',
+              }}
+            />
           )
-        })}
+        })()}
       </div>
 
       {/* コメント表示（右下）- コメントがある場合のみ表示 */}
