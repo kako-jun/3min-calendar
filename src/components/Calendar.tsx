@@ -7,7 +7,7 @@ import { getYearMonthParams } from '../lib/calendar'
 import { APP_THEMES } from '../lib/types'
 import { AppHeader } from './AppHeader'
 import { MonthSelector } from './MonthSelector'
-import { CalendarGrid } from './CalendarGrid'
+import { CalendarGridCanvas, type CalendarGridCanvasHandle } from './CalendarGridCanvas'
 import { CalendarThemeSelector } from './CalendarThemeSelector'
 import { DayEditor } from './DayEditor'
 import { ActionButtons } from './ActionButtons'
@@ -21,7 +21,7 @@ export function Calendar() {
   const getCalendarComment = useCalendarStore((state) => state.getCalendarComment)
   const updateCalendarComment = useCalendarStore((state) => state.updateCalendarComment)
   const appTheme = APP_THEMES[settings.appTheme]
-  const calendarRef = useRef<HTMLDivElement>(null)
+  const calendarRef = useRef<CalendarGridCanvasHandle>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [isCopying, setIsCopying] = useState(false)
   const [comment, setComment] = useState('')
@@ -49,7 +49,9 @@ export function Calendar() {
   }
 
   const yearMonthParams = getYearMonthParams(view.year, view.month)
-  const title = t('calendar.yearMonth', yearMonthParams)
+  const monthNames = t('calendar.monthNames', { returnObjects: true }) as string[] | string
+  const monthName = Array.isArray(monthNames) ? monthNames[view.month] : String(view.month + 1)
+  const title = t('calendar.yearMonth', { ...yearMonthParams, monthName })
   const filename = `calendar-${view.year}-${String(view.month + 1).padStart(2, '0')}`
 
   return (
@@ -71,7 +73,7 @@ export function Calendar() {
       <div className="mt-2 flex flex-col gap-2 lg:flex-row lg:items-start">
         {/* カレンダーグリッド + コントロール（テーマ＆アクション） */}
         <div className="flex flex-col items-center gap-2 lg:w-1/2">
-          <CalendarGrid ref={calendarRef} comment={comment} />
+          <CalendarGridCanvas ref={calendarRef} comment={comment} />
           <div className="flex items-center gap-3">
             <CalendarThemeSelector />
             <button

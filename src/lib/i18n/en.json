@@ -40,9 +40,23 @@
   },
   "calendar": {
     "today": "Today",
-    "yearMonth": "{{month}}/{{year}}",
-    "yearSuffix": "/",
+    "yearMonth": "{{monthName}} {{year}}",
+    "yearSuffix": "",
     "monthSuffix": "",
+    "monthNames": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
     "commentPlaceholder": "Note (shown at bottom right of calendar)"
   },
   "weekdays": {

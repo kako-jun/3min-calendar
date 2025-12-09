@@ -40,9 +40,23 @@
   },
   "calendar": {
     "today": "วันนี้",
-    "yearMonth": "{{month}}/{{year}}",
+    "yearMonth": "{{monthName}} {{year}}",
     "yearSuffix": "",
     "monthSuffix": "",
+    "monthNames": [
+      "ม.ค.",
+      "ก.พ.",
+      "มี.ค.",
+      "เม.ย.",
+      "พ.ค.",
+      "มิ.ย.",
+      "ก.ค.",
+      "ส.ค.",
+      "ก.ย.",
+      "ต.ค.",
+      "พ.ย.",
+      "ธ.ค."
+    ],
     "commentPlaceholder": "หมายเหตุ (แสดงที่มุมขวาล่างของปฏิทิน)"
   },
   "weekdays": {

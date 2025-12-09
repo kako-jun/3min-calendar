@@ -40,9 +40,23 @@
   },
   "calendar": {
     "today": "Hoje",
-    "yearMonth": "{{month}}/{{year}}",
+    "yearMonth": "{{monthName}} {{year}}",
     "yearSuffix": "",
     "monthSuffix": "",
+    "monthNames": [
+      "jan.",
+      "fev.",
+      "mar.",
+      "abr.",
+      "mai.",
+      "jun.",
+      "jul.",
+      "ago.",
+      "set.",
+      "out.",
+      "nov.",
+      "dez."
+    ],
     "commentPlaceholder": "Nota (exibida no canto inferior direito do calendário)"
   },
   "weekdays": {

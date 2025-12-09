@@ -40,9 +40,23 @@
   },
   "calendar": {
     "today": "आज",
-    "yearMonth": "{{year}} {{month}}",
+    "yearMonth": "{{monthName}} {{year}}",
     "yearSuffix": "",
     "monthSuffix": "",
+    "monthNames": [
+      "जन.",
+      "फेब्.",
+      "मार्च",
+      "अप्रि.",
+      "मे",
+      "जुन",
+      "जुल.",
+      "अग.",
+      "सेप्ट.",
+      "अक्टो.",
+      "नोभ.",
+      "डिसे."
+    ],
     "commentPlaceholder": "नोट (क्यालेन्डरको तल दायाँमा देखिन्छ)"
   },
   "weekdays": {

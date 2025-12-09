@@ -2,12 +2,13 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShareFromSquare, faDownload } from '@fortawesome/free-solid-svg-icons'
-import { shareImage, downloadImage, copyImageToClipboard } from '../lib/capture'
+import { shareCanvasImage, downloadCanvasImage, copyCanvasImageToClipboard } from '../lib/capture'
 import { useCalendarStore } from '../lib/store'
 import { APP_THEMES } from '../lib/types'
+import type { CalendarGridCanvasHandle } from './CalendarGridCanvas'
 
 interface ActionButtonsProps {
-  calendarRef: React.RefObject<HTMLDivElement>
+  calendarRef: React.RefObject<CalendarGridCanvasHandle>
   filename: string
 }
 
@@ -28,15 +29,22 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
     setIsProcessing(true)
 
     try {
-      await shareImage(calendarRef.current, filename)
+      const dataURL = calendarRef.current.toDataURL(2)
+      if (!dataURL) throw new Error('Failed to get image')
+      await shareCanvasImage(dataURL, filename)
     } catch (error: unknown) {
       if (error instanceof Error) {
         if (error.message === 'Web Share API is not supported') {
           showMessage(t('messages.copied'))
         } else if (error.name !== 'AbortError') {
           try {
-            await copyImageToClipboard(calendarRef.current)
-            showMessage(t('messages.copied'))
+            const dataURL = calendarRef.current?.toDataURL(2)
+            if (dataURL) {
+              await copyCanvasImageToClipboard(dataURL)
+              showMessage(t('messages.copied'))
+            } else {
+              showMessage(t('messages.shareFailed'))
+            }
           } catch {
             showMessage(t('messages.shareFailed'))
           }
@@ -52,7 +60,9 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
     setIsProcessing(true)
 
     try {
-      await downloadImage(calendarRef.current, filename)
+      const dataURL = calendarRef.current.toDataURL(2)
+      if (!dataURL) throw new Error('Failed to get image')
+      downloadCanvasImage(dataURL, filename)
       showMessage(t('messages.downloaded'))
     } catch {
       showMessage(t('messages.downloadFailed'))

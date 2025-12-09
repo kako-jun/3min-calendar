@@ -40,9 +40,23 @@
   },
   "calendar": {
     "today": "Ngayon",
-    "yearMonth": "{{month}}/{{year}}",
+    "yearMonth": "{{monthName}} {{year}}",
     "yearSuffix": "",
     "monthSuffix": "",
+    "monthNames": [
+      "Ene.",
+      "Peb.",
+      "Mar.",
+      "Abr.",
+      "May.",
+      "Hun.",
+      "Hul.",
+      "Ago.",
+      "Set.",
+      "Okt.",
+      "Nob.",
+      "Dis."
+    ],
     "commentPlaceholder": "Tala (ipinapakita sa kanang ibaba ng kalendaryo)"
   },
   "weekdays": {
