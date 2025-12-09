@@ -1,5 +1,16 @@
 # 3 min. Calendar
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Made%20with-React-61DAFB?style=flat-square&logo=react" alt="Made with React">
+  <img src="https://img.shields.io/badge/Build-Vite-646CFF?style=flat-square&logo=vite" alt="Build with Vite">
+  <img src="https://img.shields.io/badge/PWA-Offline%20Ready-5A0FC8?style=flat-square&logo=pwa" alt="PWA Offline Ready">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License">
+</p>
+
+<p align="center">
+  <a href="./README.en.md">English</a> ・ <a href="./README.zh.md">中文</a>
+</p>
+
 **がんばる個人経営者の時短に**
 
 カップラーメンができる3分で、今月の営業カレンダーが完成。
@@ -134,6 +145,30 @@ InstagramやLINEで、お客様にサッと共有できます。
 株式会社デンソーウェーブ公式と同じく、入力されたURLを一切加工せず、そのままQRコードにしています。
 
 安心してお使いください。
+
+---
+
+## スマホにインストール
+
+このアプリはPWA（Progressive Web App）に対応しています。
+
+スマホのホーム画面に追加すると、普通のアプリのように使えます。
+
+### Androidの場合（Chrome）
+
+1. Chromeでこのアプリを開く
+2. 右上の「︙」メニューを押す
+3. 「ホーム画面に追加」または「アプリをインストール」を押す
+4. ホーム画面にアイコンが追加される
+
+### iPhoneの場合（Safari）
+
+1. Safariでこのアプリを開く
+2. 下の「共有」ボタン（□から↑が出ているアイコン）を押す
+3. 「ホーム画面に追加」を押す
+4. ホーム画面にアイコンが追加される
+
+インストール後はオフラインでも使えます。
 
 ---
 

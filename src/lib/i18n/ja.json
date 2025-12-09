@@ -139,7 +139,8 @@
   },
   "languages": {
     "ja": "日本語",
-    "en": "English"
+    "en": "English",
+    "zh": "中文"
   },
   "editor": {
     "selectDay": "編集したいカレンダーの日付をクリックしてください",

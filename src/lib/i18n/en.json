@@ -139,7 +139,8 @@
   },
   "languages": {
     "ja": "日本語",
-    "en": "English"
+    "en": "English",
+    "zh": "中文"
   },
   "editor": {
     "selectDay": "Click a date on the calendar you want to edit",

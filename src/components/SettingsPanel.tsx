@@ -27,7 +27,7 @@ import { ToggleSwitch } from './ui/ToggleSwitch'
 import { ImageSelector } from './ui/ImageSelector'
 
 const APP_THEME_IDS: AppTheme[] = ['light', 'dark']
-const LANGUAGES = ['ja', 'en'] as const
+const LANGUAGES = ['ja', 'en', 'zh'] as const
 
 interface SettingsPanelProps {
   isOpen: boolean
@@ -212,7 +212,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
               </span>
               <select
                 value={settings.language}
-                onChange={(e) => updateSettings({ language: e.target.value as 'ja' | 'en' })}
+                onChange={(e) => updateSettings({ language: e.target.value as 'ja' | 'en' | 'zh' })}
                 className="rounded border px-3 py-1 text-sm"
                 style={{
                   backgroundColor: appTheme.bg,

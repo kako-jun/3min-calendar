@@ -1,0 +1,162 @@
+{
+  "app": {
+    "title": "3 min. Calendar",
+    "titleQR": "3 min. QR",
+    "tagline": "为忙碌的个体经营者节省时间"
+  },
+  "nav": {
+    "calendar": "日历",
+    "qr": "二维码"
+  },
+  "qr": {
+    "urlLabel": "URL",
+    "urlPlaceholder": "https://example.com",
+    "enterUrl": "请输入URL",
+    "generate": "生成",
+    "sizeLabel": "尺寸",
+    "fgColor": "码色",
+    "bgColor": "背景色",
+    "invert": "反转颜色",
+    "transparent": "透明背景",
+    "style": "样式",
+    "styles": {
+      "squares": "方块",
+      "dots": "圆点",
+      "fluid": "流体"
+    },
+    "eyeStyle": "定位点形状",
+    "eyeStyles": {
+      "square": "方形",
+      "rounded": "圆角",
+      "circle": "圆形"
+    },
+    "logo": "中央Logo",
+    "selectLogo": "选择图片",
+    "removeLogo": "删除Logo",
+    "safety": "输入的URL不会发送到服务器。在浏览器内生成，不添加任何跳转链接。",
+    "madeInJapan": "日本制造",
+    "openSource": "源代码已在GitHub公开",
+    "trademark": "QR码是株式会社电装波动的注册商标"
+  },
+  "calendar": {
+    "today": "今天",
+    "yearMonth": "{{year}}年{{month}}月",
+    "yearSuffix": "年",
+    "monthSuffix": "月",
+    "commentPlaceholder": "备注（显示在日历右下角）"
+  },
+  "weekdays": {
+    "sun": "日",
+    "mon": "一",
+    "tue": "二",
+    "wed": "三",
+    "thu": "四",
+    "fri": "五",
+    "sat": "六"
+  },
+  "settings": {
+    "weekStart": "周起始日",
+    "sunday": "周日",
+    "monday": "周一",
+    "country": "国家/地区",
+    "language": "语言",
+    "appTheme": "应用外观",
+    "calendarTheme": "日历主题",
+    "shopName": "店名",
+    "shopLogo": "店铺Logo",
+    "showHolidays": "显示节假日",
+    "showRokuyo": "显示六曜",
+    "useWareki": "使用日本年号",
+    "backgroundImage": "背景图片",
+    "selectImage": "选择图片",
+    "removeImage": "删除",
+    "backgroundOpacity": "背景透明度",
+    "qrCodeComingSoon": "二维码功能（计划中）"
+  },
+  "about": {
+    "author": "作者"
+  },
+  "actions": {
+    "share": "分享",
+    "download": "下载",
+    "copy": "复制",
+    "paste": "粘贴",
+    "clear": "清除",
+    "settings": "设置",
+    "copyFromPrev": "从上月复制",
+    "copyFromPrevShort": "从上月"
+  },
+  "time": {
+    "from": "开始",
+    "to": "结束",
+    "none": "-"
+  },
+  "quickInput": {
+    "closed": "休",
+    "available": "◯",
+    "few": "△",
+    "full": "满",
+    "reserved": "✕"
+  },
+  "messages": {
+    "copied": "已复制到剪贴板",
+    "downloaded": "已下载",
+    "shareFailed": "分享失败",
+    "downloadFailed": "下载失败"
+  },
+  "dataManagement": {
+    "title": "数据管理",
+    "export": "导出",
+    "import": "导入",
+    "exportSuccess": "数据已导出",
+    "importSuccess": "数据已导入。页面将重新加载。",
+    "importConfirm": "导入将覆盖当前数据。是否继续？",
+    "invalidFile": "无效的文件"
+  },
+  "appThemes": {
+    "dark": "深色",
+    "light": "浅色"
+  },
+  "calendarThemes": {
+    "light": "浅色",
+    "light-red": "浅红",
+    "light-orange": "浅橙",
+    "light-yellow": "浅黄",
+    "light-green": "浅绿",
+    "light-blue": "浅蓝",
+    "light-purple": "浅紫",
+    "dark": "深色",
+    "dark-red": "深红",
+    "dark-orange": "深橙",
+    "dark-yellow": "深黄",
+    "dark-green": "深绿",
+    "dark-blue": "深蓝",
+    "dark-purple": "深紫"
+  },
+  "gridStyles": {
+    "rounded": "圆角",
+    "lined": "线框"
+  },
+  "languages": {
+    "ja": "日本語",
+    "en": "English",
+    "zh": "中文"
+  },
+  "editor": {
+    "selectDay": "请点击日历上的日期进行编辑",
+    "freeTextPlaceholder": "输入备注"
+  },
+  "emoji": {
+    "title": "添加表情",
+    "categories": {
+      "events": "活动",
+      "food": "餐饮",
+      "beauty": "美容",
+      "nature": "自然",
+      "symbols": "符号",
+      "status": "状态",
+      "faces": "表情",
+      "hands": "手势"
+    }
+  }
+}

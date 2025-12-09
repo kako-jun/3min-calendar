@@ -199,7 +199,7 @@ export interface Settings {
   appTheme: AppTheme // アプリ全体のテーマ（ライト/ダーク）
   calendarTheme: CalendarThemeId // カレンダー画像のテーマ
   gridStyle: GridStyle // グリッド表示スタイル（角丸/罫線）
-  language: 'ja' | 'en'
+  language: 'ja' | 'en' | 'zh'
   country: CountryCode
   shopName: string
   shopLogo: string | null // 店名ロゴ画像（Base64）
