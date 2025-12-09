@@ -85,7 +85,8 @@
     "selectImage": "เลือกรูปภาพ",
     "removeImage": "ลบ",
     "backgroundOpacity": "ความทึบพื้นหลัง",
-    "qrCodeDescription": "สแกนเพื่อใช้งานบนมือถือ"
+    "qrCodeDescription": "สแกนเพื่อใช้งานบนมือถือ",
+    "aboutApp": "เกี่ยวกับแอปนี้"
   },
   "about": {
     "author": "ผู้สร้าง"

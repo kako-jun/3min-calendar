@@ -71,7 +71,8 @@
     "selectImage": "选择图片",
     "removeImage": "删除",
     "backgroundOpacity": "背景透明度",
-    "qrCodeDescription": "手机使用请扫码"
+    "qrCodeDescription": "手机使用请扫码",
+    "aboutApp": "关于此应用"
   },
   "about": {
     "author": "作者"

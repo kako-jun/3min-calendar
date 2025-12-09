@@ -17,7 +17,7 @@ import {
   faFileImport,
   faHeart,
 } from '@fortawesome/free-solid-svg-icons'
-import { faGithub } from '@fortawesome/free-brands-svg-icons'
+import { faGithub, faReadme } from '@fortawesome/free-brands-svg-icons'
 import { useCalendarStore } from '../lib/store'
 import { SUPPORTED_COUNTRIES, type CountryCode } from '../lib/holidays'
 import { APP_THEMES, type AppTheme, type Settings } from '../lib/types'
@@ -166,6 +166,16 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             <p className="text-center text-xs" style={{ color: appTheme.textMuted }}>
               {t('settings.qrCodeDescription')}
             </p>
+            <a
+              href={`https://github.com/kako-jun/3min/blob/main/README${settings.language === 'ja' ? '' : `.${settings.language}`}.md`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm transition-opacity hover:opacity-70"
+              style={{ color: appTheme.text }}
+            >
+              <FontAwesomeIcon icon={faReadme} />
+              <span>{t('settings.aboutApp')}</span>
+            </a>
           </div>
 
           <hr style={{ borderColor: appTheme.textMuted, opacity: 0.3 }} />

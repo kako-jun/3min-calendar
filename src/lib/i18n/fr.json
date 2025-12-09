@@ -85,7 +85,8 @@
     "selectImage": "Sélectionner une image",
     "removeImage": "Supprimer",
     "backgroundOpacity": "Opacité du fond",
-    "qrCodeDescription": "Scannez pour utiliser sur mobile"
+    "qrCodeDescription": "Scannez pour utiliser sur mobile",
+    "aboutApp": "À propos de cette app"
   },
   "about": {
     "author": "Auteur"

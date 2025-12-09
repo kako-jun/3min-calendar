@@ -71,7 +71,8 @@
     "selectImage": "画像を選択",
     "removeImage": "削除",
     "backgroundOpacity": "背景の濃さ",
-    "qrCodeDescription": "スマホで使う場合はこちら"
+    "qrCodeDescription": "スマホで使う場合はこちら",
+    "aboutApp": "このアプリについて"
   },
   "about": {
     "author": "作者"

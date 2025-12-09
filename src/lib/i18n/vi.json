@@ -85,7 +85,8 @@
     "selectImage": "Chọn ảnh",
     "removeImage": "Xóa",
     "backgroundOpacity": "Độ mờ nền",
-    "qrCodeDescription": "Quét để sử dụng trên điện thoại"
+    "qrCodeDescription": "Quét để sử dụng trên điện thoại",
+    "aboutApp": "Về ứng dụng này"
   },
   "about": {
     "author": "Tác giả"

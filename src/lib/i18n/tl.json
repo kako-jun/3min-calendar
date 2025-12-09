@@ -85,7 +85,8 @@
     "selectImage": "Pumili ng larawan",
     "removeImage": "Alisin",
     "backgroundOpacity": "Opacity ng background",
-    "qrCodeDescription": "I-scan para gamitin sa mobile"
+    "qrCodeDescription": "I-scan para gamitin sa mobile",
+    "aboutApp": "Tungkol sa app na ito"
   },
   "about": {
     "author": "May-akda"
