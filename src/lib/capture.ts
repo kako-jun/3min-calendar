@@ -1,49 +1,111 @@
 /**
- * カレンダーを正方形画像としてキャプチャするユーティリティ
- * 画面表示と完全一致させるため、要素をそのままキャプチャしてスケールアップ
+ * カレンダーを画像としてキャプチャするユーティリティ
+ * Screen Capture APIを使用してブラウザの実際の表示をそのままキャプチャ
  */
 
 /**
- * HTML要素をBlobとしてキャプチャ（Instagram用1080x1080）
- * 画面表示を2倍にスケールアップして高解像度化
+ * Screen Capture APIを使用して要素をキャプチャ
  */
 export async function captureElementAsBlob(element: HTMLElement): Promise<Blob | null> {
-  try {
-    const html2canvas = (await import('html2canvas')).default
+  let stream: MediaStream | null = null
 
+  try {
     // キャプチャ前に選択枠を非表示にする
     const selectionElement = element.querySelector('[data-selection-frame]') as HTMLElement | null
     if (selectionElement) {
       selectionElement.style.display = 'none'
     }
 
-    // フォントの読み込みを待つ
-    await document.fonts.ready
-
-    // 要素の実際のサイズを取得
+    // 要素の位置とサイズを取得
     const rect = element.getBoundingClientRect()
 
-    // 要素をそのままキャプチャ（scale: 2で高解像度化）
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      logging: false,
-      useCORS: true,
-      allowTaint: true,
-      width: rect.width,
-      height: rect.height,
-      backgroundColor: null,
-    })
+    // Screen Capture APIで画面をキャプチャ
+    stream = await navigator.mediaDevices.getDisplayMedia({
+      video: {
+        displaySurface: 'browser',
+      },
+      preferCurrentTab: true,
+    } as DisplayMediaStreamOptions)
+
+    // ビデオトラックを取得
+    const track = stream.getVideoTracks()[0]
+    if (!track) throw new Error('No video track available')
+
+    // VideoElementを使ってフレームを取得
+    const video = document.createElement('video')
+    video.srcObject = stream
+    video.muted = true
+    await video.play()
+
+    // フレームが安定するまで少し待つ
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
+    // ビデオからCanvasにキャプチャ
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = video.videoWidth
+    tempCanvas.height = video.videoHeight
+    const tempCtx = tempCanvas.getContext('2d')
+    if (!tempCtx) throw new Error('Canvas context not available')
+    tempCtx.drawImage(video, 0, 0)
+
+    // ストリームを停止
+    track.stop()
+    video.srcObject = null
+    stream = null
 
     // 選択枠を復元
     if (selectionElement) {
       selectionElement.style.display = ''
     }
 
+    // キャプチャした画像から要素部分を切り出す
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('Canvas context not available')
+
+    // 出力サイズ（元のサイズの2倍）
+    canvas.width = rect.width * 2
+    canvas.height = rect.height * 2
+
+    // キャプチャ画像のスケールを計算（ビデオサイズとウィンドウサイズの比率）
+    const scaleX = tempCanvas.width / window.innerWidth
+    const scaleY = tempCanvas.height / window.innerHeight
+
+    // 要素の位置（viewportからの相対位置）
+    const sourceX = rect.left * scaleX
+    const sourceY = rect.top * scaleY
+    const sourceWidth = rect.width * scaleX
+    const sourceHeight = rect.height * scaleY
+
+    // 切り出して描画（2倍に拡大）
+    ctx.drawImage(
+      tempCanvas,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    )
+
     // Blobに変換
     return new Promise((resolve) => {
       canvas.toBlob((blob) => resolve(blob), 'image/png')
     })
   } catch (error) {
+    // ストリームを停止
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop())
+    }
+
+    // 選択枠を復元
+    const selectionElement = element.querySelector('[data-selection-frame]') as HTMLElement | null
+    if (selectionElement) {
+      selectionElement.style.display = ''
+    }
+
     console.error('キャプチャに失敗:', error)
     return null
   }

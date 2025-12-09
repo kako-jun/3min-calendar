@@ -302,6 +302,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
           return (
             <motion.div
               layoutId="calendar-selection"
+              data-selection-frame
               className={`pointer-events-none absolute ${isLinedStyle ? '' : 'rounded'}`}
               style={{
                 left: `calc(${col * cellWidthPercent}% + ${(col * gap) / 7}px)`,
