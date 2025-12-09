@@ -5,6 +5,7 @@ import type { DayEntry } from './types'
 /** コピー/ペースト用にエントリをシリアライズ */
 export function serializeEntry(entry: Partial<DayEntry>): string {
   return JSON.stringify({
+    symbol: entry.symbol,
     stamp: entry.stamp,
     timeFrom: entry.timeFrom,
     timeTo: entry.timeTo,
@@ -17,6 +18,7 @@ export function deserializeEntry(str: string): Partial<DayEntry> | null {
   try {
     const data = JSON.parse(str)
     return {
+      symbol: data.symbol ?? null,
       stamp: data.stamp ?? null,
       timeFrom: data.timeFrom ?? '',
       timeTo: data.timeTo ?? '',

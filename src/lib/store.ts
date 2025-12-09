@@ -165,6 +165,7 @@ export const useCalendarStore = create<
     const entry: DayEntry = {
       date,
       text: updates.text ?? existing?.text ?? '',
+      symbol: updates.symbol !== undefined ? updates.symbol : existing?.symbol,
       stamp: updates.stamp !== undefined ? updates.stamp : existing?.stamp,
       timeFrom: updates.timeFrom !== undefined ? updates.timeFrom : existing?.timeFrom,
       timeTo: updates.timeTo !== undefined ? updates.timeTo : existing?.timeTo,

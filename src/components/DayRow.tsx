@@ -51,7 +51,8 @@ export function DayRow({
   const weekdayName = t(`weekdays.${weekdayKeys[dayOfWeek]}`)
 
   // エントリから値を取得
-  const stamp = entry?.stamp ?? null
+  const entrySymbol = entry?.symbol ?? null
+  const entryStamp = entry?.stamp ?? null
   const entryTimeFrom = entry?.timeFrom ?? ''
   const entryTimeTo = entry?.timeTo ?? ''
   const freeText = entry?.text ?? ''
@@ -60,6 +61,8 @@ export function DayRow({
   const isComposingRef = useRef(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const [localFreeText, setLocalFreeText] = useState(freeText)
+  const [localSymbol, setLocalSymbol] = useState(entrySymbol)
+  const [localStamp, setLocalStamp] = useState(entryStamp)
   const [localTimeFrom, setLocalTimeFrom] = useState(entryTimeFrom)
   const [localTimeTo, setLocalTimeTo] = useState(entryTimeTo)
 
@@ -69,6 +72,14 @@ export function DayRow({
       setLocalFreeText(freeText)
     }
   }, [freeText])
+
+  useEffect(() => {
+    setLocalSymbol(entrySymbol)
+  }, [entrySymbol])
+
+  useEffect(() => {
+    setLocalStamp(entryStamp)
+  }, [entryStamp])
 
   useEffect(() => {
     setLocalTimeFrom(entryTimeFrom)
@@ -81,9 +92,17 @@ export function DayRow({
   // 入力欄やボタンにフォーカス/クリックしたらこの日を選択
   const handleFocus = () => onSelect(dateString)
 
-  // スタンプ変更ハンドラ
+  // 記号変更ハンドラ（背景表示用）
+  const handleSymbolChange = (symbolKey: string | null) => {
+    handleFocus()
+    setLocalSymbol(symbolKey)
+    onUpdate(dateString, { symbol: symbolKey })
+  }
+
+  // スタンプ変更ハンドラ（左上表示用）
   const handleStampChange = (stampKey: string | null) => {
     handleFocus()
+    setLocalStamp(stampKey)
     onUpdate(dateString, { stamp: stampKey })
   }
 
@@ -215,7 +234,13 @@ export function DayRow({
         <button
           onClick={() => {
             handleFocus()
-            onCopy({ stamp, timeFrom: localTimeFrom, timeTo: localTimeTo, text: localFreeText })
+            onCopy({
+              symbol: localSymbol,
+              stamp: localStamp,
+              timeFrom: localTimeFrom,
+              timeTo: localTimeTo,
+              text: localFreeText,
+            })
           }}
           className="shrink-0 rounded px-2 py-1 text-xs transition-opacity hover:opacity-80"
           style={{ backgroundColor: appTheme.bg, color: appTheme.text }}
@@ -240,7 +265,12 @@ export function DayRow({
 
       {/* スタンプボタンと時刻入力 */}
       <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
-        <QuickInputButtons selectedStamp={stamp} onSelect={handleStampChange} />
+        <QuickInputButtons
+          selectedSymbol={localSymbol}
+          selectedStamp={localStamp}
+          onSymbolSelect={handleSymbolChange}
+          onStampSelect={handleStampChange}
+        />
 
         {/* 時刻入力 */}
         <div className="flex items-center gap-1">

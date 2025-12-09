@@ -7,7 +7,19 @@ import { getCalendarDays, getWeekdayHeaders, getYearMonthParams } from '../lib/c
 import { isHoliday } from '../lib/holidays'
 import { getRokuyoName } from '../lib/rokuyo'
 import { getWarekiYear } from '../lib/wareki'
-import { THEMES, QUICK_INPUT_STYLES } from '../lib/types'
+import { THEMES, SYMBOL_STYLES, STAMP_STYLES } from '../lib/types'
+
+/** 記号系スタイルを取得 */
+function getSymbolStyle(symbolKey: string | null | undefined) {
+  if (!symbolKey) return null
+  return SYMBOL_STYLES.find((s) => s.key === symbolKey) ?? null
+}
+
+/** スタンプ系スタイルを取得 */
+function getStampStyle(stampKey: string | null | undefined) {
+  if (!stampKey) return null
+  return STAMP_STYLES.find((s) => s.key === stampKey) ?? null
+}
 
 /** Canvas のベースサイズ（論理ピクセル） */
 const BASE_SIZE = 500
@@ -20,12 +32,6 @@ const CELL_RADIUS = 4
 /** フォントファミリー（index.cssと同じ） */
 const FONT_FAMILY =
   'Inter, "Zen Kaku Gothic Antique", "Noto Sans SC", system-ui, Avenir, Helvetica, Arial, sans-serif'
-
-/** スタンプキーからスタイルを取得 */
-function getStampStyle(stampKey: string | null | undefined) {
-  if (!stampKey) return null
-  return QUICK_INPUT_STYLES.find((s) => s.key === stampKey) ?? null
-}
 
 /** アニメーション付き選択枠 */
 interface SelectionRectProps {
@@ -446,7 +452,8 @@ export const CalendarGridCanvas = forwardRef<CalendarGridCanvasHandle, CalendarG
               const dayColor = getDayColor(day, holidayInfo)
 
               // エントリから値を取得
-              const stampStyle = getStampStyle(entry?.stamp)
+              const symbolStyle = getSymbolStyle(entry?.symbol) // 背景記号（◯△✕）
+              const stampStyle = getStampStyle(entry?.stamp) // コーナースタンプ（満休）
               const timeFrom = entry?.timeFrom ?? ''
               const timeTo = entry?.timeTo ?? ''
               const time = timeFrom || timeTo ? `${timeFrom}-${timeTo}` : ''
@@ -478,6 +485,72 @@ export const CalendarGridCanvas = forwardRef<CalendarGridCanvasHandle, CalendarG
                     stroke={isLinedStyle ? lineColor : undefined}
                     strokeWidth={isLinedStyle ? 0.5 : 0}
                   />
+
+                  {/* 記号系背景（◯ △ ✕）- セル全体に薄く大きく表示 */}
+                  {symbolStyle && (
+                    <Group>
+                      {symbolStyle.key === 'available' && (
+                        <Circle
+                          x={cellWidth / 2}
+                          y={cellHeight / 2}
+                          radius={Math.min(cellWidth, cellHeight) * 0.35}
+                          stroke={symbolStyle.bgColor}
+                          strokeWidth={4}
+                          opacity={0.3}
+                        />
+                      )}
+                      {symbolStyle.key === 'few' &&
+                        (() => {
+                          // 正三角形を計算（セルの中心に配置）
+                          const size = Math.min(cellWidth, cellHeight) * 0.65
+                          const cx = cellWidth / 2
+                          const cy = cellHeight / 2
+                          const h = (size * Math.sqrt(3)) / 2 // 正三角形の高さ
+                          return (
+                            <Line
+                              points={[
+                                cx,
+                                cy - h / 2, // 頂点（上）
+                                cx + size / 2,
+                                cy + h / 2, // 右下
+                                cx - size / 2,
+                                cy + h / 2, // 左下
+                              ]}
+                              stroke={symbolStyle.bgColor}
+                              strokeWidth={4}
+                              closed
+                              lineJoin="round"
+                              opacity={0.3}
+                            />
+                          )
+                        })()}
+                      {symbolStyle.key === 'reserved' &&
+                        (() => {
+                          // 対称な×を計算
+                          const size = Math.min(cellWidth, cellHeight) * 0.3
+                          const cx = cellWidth / 2
+                          const cy = cellHeight / 2
+                          return (
+                            <>
+                              <Line
+                                points={[cx - size, cy - size, cx + size, cy + size]}
+                                stroke={symbolStyle.bgColor}
+                                strokeWidth={4}
+                                lineCap="round"
+                                opacity={0.3}
+                              />
+                              <Line
+                                points={[cx + size, cy - size, cx - size, cy + size]}
+                                stroke={symbolStyle.bgColor}
+                                strokeWidth={4}
+                                lineCap="round"
+                                opacity={0.3}
+                              />
+                            </>
+                          )
+                        })()}
+                    </Group>
+                  )}
 
                   {/* 六曜と日付（右上） - 日付は右揃え、六曜は日付の左 */}
                   {(() => {
@@ -517,75 +590,36 @@ export const CalendarGridCanvas = forwardRef<CalendarGridCanvasHandle, CalendarG
                     )
                   })()}
 
-                  {/* スタンプ（左上） - padding: 4px, icon size: 10, 六曜より前面 */}
-                  {stampStyle && (
-                    <Group x={4} y={4}>
-                      {/* アイコン系スタンプ */}
-                      {(stampStyle.key === 'available' ||
-                        stampStyle.key === 'few' ||
-                        stampStyle.key === 'reserved') && (
-                        <>
-                          <Rect width={14} height={12} fill={stampStyle.bgColor} cornerRadius={2} />
-                          {stampStyle.key === 'available' && (
-                            <Circle
-                              x={7}
-                              y={6}
-                              radius={3.5}
-                              stroke={stampStyle.textColor}
-                              strokeWidth={1.5}
-                            />
-                          )}
-                          {stampStyle.key === 'few' && (
-                            <Line
-                              points={[7, 2, 11.5, 9.5, 2.5, 9.5]}
-                              stroke={stampStyle.textColor}
-                              strokeWidth={1.5}
-                              closed
-                              lineJoin="round"
-                            />
-                          )}
-                          {stampStyle.key === 'reserved' && (
-                            <Line
-                              points={[3.5, 2.5, 10.5, 9.5, 7, 6, 3.5, 9.5, 10.5, 2.5]}
-                              stroke={stampStyle.textColor}
-                              strokeWidth={1.5}
-                              lineCap="round"
-                            />
-                          )}
-                        </>
-                      )}
-                      {/* テキスト系スタンプ（closed, full） */}
-                      {(stampStyle.key === 'closed' || stampStyle.key === 'full') &&
-                        (() => {
-                          const stampText = t(`quickInput.${stampStyle.key}`)
-                          // テキスト幅を推定: 日本語1文字=8px, 英語1文字=5px + 左右padding 4px
-                          const isJapanese = /[\u3000-\u9fff]/.test(stampText)
-                          const textWidth = isJapanese ? stampText.length * 8 : stampText.length * 5
-                          const stampWidth = textWidth + 6
-                          return (
-                            <>
-                              <Rect
-                                width={stampWidth}
-                                height={12}
-                                fill={stampStyle.bgColor}
-                                cornerRadius={2}
-                              />
-                              <Text
-                                x={0}
-                                y={1}
-                                width={stampWidth}
-                                text={stampText}
-                                fontSize={8}
-                                fontStyle="bold"
-                                fontFamily={FONT_FAMILY}
-                                fill={stampStyle.textColor}
-                                align="center"
-                              />
-                            </>
-                          )
-                        })()}
-                    </Group>
-                  )}
+                  {/* スタンプ（左上） - 満・休 */}
+                  {stampStyle &&
+                    (() => {
+                      const stampText = t(`quickInput.${stampStyle.key}`)
+                      // テキスト幅を推定: 日本語1文字=8px, 英語1文字=5px + 左右padding 4px
+                      const isJapanese = /[\u3000-\u9fff]/.test(stampText)
+                      const textWidth = isJapanese ? stampText.length * 8 : stampText.length * 5
+                      const stampWidth = textWidth + 6
+                      return (
+                        <Group x={4} y={4}>
+                          <Rect
+                            width={stampWidth}
+                            height={12}
+                            fill={stampStyle.bgColor}
+                            cornerRadius={2}
+                          />
+                          <Text
+                            x={0}
+                            y={1}
+                            width={stampWidth}
+                            text={stampText}
+                            fontSize={8}
+                            fontStyle="bold"
+                            fontFamily={FONT_FAMILY}
+                            fill={stampStyle.textColor}
+                            align="center"
+                          />
+                        </Group>
+                      )
+                    })()}
 
                   {/* 時刻 - marginTop: 4px from first row (~18px) */}
                   {time && (

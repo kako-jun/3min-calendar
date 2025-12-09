@@ -4,7 +4,8 @@ import type { CountryCode } from './holidays'
 export interface DayEntry {
   date: string // YYYY-MM-DD
   text: string // 自由テキストのみ
-  stamp?: string | null // スタンプキー: 'closed', 'available', etc.
+  symbol?: string | null // 記号キー: 'available'(◯), 'few'(△), 'reserved'(✕) - 背景に大きく表示
+  stamp?: string | null // スタンプキー: 'full'(満), 'closed'(休) - 左上に小さく表示
   timeFrom?: string // 開始時刻: '10:00'
   timeTo?: string // 終了時刻: '18:00'
 }
@@ -247,13 +248,21 @@ export interface QuickInputStyle {
   textColor: string
 }
 
-export const QUICK_INPUT_STYLES: QuickInputStyle[] = [
-  { key: 'closed', bgColor: '#4b5563', textColor: '#ffffff' }, // gray-600
-  { key: 'available', bgColor: '#16a34a', textColor: '#ffffff' }, // green-600
-  { key: 'few', bgColor: '#ca8a04', textColor: '#ffffff' }, // yellow-600
-  { key: 'reserved', bgColor: '#dc2626', textColor: '#ffffff' }, // red-600
-  { key: 'full', bgColor: '#9333ea', textColor: '#ffffff' }, // purple-600
+/** 記号系（背景表示）: ◯ △ ✕ */
+export const SYMBOL_STYLES: QuickInputStyle[] = [
+  { key: 'available', bgColor: '#16a34a', textColor: '#ffffff' }, // green-600 ◯
+  { key: 'few', bgColor: '#ca8a04', textColor: '#ffffff' }, // yellow-600 △
+  { key: 'reserved', bgColor: '#dc2626', textColor: '#ffffff' }, // red-600 ✕
 ]
+
+/** スタンプ系（左上表示）: 満 休 */
+export const STAMP_STYLES: QuickInputStyle[] = [
+  { key: 'full', bgColor: '#9333ea', textColor: '#ffffff' }, // purple-600 満
+  { key: 'closed', bgColor: '#4b5563', textColor: '#ffffff' }, // gray-600 休
+]
+
+/** 全スタイル（記号 → スタンプの順） */
+export const QUICK_INPUT_STYLES: QuickInputStyle[] = [...SYMBOL_STYLES, ...STAMP_STYLES]
 
 /**
  * テキストに対応するクイック入力スタイルを取得

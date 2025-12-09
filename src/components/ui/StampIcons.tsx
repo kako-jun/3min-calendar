@@ -22,11 +22,16 @@ export function CircleIcon({ size = 14 }: IconProps) {
 export function TriangleIcon({ size = 14 }: IconProps) {
   const strokeWidth = size > 10 ? 2 : 1.5
   const margin = strokeWidth
-  const top = margin
-  const bottom = size - margin
-  const left = margin
-  const right = size - margin
-  const midX = size / 2
+  // 正三角形: 辺の長さ s に対して高さ h = s * √3 / 2
+  const sideLength = size - margin * 2
+  const height = (sideLength * Math.sqrt(3)) / 2
+  const centerX = size / 2
+  const centerY = size / 2
+  // 頂点座標
+  const topY = centerY - height / 2
+  const bottomY = centerY + height / 2
+  const leftX = centerX - sideLength / 2
+  const rightX = centerX + sideLength / 2
   return (
     <svg
       width={size}
@@ -36,7 +41,7 @@ export function TriangleIcon({ size = 14 }: IconProps) {
       stroke="currentColor"
       strokeWidth={strokeWidth}
     >
-      <path d={`M${midX} ${top}L${right} ${bottom}H${left}Z`} strokeLinejoin="round" />
+      <path d={`M${centerX} ${topY}L${rightX} ${bottomY}H${leftX}Z`} strokeLinejoin="round" />
     </svg>
   )
 }
