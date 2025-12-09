@@ -39,6 +39,8 @@
   "calendar": {
     "today": "Today",
     "yearMonth": "{{month}}/{{year}}",
+    "yearSuffix": "/",
+    "monthSuffix": "",
     "commentPlaceholder": "Note (shown at bottom right of calendar)"
   },
   "weekdays": {

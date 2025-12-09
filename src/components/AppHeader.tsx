@@ -44,7 +44,7 @@ export function AppHeader() {
 
   return (
     <header className="text-left">
-      <div className="flex gap-1">
+      <div className="flex">
         <img
           src="/logo.webp"
           alt=""

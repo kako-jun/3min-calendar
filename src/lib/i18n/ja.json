@@ -39,6 +39,8 @@
   "calendar": {
     "today": "今日",
     "yearMonth": "{{year}}年{{month}}月",
+    "yearSuffix": "年",
+    "monthSuffix": "月",
     "commentPlaceholder": "注釈（カレンダー右下に表示）"
   },
   "weekdays": {

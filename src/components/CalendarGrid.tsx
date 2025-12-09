@@ -90,7 +90,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
 
       {/* ヘッダー：店名（左）と年月（右） */}
       <div
-        className="relative mb-2 flex shrink-0 items-center justify-between"
+        className="relative mb-1 flex shrink-0 items-center justify-between"
         style={{ color: theme.text }}
       >
         {/* 店名（ロゴと文字） */}
@@ -102,7 +102,14 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
         </div>
 
         {/* 年月 */}
-        <div className="text-lg font-bold">{t('calendar.yearMonth', yearMonthParams)}</div>
+        <div className="font-bold">
+          <span className="text-base opacity-60">
+            {yearMonthParams.year}
+            {t('calendar.yearSuffix')}
+          </span>
+          <span className="ml-1 text-2xl">{yearMonthParams.month}</span>
+          <span className="text-base">{t('calendar.monthSuffix')}</span>
+        </div>
       </div>
 
       {/* 曜日ヘッダー */}
@@ -120,7 +127,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
         {weekdays.map((day, index) => (
           <div
             key={day.dayOfWeek}
-            className="py-1 text-center text-xs font-semibold"
+            className="py-1 text-center text-sm font-semibold"
             style={{
               color:
                 day.dayOfWeek === 0
@@ -244,7 +251,7 @@ export const CalendarGrid = forwardRef<HTMLDivElement, CalendarGridProps>(functi
                       </div>
                       {/* 日付（右上固定） */}
                       <div
-                        className={`shrink-0 text-[9px] leading-none ${day.isToday ? 'font-bold' : ''}`}
+                        className={`shrink-0 text-xs leading-none ${day.isToday ? 'font-bold' : ''}`}
                         style={{ color: getDayColor() }}
                       >
                         {day.day}

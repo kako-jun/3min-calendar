@@ -152,8 +152,8 @@ export const THEMES: Record<ThemeId, ThemeColors> = {
     holiday: '#f87171',
   },
   'dark-yellow': {
-    bg: '#422006',
-    surface: '#713f12',
+    bg: '#3d3a04',
+    surface: '#5c5512',
     text: '#fefce8',
     textMuted: '#fde047',
     accent: '#facc15',
