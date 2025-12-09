@@ -15,7 +15,10 @@ import {
   faImage,
   faFileExport,
   faFileImport,
+  faQrcode,
+  faHeart,
 } from '@fortawesome/free-solid-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { useCalendarStore } from '../lib/store'
 import { SUPPORTED_COUNTRIES, type CountryCode } from '../lib/holidays'
 import { APP_THEMES, type AppTheme } from '../lib/types'
@@ -129,6 +132,25 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         </div>
 
         <div className="space-y-6">
+          {/* QRコード予定地 */}
+          <div className="flex flex-col items-center gap-2">
+            <div
+              className="flex h-24 w-24 items-center justify-center rounded-lg border-2 border-dashed"
+              style={{ borderColor: appTheme.textMuted }}
+            >
+              <FontAwesomeIcon
+                icon={faQrcode}
+                className="text-3xl"
+                style={{ color: appTheme.textMuted }}
+              />
+            </div>
+            <p className="text-center text-xs" style={{ color: appTheme.textMuted }}>
+              {t('settings.qrCodeComingSoon')}
+            </p>
+          </div>
+
+          <hr style={{ borderColor: appTheme.textMuted, opacity: 0.3 }} />
+
           {/* アプリ設定 */}
           <div className="space-y-3">
             {/* アプリの外観 */}
@@ -163,18 +185,18 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             </div>
 
             {/* 言語設定 */}
-            <div>
-              <label
-                className="mb-1 flex items-center gap-2 text-sm"
+            <div className="flex items-center justify-between">
+              <span
+                className="flex items-center gap-2 text-sm"
                 style={{ color: appTheme.textMuted }}
               >
                 <FontAwesomeIcon icon={faLanguage} className="w-4" />
                 {t('settings.language')}
-              </label>
+              </span>
               <select
                 value={settings.language}
                 onChange={(e) => updateSettings({ language: e.target.value as 'ja' | 'en' })}
-                className="w-full rounded border px-3 py-2"
+                className="rounded border px-3 py-1 text-sm"
                 style={{
                   backgroundColor: appTheme.bg,
                   borderColor: appTheme.textMuted,
@@ -230,20 +252,20 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
 
             {/* 国/地域設定 */}
             <div
-              className={`transition-opacity ${settings.showHolidays ? '' : 'pointer-events-none opacity-40'}`}
+              className={`flex items-center justify-between transition-opacity ${settings.showHolidays ? '' : 'pointer-events-none opacity-40'}`}
             >
-              <label
-                className="mb-1 flex items-center gap-2 text-sm"
+              <span
+                className="flex items-center gap-2 text-sm"
                 style={{ color: appTheme.textMuted }}
               >
                 <FontAwesomeIcon icon={faGlobe} className="w-4" />
                 {t('settings.country')}
-              </label>
+              </span>
               <select
                 value={settings.country}
                 onChange={(e) => updateSettings({ country: e.target.value as CountryCode })}
                 disabled={!settings.showHolidays}
-                className="w-full rounded border px-3 py-2"
+                className="rounded border px-3 py-1 text-sm"
                 style={{
                   backgroundColor: appTheme.bg,
                   borderColor: appTheme.textMuted,
@@ -296,19 +318,19 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
           {/* 表示設定 */}
           <div className="space-y-3">
             {/* 店名設定 */}
-            <div>
-              <label
-                className="mb-1 flex items-center gap-2 text-sm"
+            <div className="flex items-center justify-between gap-4">
+              <span
+                className="flex shrink-0 items-center gap-2 text-sm"
                 style={{ color: appTheme.textMuted }}
               >
                 <FontAwesomeIcon icon={faStore} className="w-4" />
                 {t('settings.shopName')}
-              </label>
+              </span>
               <input
                 type="text"
                 value={settings.shopName}
                 onChange={(e) => updateSettings({ shopName: e.target.value })}
-                className="w-full rounded border px-3 py-2"
+                className="min-w-0 flex-1 rounded border px-3 py-1 text-sm"
                 style={{
                   backgroundColor: appTheme.bg,
                   borderColor: appTheme.textMuted,
@@ -319,60 +341,66 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
             </div>
 
             {/* 店名ロゴ設定 */}
-            <div>
-              <label
-                className="mb-1 flex items-center gap-2 text-sm"
+            <div className="flex items-center justify-between">
+              <span
+                className="flex shrink-0 items-center gap-2 text-sm"
                 style={{ color: appTheme.textMuted }}
               >
                 <FontAwesomeIcon icon={faImage} className="w-4" />
                 {t('settings.shopLogo')}
-              </label>
+              </span>
               <ImageSelector
                 value={settings.shopLogo}
                 onChange={(value) => updateSettings({ shopLogo: value })}
                 theme={appTheme}
                 previewFit="contain"
+                inline
               />
             </div>
 
             {/* 背景画像設定 */}
-            <div>
-              <label
-                className="mb-1 flex items-center gap-2 text-sm"
+            <div className="flex items-center justify-between">
+              <span
+                className="flex shrink-0 items-center gap-2 text-sm"
                 style={{ color: appTheme.textMuted }}
               >
                 <FontAwesomeIcon icon={faImage} className="w-4" />
                 {t('settings.backgroundImage')}
-              </label>
+              </span>
               <ImageSelector
                 value={settings.backgroundImage}
                 onChange={(value) => updateSettings({ backgroundImage: value })}
                 theme={appTheme}
+                inline
               />
             </div>
 
             {/* 背景の濃さ */}
             <div
-              className={`transition-opacity ${settings.backgroundImage ? '' : 'pointer-events-none opacity-40'}`}
+              className={`flex items-center justify-between gap-4 transition-opacity ${settings.backgroundImage ? '' : 'pointer-events-none opacity-40'}`}
             >
-              <label
-                className="mb-1 flex items-center gap-2 text-sm"
+              <span
+                className="flex shrink-0 items-center gap-2 text-sm"
                 style={{ color: appTheme.textMuted }}
               >
                 {t('settings.backgroundOpacity')}
-              </label>
-              <input
-                type="range"
-                min="0.05"
-                max="0.5"
-                step="0.05"
-                value={settings.backgroundOpacity}
-                onChange={(e) => updateSettings({ backgroundOpacity: parseFloat(e.target.value) })}
-                disabled={!settings.backgroundImage}
-                className="w-full"
-              />
-              <div className="mt-1 text-right text-xs" style={{ color: appTheme.textMuted }}>
-                {Math.round(settings.backgroundOpacity * 100)}%
+              </span>
+              <div className="flex min-w-0 flex-1 items-center gap-2">
+                <input
+                  type="range"
+                  min="0.05"
+                  max="0.5"
+                  step="0.05"
+                  value={settings.backgroundOpacity}
+                  onChange={(e) =>
+                    updateSettings({ backgroundOpacity: parseFloat(e.target.value) })
+                  }
+                  disabled={!settings.backgroundImage}
+                  className="min-w-0 flex-1"
+                />
+                <span className="w-8 text-right text-xs" style={{ color: appTheme.textMuted }}>
+                  {Math.round(settings.backgroundOpacity * 100)}%
+                </span>
               </div>
             </div>
           </div>
@@ -408,6 +436,38 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
                 />
               </label>
             </div>
+          </div>
+
+          <hr style={{ borderColor: appTheme.textMuted, opacity: 0.3 }} />
+
+          {/* About & Sponsor */}
+          <div className="flex flex-col items-center gap-4 py-4">
+            <p className="text-center text-sm" style={{ color: appTheme.textMuted }}>
+              {t('about.author')}: <strong>kako-jun</strong>
+              <a
+                href="https://github.com/kako-jun/3min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-2 inline-flex items-center hover:opacity-70"
+                style={{ color: appTheme.text }}
+              >
+                <FontAwesomeIcon icon={faGithub} />
+              </a>
+            </p>
+            <a
+              href="https://github.com/sponsors/kako-jun"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm transition-all hover:opacity-80"
+              style={{
+                backgroundColor: appTheme.bg,
+                borderColor: appTheme.textMuted,
+                color: appTheme.text,
+              }}
+            >
+              <FontAwesomeIcon icon={faHeart} className="text-pink-500" />
+              <span>Sponsor on GitHub</span>
+            </a>
           </div>
         </div>
       </div>

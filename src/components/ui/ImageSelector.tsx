@@ -11,6 +11,7 @@ interface ImageSelectorProps {
   theme: AppThemeColors
   previewSize?: 'small' | 'medium'
   previewFit?: 'contain' | 'cover'
+  inline?: boolean
 }
 
 export function ImageSelector({
@@ -19,6 +20,7 @@ export function ImageSelector({
   theme,
   previewSize = 'medium',
   previewFit = 'cover',
+  inline = false,
 }: ImageSelectorProps) {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -44,10 +46,11 @@ export function ImageSelector({
   }
 
   const sizeClass = previewSize === 'small' ? 'h-12 w-12' : 'h-16 w-16'
+  const inlineSizeClass = 'h-8 w-8'
   const fitClass = previewFit === 'contain' ? 'object-contain' : 'object-cover'
 
   return (
-    <div>
+    <div className={inline ? 'flex items-center gap-2' : ''}>
       <div className="flex items-center gap-2">
         <input
           ref={inputRef}
@@ -56,9 +59,17 @@ export function ImageSelector({
           onChange={handleSelect}
           className="hidden"
         />
+        {inline && value && (
+          <img
+            src={value}
+            alt="Preview"
+            className={`${inlineSizeClass} ${fitClass} rounded`}
+            style={{ border: `1px solid ${theme.textMuted}` }}
+          />
+        )}
         <button
           onClick={() => inputRef.current?.click()}
-          className="rounded px-3 py-2 text-sm transition-opacity hover:opacity-80"
+          className={`rounded text-sm transition-opacity hover:opacity-80 ${inline ? 'px-2 py-1' : 'px-3 py-2'}`}
           style={{
             backgroundColor: theme.bg,
             color: theme.text,
@@ -70,15 +81,15 @@ export function ImageSelector({
         {value && (
           <button
             onClick={handleRemove}
-            className="flex items-center gap-1 rounded px-3 py-2 text-sm transition-opacity hover:opacity-80"
+            className={`flex items-center gap-1 rounded text-sm transition-opacity hover:opacity-80 ${inline ? 'px-2 py-1' : 'px-3 py-2'}`}
             style={{ backgroundColor: '#dc2626', color: '#ffffff' }}
           >
             <FontAwesomeIcon icon={faTrash} />
-            {t('settings.removeImage')}
+            {!inline && t('settings.removeImage')}
           </button>
         )}
       </div>
-      {value && (
+      {!inline && value && (
         <div className="mt-2">
           <img
             src={value}

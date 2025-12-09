@@ -68,7 +68,11 @@
     "backgroundImage": "背景画像",
     "selectImage": "画像を選択",
     "removeImage": "削除",
-    "backgroundOpacity": "背景の濃さ"
+    "backgroundOpacity": "背景の濃さ",
+    "qrCodeComingSoon": "QRコード機能（予定）"
+  },
+  "about": {
+    "author": "作者"
   },
   "actions": {
     "share": "シェア",

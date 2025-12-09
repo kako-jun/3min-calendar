@@ -68,7 +68,11 @@
     "backgroundImage": "Background image",
     "selectImage": "Select image",
     "removeImage": "Remove",
-    "backgroundOpacity": "Background opacity"
+    "backgroundOpacity": "Background opacity",
+    "qrCodeComingSoon": "QR Code (Coming Soon)"
+  },
+  "about": {
+    "author": "Author"
   },
   "actions": {
     "share": "Share",
