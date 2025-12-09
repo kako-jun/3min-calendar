@@ -111,7 +111,7 @@ export function EmojiPicker({ onSelect, appTheme }: EmojiPickerProps) {
           >
             {/* カテゴリタブ */}
             <div
-              className="flex flex-wrap gap-1 border-b p-2"
+              className="flex flex-wrap justify-center gap-1 border-b p-2"
               style={{ borderColor: theme.textMuted }}
             >
               {categoryKeys.map((cat) => (

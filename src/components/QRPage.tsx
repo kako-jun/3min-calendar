@@ -77,14 +77,27 @@ export function QRPage() {
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'))
       if (!blob) return
 
-      if (navigator.share && navigator.canShare) {
-        const file = new File([blob], 'qrcode.png', { type: 'image/png' })
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({ files: [file], title: '3 min. QR' })
-          return
+      const file = new File([blob], 'qrcode.png', { type: 'image/png' })
+      const shareData = { files: [file], title: '3 min. QR' }
+
+      // Web Share APIでファイル共有を試行
+      if (navigator.share) {
+        // canShareがある場合はチェック、ない場合は直接試行
+        if (!navigator.canShare || navigator.canShare(shareData)) {
+          try {
+            await navigator.share(shareData)
+            return
+          } catch (e) {
+            // AbortError（ユーザーキャンセル）は無視
+            if (e instanceof Error && e.name === 'AbortError') {
+              return
+            }
+            // その他のエラーはフォールバック
+          }
         }
       }
 
+      // フォールバック: クリップボードにコピー
       await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
       alert(t('messages.copied'))
     } catch (error) {

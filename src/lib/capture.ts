@@ -50,20 +50,27 @@ export async function copyCanvasImageToClipboard(dataURL: string): Promise<void>
  */
 export async function shareCanvasImage(dataURL: string, filename: string): Promise<void> {
   const blob = dataURLToBlob(dataURL)
-
-  // Web Share API がサポートされているか確認
-  if (!navigator.share || !navigator.canShare) {
-    // サポートされていない場合はクリップボードにコピー
-    await copyCanvasImageToClipboard(dataURL)
-    throw new Error('Web Share API is not supported')
-  }
-
   const file = new File([blob], `${filename}.png`, { type: 'image/png' })
   const shareData = { files: [file], title: filename }
 
-  if (navigator.canShare(shareData)) {
-    await navigator.share(shareData)
-  } else {
-    throw new Error('Cannot share this content')
+  // Web Share APIでファイル共有を試行
+  if (navigator.share) {
+    // canShareがある場合はチェック、ない場合は直接試行
+    if (!navigator.canShare || navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData)
+        return
+      } catch (e) {
+        // AbortError（ユーザーキャンセル）は再スロー
+        if (e instanceof Error && e.name === 'AbortError') {
+          throw e
+        }
+        // その他のエラーはフォールバック
+      }
+    }
   }
+
+  // フォールバック: クリップボードにコピー
+  await copyCanvasImageToClipboard(dataURL)
+  throw new Error('Web Share API is not supported')
 }

@@ -72,7 +72,7 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="relative flex items-center gap-2">
       {/* シェアボタン */}
       <button
         onClick={handleShare}
@@ -95,10 +95,10 @@ export function ActionButtons({ calendarRef, filename }: ActionButtonsProps) {
         <FontAwesomeIcon icon={faDownload} />
       </button>
 
-      {/* メッセージ表示 */}
+      {/* メッセージ表示（ポップアップ） */}
       {message && (
         <div
-          className="rounded px-2 py-0.5 text-xs"
+          className="absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 whitespace-nowrap rounded px-3 py-1 text-xs shadow-lg"
           style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
         >
           {message}
