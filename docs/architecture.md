@@ -19,11 +19,13 @@ interface DayEntry {
 ```typescript
 interface Settings {
   weekStartsOn: 0 | 1 // 0: 日曜始まり, 1: 月曜始まり
-  theme: ThemeId // 'dark' | 'light' | 'cafe' | 'nature' | 'ocean' | 'sunset'
+  theme: ThemeId // 14種類のプリセット（ライト系7色 + ダーク系7色）
   language: 'ja' | 'en'
   country: CountryCode // 'JP' | 'US' | 'GB' | ... （20カ国）
   shopName: string // カレンダーに表示する店名
   showHolidays: boolean // 祝日を色分け表示するか
+  showRokuyo: boolean // 六曜を表示するか
+  useWareki: boolean // 和暦を使用するか
 }
 ```
 
@@ -39,10 +41,24 @@ interface Template {
 
 ## テーマシステム
 
-6種類のプリセットテーマ。カスタムカラーは意図的に非対応。
+14種類のプリセットテーマ（ライト系7色 + ダーク系7色の虹配色）。カスタムカラーは意図的に非対応。
 
 ```typescript
-type ThemeId = 'dark' | 'light' | 'cafe' | 'nature' | 'ocean' | 'sunset'
+type ThemeId =
+  | 'light-red'
+  | 'light-orange'
+  | 'light-yellow'
+  | 'light-green'
+  | 'light-blue'
+  | 'light-indigo'
+  | 'light-violet'
+  | 'dark-red'
+  | 'dark-orange'
+  | 'dark-yellow'
+  | 'dark-green'
+  | 'dark-blue'
+  | 'dark-indigo'
+  | 'dark-violet'
 
 interface ThemeColors {
   bg: string // 背景色

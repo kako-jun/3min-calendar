@@ -35,7 +35,7 @@ src/
 ├── lib/
 │   ├── types.ts, store.ts, storage.ts
 │   ├── calendar.ts, capture.ts, holidays.ts, theme.ts
-│   ├── qr.ts, time.ts, entry.ts
+│   ├── qr.ts, time.ts, entry.ts, rokuyo.ts, wareki.ts
 │   └── i18n/ (index.ts, ja.json, en.json)
 └── components/
     ├── ui/ (SegmentedControl, ColorInput, ToggleSwitch, ImageSelector)
