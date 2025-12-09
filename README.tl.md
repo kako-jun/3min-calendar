@@ -65,15 +65,6 @@ Lalabas ito sa kaliwang itaas ng calendar image.
 - **📤 Ibahagi** → Direktang i-post sa Instagram, LINE, X
 - **💾 I-save** → I-save ang image sa phone o computer
 
-**※ Kailangan ang "Screen share" permission sa bawat pagkakataon**
-
-Kapag pinindot ang "Ibahagi" o "I-save", may lalabas na confirmation na "Ibahagi ang screen?"
-
-Ito ay kinakailangan para i-save ang calendar bilang image.
-I-tap ang "Payagan".
-
-(Para sa seguridad, lumalabas ang confirmation sa bawat pagkakataon)
-
 ---
 
 ## Ano ang Maaaring I-set
@@ -187,19 +178,11 @@ Hindi automatic na naililipat sa bagong phone.
 
 Para ilipat ang data, pumunta sa "Data Management" sa settings screen → "Export" para i-save ang backup file, pagkatapos "Import" sa bagong phone.
 
-### Q. Ano ang "Screen share"? Nakakatakot ba?
-
-Huwag mag-alala. Ito ay feature para i-save ang calendar bilang image.
-
-Hindi nakikita ng kahit sino ang screen mo.
-Kapag pinindot ang "Payagan", ang calendar part lang ang iku-cut at ise-save bilang image.
-
 ### Q. Hindi ko alam paano mag-post sa Instagram o LINE
 
 1. I-tap ang **📤Ibahagi** button
-2. I-tap ang permission na "Screen share"
-3. Piliin ang "Instagram" o "LINE"
-4. I-post tulad ng normal
+2. Piliin ang "Instagram" o "LINE"
+3. I-post tulad ng normal
 
 Kung hindi gumana, gamitin ang **💾I-save** para i-save ang image,
 pagkatapos i-post tulad ng normal na pag-post ng photo.
@@ -248,10 +231,6 @@ Kung hindi gumagana nang maayos, subukan ang mga sumusunod:
 
 3. **Subukan ang ibang browser**
    - Chrome, Safari, Edge, atbp.
-
-4. **Kung hindi lumabas ang "Screen share"**
-   - Tingnan kung pinapayagan ang "Screen share" sa browser settings
-   - Maaaring hindi ito suportado ng ilang lumang browser
 
 ---
 

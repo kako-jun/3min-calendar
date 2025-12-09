@@ -65,15 +65,6 @@ Aparecerá arriba a la izquierda de la imagen del calendario.
 - **📤 Compartir** → Publicar directamente en Instagram, LINE, X
 - **💾 Guardar** → Guardar la imagen en el móvil o ordenador
 
-**※ Se requiere permiso de "Compartir pantalla" cada vez**
-
-Al pulsar "Compartir" o "Guardar", aparecerá una confirmación "¿Compartir pantalla?"
-
-Esto es necesario para guardar el calendario como imagen.
-Pulsa "Permitir".
-
-(Por seguridad, la confirmación aparece cada vez)
-
 ---
 
 ## Qué Se Puede Configurar
@@ -187,19 +178,11 @@ No se transfieren automáticamente al nuevo móvil.
 
 Para transferir datos, ve a "Gestión de datos" en la pantalla de configuración → "Exportar" para guardar un archivo de respaldo, luego "Importar" en el nuevo móvil.
 
-### P. ¿Qué es "Compartir pantalla"? ¿Es peligroso?
-
-No te preocupes. Es una función para guardar el calendario como imagen.
-
-Tu pantalla no es vista por nadie.
-Al pulsar "Permitir", solo se recorta la parte del calendario y se guarda como imagen.
-
 ### P. No sé cómo publicar en Instagram o LINE
 
 1. Pulsa el botón **📤Compartir**
-2. Pulsa el permiso de "Compartir pantalla"
-3. Elige "Instagram" o "LINE"
-4. Publica como siempre
+2. Elige "Instagram" o "LINE"
+3. Publica como siempre
 
 Si no funciona, usa **💾Guardar** para guardar la imagen,
 luego publícala como publicas fotos normalmente.
@@ -248,10 +231,6 @@ Si no funciona bien, prueba lo siguiente:
 
 3. **Prueba con otro navegador**
    - Chrome, Safari, Edge, etc.
-
-4. **Si no aparece "Compartir pantalla"**
-   - Comprueba si "Compartir pantalla" está permitido en la configuración del navegador
-   - Algunos navegadores antiguos pueden no soportarlo
 
 ---
 

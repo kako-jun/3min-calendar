@@ -67,15 +67,6 @@ It will appear in the top left of the calendar image.
 - **📤 Share** → Post directly to Instagram, LINE, X, etc.
 - **💾 Save** → Save the image to your phone or computer
 
-**※ "Share screen" permission is required each time**
-
-When you tap "Share" or "Save", you'll see a "Share your screen?" confirmation.
-
-This is required to save the calendar as an image.
-Tap "Allow".
-
-(For security reasons, this confirmation appears every time)
-
 ---
 
 ## Settings
@@ -197,20 +188,11 @@ Data doesn't transfer automatically to a new phone.
 
 To transfer data, go to Settings → "Data Management" → "Export" to save a backup file, then "Import" it on your new phone.
 
-### Q. What is "Share screen"? Is it safe?
-
-Don't worry. This is a feature to save the calendar as an image.
-
-Your screen is not being shared with anyone.
-
-When you tap "Allow", it captures only the calendar area and saves it as an image.
-
 ### Q. How do I post to Instagram or LINE?
 
 1. Tap the **📤 Share** button
-2. Allow the "Share screen" permission
-3. Select "Instagram" or "LINE"
-4. Post as usual
+2. Select "Instagram" or "LINE"
+3. Post as usual
 
 If it doesn't work, use **💾 Save** to save the image, then post it the same way you normally share photos.
 
@@ -260,10 +242,6 @@ If something isn't working, try these:
 
 3. **Try a different browser**
    - Chrome, Safari, Edge, etc.
-
-4. **If "Share screen" doesn't appear**
-   - Check if screen sharing is enabled in your browser settings
-   - Some older browsers may not support this feature
 
 ---
 

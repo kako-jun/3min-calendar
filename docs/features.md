@@ -23,10 +23,8 @@
 ## 画像キャプチャ（capture.ts）
 
 - **重要**: ブラウザ表示と出力画像が完全一致すること
-- Screen Capture APIでブラウザの実際の表示をキャプチャ
-- CSS zoomで画面に収まる最大倍率（最大2倍）に拡大して高解像度化
-- キャプチャ中は黒背景でカレンダー以外を非表示
-- マウスカーソル非表示（cursor: 'never'オプション）
+- Canvas（Konva Stage.toDataURL()）で描画内容を直接画像化
+- ブラウザの許可ダイアログ不要で安定動作
 - Web Share API対応時はシェア、非対応時はクリップボードコピー
 
 ## 日エディタ（DayEditor.tsx / DayRow.tsx）

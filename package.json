@@ -22,7 +22,6 @@
     "date-fns": "^4.1.0",
     "date-holidays": "^3.26.5",
     "framer-motion": "^12.23.25",
-    "html2canvas": "^1.4.1",
     "i18next": "^25.6.3",
     "konva": "^10.0.12",
     "react": "^18.3.1",

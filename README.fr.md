@@ -65,15 +65,6 @@ Il apparaîtra en haut à gauche de l'image du calendrier.
 - **📤 Partager** → Publier directement sur Instagram, LINE, X
 - **💾 Enregistrer** → Enregistrer l'image sur le téléphone ou l'ordinateur
 
-**※ L'autorisation "Partager l'écran" est requise à chaque fois**
-
-Lorsque vous appuyez sur "Partager" ou "Enregistrer", une confirmation "Partager l'écran ?" apparaîtra.
-
-C'est nécessaire pour enregistrer le calendrier comme image.
-Appuyez sur "Autoriser".
-
-(Pour des raisons de sécurité, la confirmation apparaît à chaque fois)
-
 ---
 
 ## Ce Qui Peut Être Configuré
@@ -187,19 +178,11 @@ Elles ne sont pas transférées automatiquement vers le nouveau téléphone.
 
 Pour transférer les données, allez dans "Gestion des données" dans l'écran des paramètres → "Exporter" pour enregistrer un fichier de sauvegarde, puis "Importer" sur le nouveau téléphone.
 
-### Q. Qu'est-ce que "Partager l'écran" ? Est-ce dangereux ?
-
-Ne vous inquiétez pas. C'est une fonction pour enregistrer le calendrier comme image.
-
-Votre écran n'est vu par personne.
-Lorsque vous appuyez sur "Autoriser", seule la partie du calendrier est découpée et enregistrée comme image.
-
 ### Q. Je ne sais pas comment publier sur Instagram ou LINE
 
 1. Appuyez sur le bouton **📤Partager**
-2. Appuyez sur l'autorisation "Partager l'écran"
-3. Choisissez "Instagram" ou "LINE"
-4. Publiez comme d'habitude
+2. Choisissez "Instagram" ou "LINE"
+3. Publiez comme d'habitude
 
 Si ça ne fonctionne pas, utilisez **💾Enregistrer** pour enregistrer l'image,
 puis publiez-la comme vous publiez normalement des photos.
@@ -248,10 +231,6 @@ Si ça ne fonctionne pas bien, essayez ce qui suit :
 
 3. **Essayez un autre navigateur**
    - Chrome, Safari, Edge, etc.
-
-4. **Si "Partager l'écran" n'apparaît pas**
-   - Vérifiez si "Partager l'écran" est autorisé dans les paramètres du navigateur
-   - Certains anciens navigateurs peuvent ne pas le prendre en charge
 
 ---
 

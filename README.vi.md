@@ -65,15 +65,6 @@ Sẽ hiển thị ở góc trên bên trái của ảnh lịch.
 - **📤 Chia sẻ** → Đăng trực tiếp lên Instagram, LINE, X
 - **💾 Lưu** → Lưu ảnh vào điện thoại hoặc máy tính
 
-**※ Cần cấp quyền "Chia sẻ màn hình" mỗi lần**
-
-Khi nhấn "Chia sẻ" hoặc "Lưu", sẽ xuất hiện xác nhận "Chia sẻ màn hình?"
-
-Đây là thao tác cần thiết để lưu lịch dưới dạng ảnh.
-Nhấn "Cho phép".
-
-(Vì lý do bảo mật, xác nhận này xuất hiện mỗi lần)
-
 ---
 
 ## Những gì có thể cài đặt
@@ -187,19 +178,11 @@ Không tự động chuyển sang điện thoại mới.
 
 Để chuyển dữ liệu, vào "Quản lý dữ liệu" trong màn hình cài đặt → "Xuất" để lưu file sao lưu, rồi "Nhập" trên điện thoại mới.
 
-### Q. "Chia sẻ màn hình" là gì? Có đáng sợ không?
-
-Yên tâm. Đây là tính năng để lưu lịch dưới dạng ảnh.
-
-Màn hình của bạn không bị ai xem.
-Khi nhấn "Cho phép", chỉ cắt phần lịch và lưu thành ảnh.
-
 ### Q. Không biết cách đăng lên Instagram hoặc LINE
 
 1. Nhấn nút **📤Chia sẻ**
-2. Nhấn cho phép "Chia sẻ màn hình"
-3. Chọn "Instagram" hoặc "LINE"
-4. Đăng như bình thường
+2. Chọn "Instagram" hoặc "LINE"
+3. Đăng như bình thường
 
 Nếu không được, dùng **💾Lưu** để lưu ảnh,
 rồi đăng giống như cách bạn thường đăng ảnh.
@@ -248,10 +231,6 @@ Nếu không hoạt động, hãy thử những cách sau:
 
 3. **Thử trình duyệt khác**
    - Chrome, Safari, Edge, v.v.
-
-4. **Nếu "Chia sẻ màn hình" không xuất hiện**
-   - Kiểm tra xem "Chia sẻ màn hình" đã được cho phép trong cài đặt trình duyệt chưa
-   - Một số trình duyệt cũ có thể không hỗ trợ
 
 ---
 

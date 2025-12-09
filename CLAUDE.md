@@ -19,7 +19,7 @@
 | 日付操作       | date-fns 4              |
 | 祝日判定       | date-holidays           |
 | 国際化         | i18next + react-i18next |
-| 画像キャプチャ | Screen Capture API      |
+| 画像キャプチャ | react-konva (Canvas)    |
 | QRコード生成   | react-qrcode-logo       |
 | アニメーション | framer-motion           |
 | PWA            | vite-plugin-pwa         |

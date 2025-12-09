@@ -65,15 +65,6 @@ Aparecerá no canto superior esquerdo da imagem do calendário.
 - **📤 Compartilhar** → Postar diretamente no Instagram, LINE, X
 - **💾 Salvar** → Salvar a imagem no celular ou computador
 
-**※ É necessária permissão de "Compartilhar tela" toda vez**
-
-Ao tocar em "Compartilhar" ou "Salvar", aparecerá uma confirmação "Compartilhar tela?"
-
-Isso é necessário para salvar o calendário como imagem.
-Toque em "Permitir".
-
-(Por segurança, a confirmação aparece toda vez)
-
 ---
 
 ## O Que Pode Ser Configurado
@@ -187,19 +178,11 @@ Não são transferidos automaticamente para o novo celular.
 
 Para transferir dados, vá em "Gestão de dados" na tela de configurações → "Exportar" para salvar um arquivo de backup, depois "Importar" no novo celular.
 
-### P. O que é "Compartilhar tela"? É perigoso?
-
-Não se preocupe. É uma função para salvar o calendário como imagem.
-
-Sua tela não é vista por ninguém.
-Ao tocar em "Permitir", apenas a parte do calendário é recortada e salva como imagem.
-
 ### P. Não sei como postar no Instagram ou LINE
 
 1. Toque no botão **📤Compartilhar**
-2. Toque na permissão de "Compartilhar tela"
-3. Escolha "Instagram" ou "LINE"
-4. Poste como sempre
+2. Escolha "Instagram" ou "LINE"
+3. Poste como sempre
 
 Se não funcionar, use **💾Salvar** para salvar a imagem,
 depois poste como você normalmente posta fotos.
@@ -248,10 +231,6 @@ Se não funcionar bem, tente o seguinte:
 
 3. **Tente outro navegador**
    - Chrome, Safari, Edge, etc.
-
-4. **Se "Compartilhar tela" não aparecer**
-   - Verifique se "Compartilhar tela" está permitido nas configurações do navegador
-   - Alguns navegadores antigos podem não suportar
 
 ---
 
