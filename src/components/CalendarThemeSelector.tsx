@@ -72,8 +72,12 @@ export function CalendarThemeSelector() {
       {/* テーマ選択トグルボタン */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex h-[26px] items-center gap-1.5 rounded-full px-3 text-xs transition-opacity hover:opacity-80"
-        style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
+        className="flex h-[26px] items-center gap-1.5 rounded-full border px-3 text-xs transition-opacity hover:opacity-80"
+        style={{
+          backgroundColor: appTheme.surface,
+          color: appTheme.text,
+          borderColor: `${appTheme.textMuted}40`,
+        }}
         title={t('settings.calendarTheme')}
       >
         <FontAwesomeIcon icon={faPalette} />

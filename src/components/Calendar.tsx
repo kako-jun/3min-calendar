@@ -79,8 +79,12 @@ export function Calendar() {
             <button
               onClick={handleCopyFromPrev}
               disabled={isCopying}
-              className="flex items-center gap-1 rounded-full px-3 py-1 text-xs transition-opacity hover:opacity-80 disabled:opacity-50"
-              style={{ backgroundColor: appTheme.surface, color: appTheme.text }}
+              className="flex items-center gap-1 rounded-full border px-3 py-1 text-xs transition-opacity hover:opacity-80 disabled:opacity-50"
+              style={{
+                backgroundColor: appTheme.surface,
+                color: appTheme.text,
+                borderColor: `${appTheme.textMuted}40`,
+              }}
             >
               <FontAwesomeIcon icon={faReply} />
               <span>{t('actions.copyFromPrevShort')}</span>
