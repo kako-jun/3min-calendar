@@ -76,19 +76,19 @@ Aparecerá no canto superior esquerdo da imagem do calendário.
 
 Toque no botão **⚙️Configurações** no canto superior direito:
 
-| Item              | Descrição                                          |
-| ----------------- | -------------------------------------------------- |
-| Tema do app       | Claro / Escuro                                     |
-| Idioma            | 日本語 / English / Português, etc.                 |
-| Início da semana  | Começa domingo / Começa segunda                    |
-| Mostrar feriados  | Ligar/Desligar                                     |
-| País/Região       | Escolha seu país, feriados colorem automaticamente |
-| Mostrar Rokuyo    | Mostrar dias de sorte japoneses                    |
-| Usar era japonesa | Mostrar "Reiwa 7" em vez de "2025"                 |
-| Nome da loja      | Nome que aparece no canto superior esquerdo        |
-| Logo da loja      | Pequeno logo ao lado do nome                       |
-| Imagem de fundo   | Coloque sua imagem favorita como fundo             |
-| Gestão de dados   | Backup e restauração de dados                      |
+| Item              | Descrição                                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------------------- |
+| Tema do app       | Claro / Escuro                                                                                           |
+| Idioma            | 日本語 / English / 中文 / 한국어 / नेपाली / ไทย / Tiếng Việt / Filipino / Español / Português / Français |
+| Início da semana  | Começa domingo / Começa segunda                                                                          |
+| Mostrar feriados  | Ligar/Desligar                                                                                           |
+| País/Região       | Escolha seu país, feriados colorem automaticamente                                                       |
+| Mostrar Rokuyo    | Mostrar dias de sorte japoneses                                                                          |
+| Usar era japonesa | Mostrar "Reiwa 7" em vez de "2025"                                                                       |
+| Nome da loja      | Nome que aparece no canto superior esquerdo                                                              |
+| Logo da loja      | Pequeno logo ao lado do nome                                                                             |
+| Imagem de fundo   | Coloque sua imagem favorita como fundo                                                                   |
+| Gestão de dados   | Backup e restauração de dados                                                                            |
 
 ---
 

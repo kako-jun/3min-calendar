@@ -148,6 +148,8 @@ export function QRPage() {
                       logoHeight={logoSize.height}
                       removeQrCodeBehindLogo
                       logoPaddingStyle="square"
+                      quietZone={0}
+                      enableCORS
                     />
                   </motion.div>
                 ) : (

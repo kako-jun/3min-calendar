@@ -78,19 +78,19 @@ It will appear in the top left of the calendar image.
 
 Tap the **⚙️ Settings** button in the top right for these options:
 
-| Setting          | Description                                   |
-| ---------------- | --------------------------------------------- |
-| App Theme        | Light / Dark                                  |
-| Language         | Japanese / English                            |
-| Week Starts On   | Sunday / Monday                               |
-| Show Holidays    | On / Off                                      |
-| Country/Region   | Select your country for automatic holidays    |
-| Show Rokuyo      | Display Japanese lucky days (for restaurants) |
-| Use Japanese Era | Show "Reiwa 7" instead of "2025"              |
-| Shop Name        | Displayed in top left of calendar             |
-| Shop Logo        | Small logo next to shop name                  |
-| Background Image | Set a custom background for the calendar      |
-| Data Management  | Backup and restore your data                  |
+| Setting          | Description                                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| App Theme        | Light / Dark                                                                                                  |
+| Language         | Japanese / English / Chinese / Korean / Nepali / Thai / Vietnamese / Filipino / Spanish / Portuguese / French |
+| Week Starts On   | Sunday / Monday                                                                                               |
+| Show Holidays    | On / Off                                                                                                      |
+| Country/Region   | Select your country for automatic holidays                                                                    |
+| Show Rokuyo      | Display Japanese lucky days (for restaurants)                                                                 |
+| Use Japanese Era | Show "Reiwa 7" instead of "2025"                                                                              |
+| Shop Name        | Displayed in top left of calendar                                                                             |
+| Shop Logo        | Small logo next to shop name                                                                                  |
+| Background Image | Set a custom background for the calendar                                                                      |
+| Data Management  | Backup and restore your data                                                                                  |
 
 ---
 

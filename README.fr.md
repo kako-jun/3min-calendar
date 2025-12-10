@@ -76,19 +76,19 @@ Il apparaîtra en haut à gauche de l'image du calendrier.
 
 Appuyez sur le bouton **⚙️Paramètres** en haut à droite :
 
-| Élément                  | Description                                         |
-| ------------------------ | --------------------------------------------------- |
-| Thème de l'app           | Clair / Sombre                                      |
-| Langue                   | 日本語 / English / Français, etc.                   |
-| Début de semaine         | Commence dimanche / Commence lundi                  |
-| Afficher les fériés      | Activer/Désactiver                                  |
-| Pays/Région              | Choisissez votre pays, les fériés se colorent auto. |
-| Afficher Rokuyo          | Afficher les jours de chance japonais               |
-| Utiliser l'ère japonaise | Afficher "Reiwa 7" au lieu de "2025"                |
-| Nom du commerce          | Nom affiché en haut à gauche du calendrier          |
-| Logo du commerce         | Petit logo à côté du nom                            |
-| Image de fond            | Mettez votre image préférée en fond                 |
-| Gestion des données      | Sauvegarde et restauration des données              |
+| Élément                  | Description                                                                                              |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| Thème de l'app           | Clair / Sombre                                                                                           |
+| Langue                   | 日本語 / English / 中文 / 한국어 / नेपाली / ไทย / Tiếng Việt / Filipino / Español / Português / Français |
+| Début de semaine         | Commence dimanche / Commence lundi                                                                       |
+| Afficher les fériés      | Activer/Désactiver                                                                                       |
+| Pays/Région              | Choisissez votre pays, les fériés se colorent auto.                                                      |
+| Afficher Rokuyo          | Afficher les jours de chance japonais                                                                    |
+| Utiliser l'ère japonaise | Afficher "Reiwa 7" au lieu de "2025"                                                                     |
+| Nom du commerce          | Nom affiché en haut à gauche du calendrier                                                               |
+| Logo du commerce         | Petit logo à côté du nom                                                                                 |
+| Image de fond            | Mettez votre image préférée en fond                                                                      |
+| Gestion des données      | Sauvegarde et restauration des données                                                                   |
 
 ---
 

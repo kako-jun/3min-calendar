@@ -76,19 +76,19 @@ Lalabas ito sa kaliwang itaas ng calendar image.
 
 I-tap ang **⚙️Settings** button sa kanang itaas para sa mga sumusunod na setting:
 
-| Setting Item             | Paglalarawan                                         |
-| ------------------------ | ---------------------------------------------------- |
-| App Theme                | Maliwanag / Madilim                                  |
-| Wika                     | 日本語 / English / Filipino atbp.                    |
-| Simula ng Linggo         | Simula sa Linggo / Simula sa Lunes                   |
-| Ipakita ang Holiday      | On/Off                                               |
-| Bansa/Rehiyon            | Piliin ang bansa, automatic magkakakulay ang holiday |
-| Ipakita ang Rokuyo       | Ipakita ang Japanese lucky days                      |
-| Gamitin ang Japanese Era | Ipakita ang "Reiwa 7" sa halip na "2025"             |
-| Pangalan ng Tindahan     | Pangalan na lalabas sa kaliwang itaas ng calendar    |
-| Logo ng Tindahan         | Maliit na logo sa tabi ng pangalan                   |
-| Background Image         | I-set ang gusto mong image bilang background         |
-| Data Management          | Backup at restore ng na-input na data                |
+| Setting Item             | Paglalarawan                                                                                             |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| App Theme                | Maliwanag / Madilim                                                                                      |
+| Wika                     | 日本語 / English / 中文 / 한국어 / नेपाली / ไทย / Tiếng Việt / Filipino / Español / Português / Français |
+| Simula ng Linggo         | Simula sa Linggo / Simula sa Lunes                                                                       |
+| Ipakita ang Holiday      | On/Off                                                                                                   |
+| Bansa/Rehiyon            | Piliin ang bansa, automatic magkakakulay ang holiday                                                     |
+| Ipakita ang Rokuyo       | Ipakita ang Japanese lucky days                                                                          |
+| Gamitin ang Japanese Era | Ipakita ang "Reiwa 7" sa halip na "2025"                                                                 |
+| Pangalan ng Tindahan     | Pangalan na lalabas sa kaliwang itaas ng calendar                                                        |
+| Logo ng Tindahan         | Maliit na logo sa tabi ng pangalan                                                                       |
+| Background Image         | I-set ang gusto mong image bilang background                                                             |
+| Data Management          | Backup at restore ng na-input na data                                                                    |
 
 ---
 

@@ -76,19 +76,19 @@ Aparecerá arriba a la izquierda de la imagen del calendario.
 
 Pulsa el botón **⚙️Configuración** arriba a la derecha:
 
-| Elemento          | Descripción                                        |
-| ----------------- | -------------------------------------------------- |
-| Tema de la app    | Claro / Oscuro                                     |
-| Idioma            | 日本語 / English / Español, etc.                   |
-| Inicio de semana  | Empieza domingo / Empieza lunes                    |
-| Mostrar festivos  | Activar/Desactivar                                 |
-| País/Región       | Elige tu país, los festivos se colorean auto.      |
-| Mostrar Rokuyo    | Mostrar días de suerte japoneses                   |
-| Usar era japonesa | Mostrar "Reiwa 7" en lugar de "2025"               |
-| Nombre de tienda  | Nombre que aparece arriba izquierda del calendario |
-| Logo de tienda    | Pequeño logo junto al nombre                       |
-| Imagen de fondo   | Pon tu imagen favorita como fondo                  |
-| Gestión de datos  | Copia de seguridad y restauración de datos         |
+| Elemento          | Descripción                                                                                              |
+| ----------------- | -------------------------------------------------------------------------------------------------------- |
+| Tema de la app    | Claro / Oscuro                                                                                           |
+| Idioma            | 日本語 / English / 中文 / 한국어 / नेपाली / ไทย / Tiếng Việt / Filipino / Español / Português / Français |
+| Inicio de semana  | Empieza domingo / Empieza lunes                                                                          |
+| Mostrar festivos  | Activar/Desactivar                                                                                       |
+| País/Región       | Elige tu país, los festivos se colorean auto.                                                            |
+| Mostrar Rokuyo    | Mostrar días de suerte japoneses                                                                         |
+| Usar era japonesa | Mostrar "Reiwa 7" en lugar de "2025"                                                                     |
+| Nombre de tienda  | Nombre que aparece arriba izquierda del calendario                                                       |
+| Logo de tienda    | Pequeño logo junto al nombre                                                                             |
+| Imagen de fondo   | Pon tu imagen favorita como fondo                                                                        |
+| Gestión de datos  | Copia de seguridad y restauración de datos                                                               |
 
 ---
 

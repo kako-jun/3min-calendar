@@ -76,19 +76,19 @@ Sẽ hiển thị ở góc trên bên trái của ảnh lịch.
 
 Nhấn nút **⚙️Cài đặt** góc trên bên phải để thực hiện các cài đặt sau:
 
-| Mục cài đặt        | Mô tả                                    |
-| ------------------ | ---------------------------------------- |
-| Giao diện ứng dụng | Sáng / Tối                               |
-| Ngôn ngữ           | 日本語 / English / Tiếng Việt, v.v.      |
-| Ngày đầu tuần      | Bắt đầu Chủ nhật / Bắt đầu Thứ hai       |
-| Hiển thị ngày lễ   | Bật/Tắt                                  |
-| Quốc gia/Khu vực   | Chọn quốc gia, ngày lễ tự động đổi màu   |
-| Hiển thị Rokuyo    | Hiển thị ngày may mắn của Nhật Bản       |
-| Dùng niên đại NB   | Hiển thị "Reiwa 7" thay vì "2025"        |
-| Tên cửa hàng       | Tên cửa hàng hiển thị góc trên trái lịch |
-| Logo cửa hàng      | Ảnh logo nhỏ bên cạnh tên cửa hàng       |
-| Ảnh nền            | Đặt ảnh yêu thích làm nền lịch           |
-| Quản lý dữ liệu    | Sao lưu và khôi phục dữ liệu đã nhập     |
+| Mục cài đặt        | Mô tả                                                                                                    |
+| ------------------ | -------------------------------------------------------------------------------------------------------- |
+| Giao diện ứng dụng | Sáng / Tối                                                                                               |
+| Ngôn ngữ           | 日本語 / English / 中文 / 한국어 / नेपाली / ไทย / Tiếng Việt / Filipino / Español / Português / Français |
+| Ngày đầu tuần      | Bắt đầu Chủ nhật / Bắt đầu Thứ hai                                                                       |
+| Hiển thị ngày lễ   | Bật/Tắt                                                                                                  |
+| Quốc gia/Khu vực   | Chọn quốc gia, ngày lễ tự động đổi màu                                                                   |
+| Hiển thị Rokuyo    | Hiển thị ngày may mắn của Nhật Bản                                                                       |
+| Dùng niên đại NB   | Hiển thị "Reiwa 7" thay vì "2025"                                                                        |
+| Tên cửa hàng       | Tên cửa hàng hiển thị góc trên trái lịch                                                                 |
+| Logo cửa hàng      | Ảnh logo nhỏ bên cạnh tên cửa hàng                                                                       |
+| Ảnh nền            | Đặt ảnh yêu thích làm nền lịch                                                                           |
+| Quản lý dữ liệu    | Sao lưu và khôi phục dữ liệu đã nhập                                                                     |
 
 ---
 
