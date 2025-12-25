@@ -34,3 +34,4 @@ dist-ssr
 .serena/
 .claude/settings.local.json
 vite.config.js
+.mcp.json
